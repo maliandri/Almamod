@@ -1,15 +1,34 @@
 // controllers/authController.js
+const { validationResult } = require('express-validator');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 
-// --- REGISTRO ---
+// --- REGISTRO DE USUARIO ---
 exports.registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  // 1. Validar los datos de entrada
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  // 2. Extraer todos los datos del body
+  const {
+    fullName,
+    email,
+    password,
+    phone,
+    docType,
+    docNumber,
+    birthDate,
+    address,
+    location
+  } = req.body;
 
   try {
+    // 3. Verificar si el usuario ya existe
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ msg: 'El usuario ya existe' });
@@ -17,14 +36,27 @@ exports.registerUser = async (req, res) => {
 
     const verificationToken = crypto.randomBytes(20).toString('hex');
 
-    user = new User({ name, email, password, verificationToken });
+    // 4. Crear la nueva instancia de usuario con todos los datos
+    user = new User({
+      fullName,
+      email,
+      password,
+      phone,
+      docType,
+      docNumber,
+      birthDate,
+      address,
+      location,
+      verificationToken
+    });
+
     await user.save();
     
-    // Enviar email de verificación
+    // 5. Enviar email de verificación
     const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
     const message = `
       <h1>Verificación de Email para Almamod</h1>
-      <p>Gracias por registrarte. Por favor, haz clic en el siguiente enlace para verificar tu cuenta:</p>
+      <p>Gracias por registrarte, ${user.fullName}. Por favor, haz clic en el siguiente enlace para verificar tu cuenta:</p>
       <a href="${verifyUrl}" clicktracking=off>${verifyUrl}</a>
     `;
 
@@ -58,7 +90,8 @@ exports.verifyEmail = async (req, res) => {
         await sendEmail({
             email: user.email,
             subject: '¡Bienvenido a Almamod!',
-            message: `<h1>¡Hola ${user.name}!</h1><p>Tu cuenta ha sido verificada exitosamente. Ya puedes iniciar sesión y explorar nuestras soluciones.</p>`
+            // Usamos fullName para consistencia
+            message: `<h1>¡Hola ${user.fullName}!</h1><p>Tu cuenta ha sido verificada exitosamente. Ya puedes iniciar sesión y explorar nuestras soluciones.</p>`
         });
 
         res.status(200).json({ msg: 'Email verificado correctamente. ¡Bienvenido!' });
@@ -68,8 +101,14 @@ exports.verifyEmail = async (req, res) => {
     }
 };
 
-// --- LOGIN ---
+// --- LOGIN DE USUARIO ---
 exports.loginUser = async (req, res) => {
+  // 1. Validar los datos de entrada
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { email, password } = req.body;
 
   try {
@@ -79,7 +118,7 @@ exports.loginUser = async (req, res) => {
     }
 
     if (!user.isVerified) {
-      return res.status(400).json({ msg: 'Por favor, verifica tu email antes de iniciar sesión.' });
+      return res.status(401).json({ msg: 'Por favor, verifica tu email antes de iniciar sesión.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -92,10 +131,18 @@ exports.loginUser = async (req, res) => {
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: '5h' }, // El token expira en 5 horas
+      { expiresIn: '5h' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        // Enviamos el token y algunos datos del usuario al frontend
+        res.json({
+          token,
+          user: {
+            id: user.id,
+            fullName: user.fullName,
+            email: user.email
+          }
+        });
       }
     );
   } catch (error) {

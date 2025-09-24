@@ -10,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.12.2",
+    "express-validator": "^7.2.1",
     "framer-motion": "^12.23.19",
     "lottie-react": "^2.4.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-responsive-carousel": "^3.2.23"
+    "react-responsive-carousel": "^3.2.23",
+    "react-router-dom": "^7.9.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
