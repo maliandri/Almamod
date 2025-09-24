@@ -1,0 +1,413 @@
+/* --- ESTILOS GENERALES --- */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* --- HEADER FIJO --- */
+.hero-section {
+  position: fixed;
+  top: 10;
+  z-index: 1000;
+  padding: 10px 40px;
+  width: 100%;
+  background: rgb(14, 0, 0);
+  box-shadow: 0 15px 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  box-sizing: content-box;
+}
+
+/* --- CONTENIDO DEL HEADER --- */
+.hero-content-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: flex-start; /* <-- ESTE ES EL CAMBIO */
+  align-items: center;
+  gap: 30px; /* <-- Espacio ajustado */
+}
+
+.hero-logo-container {
+  display: flex;
+  justify-content: right;
+}
+
+.hero-logo {
+  max-width: 250px;
+  height: auto;
+}
+
+.hero-text-container {
+  text-align: left;
+}
+
+.hero-text-container h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f8f9fa;
+  margin: 0 0 4px 0;
+}
+
+.hero-text-container p {
+  font-size: 1rem;
+  color: #adb5bd;
+  margin: 0;
+}
+
+/* --- SECCIÓN DE ANIMACIÓN --- */
+.animation-section {
+  min-height: 80vh;
+  padding: 60px 40px 40px 40px;
+  box-sizing: border-box;
+  background: linear-gradient(to right, rgb(249, 3, 3), #4c01f9, #59fb02);
+  background-size: 400% 400%;
+  animation: animated-gradient 15s ease-in-out infinite;
+  display: flex;
+  justify-content: center;
+}
+
+/* Contenedor para alinear la animación con el header */
+.animation-content-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center; /* Ajustado para un look más balanceado */
+  align-items: flex-start;
+}
+
+.animation-container {
+  width: 40%;
+  max-width: 550px;
+}
+
+/* --- FOOTER --- */
+.main-footer {
+  background-color: #212529;
+  color: #f8f9fa;
+  padding: 20px 40px;
+  text-align: center;
+}
+
+.main-footer p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .hero-content-wrapper {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  .hero-text-container {
+    text-align: center;
+  }
+}
+
+/* Define la animación que mueve el fondo */
+@keyframes animated-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- ESTILOS PARA BOTONES FLOTANTES Y MODALES --- */
+.floating-buttons-container {
+  position: fixed;
+  top: 120px;
+  left: 40px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.floating-button {
+  /* --- 👇 AQUÍ ESTÁN LOS CAMBIOS 👇 --- */
+  width: 230px; /* Ajusta este valor si lo necesitas más ancho o angosto */
+  box-sizing: border-box;
+  justify-content: flex-start; /* Alinea el ícono y texto a la izquierda */
+
+  /* --- Estilos que ya tenías --- */
+  background: linear-gradient(45deg, #4c01f9, #8e2de2);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.floating-button:hover { transform: scale(1.05); }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 10vh;
+  z-index: 1002;
+}
+
+.modal-content {
+  background: #f0f2f5;
+  padding: 0;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 20px 25px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #111827;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 0;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 25px;
+  overflow-y: auto;
+}
+
+.calculator-step {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.calculator-step label, .checkbox-label {
+  font-weight: 500;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calculator-step select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+.main-action-button, .secondary-action-button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.main-action-button {
+  background-color: #111827;
+  color: white;
+}
+
+.main-action-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.secondary-action-button {
+  background-color: #d1d5db;
+  color: #1f2937;
+}
+
+.results {
+  text-align: center;
+}
+
+.final-price {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #111827;
+  margin: 10px 0;
+}
+
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.results-summary {
+  text-align: left;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  margin: 15px 0;
+}
+
+.results-summary h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 5px;
+}
+
+.results-summary ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.results-summary ul li {
+  padding: 4px 0;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 10px;
+}
+
+.results-actions {
+  margin-top: 20px;
+}
+
+.modal-lg {
+  max-width: 800px;
+}
+
+.image-carousel .legend {
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  opacity: 1 !important;
+  color: white;
+  font-size: 1rem;
+  padding: 20px !important;
+}
+
+.carousel-image-container {
+  height: 450px;
+  background-color: #000;
+}
+
+.carousel-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ESTILOS PARA BOTONES SOCIALES */
+
+.social-button.whatsapp:hover {
+  background: #25D366;
+}
+.social-button.instagram:hover {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+}
+.social-button.facebook:hover {
+  background: #1877F2;
+}
+
+.social-link {
+  text-decoration: none;
+}
+
+.separator {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 5px 0;
+}
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.register-form h2, .register-form h3 {
+  text-align: center;
+  color: #333;
+}
+
+.register-form input, .register-form select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.register-form .doc-type-group {
+  display: flex;
+  gap: 10px;
+}
+.register-form .doc-type-group select {
+  flex-basis: 30%;
+}
+.register-form .doc-type-group input {
+  flex-basis: 70%;
+}
+
+.register-form button {
+  padding: 12px;
+  border-radius: 4px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #111827;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.register-form button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.register-form button[type="button"] {
+  background-color: #2563eb;
+}
+
+.map-container {
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
