@@ -1,5 +1,6 @@
 // src/components/ObrasCarousel.jsx
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom'; // <-- 1. IMPORTAR createPortal
 import { motion, AnimatePresence } from 'framer-motion';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // Importa los estilos del carrusel
@@ -12,7 +13,7 @@ const GalleryIcon = () => (
 function ObrasCarousel() {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Lista de tus imágenes. Asegúrate que los nombres coincidan con los de tu carpeta /public/obras/
+  // Lista de tus imágenes.
   const images = [
     { src: '/obras/almamod1.jpg', legend: 'Proyecto Residencial A' },
     { src: '/obras/almamod2.jpg', legend: 'Oficina Modular B' },
@@ -20,7 +21,7 @@ function ObrasCarousel() {
 
   return (
     <>
-      {/* --- BOTÓN FLOTANTE --- */}
+      {/* --- BOTÓN FLOTANTE (No cambia)--- */}
       <motion.button
         className="floating-button"
         onClick={() => setIsOpen(true)}
@@ -31,9 +32,9 @@ function ObrasCarousel() {
         <span>Nuestras Obras</span>
       </motion.button>
 
-      {/* --- MODAL DEL CARRUSEL --- */}
-      <AnimatePresence>
-        {isOpen && (
+      {/* --- 2. EL MODAL AHORA SE RENDERIZA EN EL PORTAL --- */}
+      {isOpen && createPortal(
+        <AnimatePresence>
           <motion.div className="modal-overlay" onClick={() => setIsOpen(false)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.div className="modal-content modal-lg" onClick={(e) => e.stopPropagation()} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}>
               <div className="modal-header">
@@ -59,8 +60,9 @@ function ObrasCarousel() {
               </div>
             </motion.div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.getElementById('modal-portal') // <-- 3. Se envía al div #modal-portal del index.html
+      )}
     </>
   );
 }

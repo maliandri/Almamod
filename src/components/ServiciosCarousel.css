@@ -1,6 +1,11 @@
 /* src/components/ServiciosCarousel.css */
 
 .servicios-carousel-container {
+  width: 100%;
+  max-width: 1200px; /* controla el ancho máximo */
+  margin: 4rem auto 1rem auto; /* MODIFICADO: Aumentado margen superior de 1rem a 4rem */
+  height: auto;      /* que no se deforme la altura */
+
   padding: 2rem;
   border-radius: 20px;
   background: rgba(22, 14, 14, 0.8);
@@ -9,9 +14,6 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   position: relative;
   overflow: hidden;
-  margin: 1rem 0;
-  width: 90%;
-  height: 90%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -41,7 +43,7 @@
   margin-bottom: 2rem;
   border-radius: 16px;
   overflow: hidden;
-  height: 240px; /* Altura fija y reducida */
+  height: 320px; /* MODIFICADO: Reducido de 450px a 320px para altura más compacta */
   flex-grow: 0;   /* Crecimiento flexible desactivado */
   min-height: auto; /* Altura mínima reseteada */
 }
@@ -58,62 +60,66 @@
   width: 100%;
   height: 100%;
   border-radius: 16px;
-  padding: 2.5rem;
+  padding: 1.5rem; /* MODIFICADO: Reducido de 2rem a 1.5rem para altura más compacta */
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* MODIFICADO: Cambiado de space-between a flex-start para acercar features */
   align-items: center;
   text-align: center;
   box-sizing: border-box;
   background-color: rgba(40, 40, 40, 0.5);
+  overflow: hidden; /* AGREGADO: Para evitar que el contenido se desborde */
+  gap: 1rem; /* MODIFICADO: Reducido de 1.5rem a 1rem para altura más compacta */
 }
 
 .slide-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem; /* MODIFICADO: Reducido de 1rem a 0.75rem para altura más compacta */
+  flex-shrink: 0; /* AGREGADO: Evita que se comprima */
 }
 
 .slide-icon {
-  font-size: 3rem;
+  font-size: 2.5rem; /* MODIFICADO: Reducido de 3rem a 2.5rem para altura más compacta */
   line-height: 1;
 }
 
 .slide-title {
-  font-size: 2.2rem;
+  font-size: 1.8rem; /* MODIFICADO: Reducido de 2rem a 1.8rem para altura más compacta */
   font-weight: 700;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.1; /* MODIFICADO: Reducido de 1.2 a 1.1 para ahorrar espacio */
 }
 
 .slide-description {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-top: 1.5rem;
-  max-width: 90%;
-  flex-grow: 1;
+  font-size: 0.95rem; /* MODIFICADO: Reducido de 1rem a 0.95rem para altura más compacta */
+  line-height: 1.4; /* MODIFICADO: Reducido de 1.5 a 1.4 para ahorrar espacio */
+  margin: 0; /* MODIFICADO: Quitado margen para usar gap del contenedor */
+  max-width: 90%; /* MODIFICADO: Aumentado de 85% a 90% para aprovechar espacio */
+  flex-grow: 0; /* MODIFICADO: Cambiado de 1 a 0 para que no ocupe todo el espacio disponible */
 }
 
 .slide-features {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.75rem;
-  margin-top: 2rem;
+  gap: 0.5rem; /* MODIFICADO: Reducido de 0.75rem a 0.5rem para altura más compacta */
+  margin: 0; /* MODIFICADO: Quitado margin para usar space-between */
+  flex-shrink: 0; /* AGREGADO: Evita que se compriman */
 }
 
 .feature-tag {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
   border-radius: 8px;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.8rem; /* MODIFICADO: Reducido de 0.6rem 1rem para altura más compacta */
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .feature-tag span {
-  font-size: 0.9rem;
+  font-size: 0.8rem; /* MODIFICADO: Reducido de 0.85rem a 0.8rem para altura más compacta */
   font-weight: 600;
   color: white;
 }
@@ -126,8 +132,8 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 55px; /* MODIFICADO: Aumentado de 50px a 55px */
+  height: 55px; /* MODIFICADO: Aumentado de 50px a 55px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,6 +141,7 @@
   color: white;
   transition: all 0.3s ease;
   z-index: 10;
+  font-size: 1.2rem; /* AGREGADO: Tamaño de flecha más grande */
 }
 
 .carousel-nav:hover {
@@ -152,17 +159,17 @@
 
 .carousel-dots {
   position: absolute;
-  bottom: 1rem;
+  bottom: 1.5rem; /* MODIFICADO: Aumentado de 1rem a 1.5rem */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem; /* MODIFICADO: Aumentado de 0.5rem a 0.75rem */
   z-index: 10;
 }
 
 .dot {
-  width: 12px;
-  height: 12px;
+  width: 14px; /* MODIFICADO: Aumentado de 12px a 14px */
+  height: 14px; /* MODIFICADO: Aumentado de 12px a 14px */
   border-radius: 50%;
   border: none;
   background: rgba(255, 255, 255, 0.4);
@@ -227,39 +234,55 @@
   text-align: center;
 }
 
-/* --- RESPONSIVE DESIGN --- */
+/* --- RESPONSIVE DESIGN MEJORADO --- */
 @media (max-width: 992px) {
   .servicios-carousel-container {
     padding: 1.5rem;
+    margin: 3rem auto 1rem auto; /* MODIFICADO: Reducido margen superior para tablets */
   }
   .servicios-header h2 {
     font-size: 2rem;
   }
+  .carousel-main {
+    height: 280px; /* MODIFICADO: Reducido para tablets */
+  }
+  .service-slide {
+    padding: 1.3rem; /* MODIFICADO: Reducido para tablets */
+    gap: 0.8rem; /* MODIFICADO: Reducido para tablets */
+  }
   .slide-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem; /* MODIFICADO: Reducido */
   }
   .slide-description {
-    font-size: 1rem;
+    font-size: 0.9rem; /* MODIFICADO: Reducido */
   }
 }
 
 @media (max-width: 768px) {
   .servicios-carousel-container {
     padding: 1rem;
-    margin: 0.5rem 0;
+    margin: 2rem auto 0.5rem auto; /* MODIFICADO: Reducido margen superior para móviles */
   }
   .servicios-header h2 {
     font-size: 1.8rem;
   }
+  .carousel-main {
+    height: 260px; /* MODIFICADO: Reducido para móviles */
+  }
   .service-slide {
-    padding: 1.5rem;
+    padding: 1.2rem; /* MODIFICADO: Padding optimizado para móvil */
+    gap: 0.75rem; /* MODIFICADO: Gap reducido */
   }
   .slide-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem; /* MODIFICADO: Reducido */
+  }
+  .slide-description {
+    font-size: 0.85rem; /* MODIFICADO: Reducido */
+    max-width: 95%; /* MODIFICADO: Más ancho en móvil */
   }
   .carousel-nav {
-    width: 40px;
-    height: 40px;
+    width: 40px; /* MODIFICADO: Reducido para altura compacta */
+    height: 40px; /* MODIFICADO: Reducido para altura compacta */
   }
   .prev-btn {
     left: 0.5rem;
@@ -269,5 +292,33 @@
   }
   .service-thumbnails-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .servicios-carousel-container {
+    margin: 1.5rem auto 0.5rem auto; /* MODIFICADO: Margen reducido para móviles pequeños */
+  }
+  .carousel-main {
+    height: 240px; /* MODIFICADO: Altura compacta para móviles pequeños */
+  }
+  .service-slide {
+    padding: 1rem;
+    gap: 0.6rem; /* MODIFICADO: Gap muy compacto */
+  }
+  .slide-title {
+    font-size: 1.3rem; /* MODIFICADO: Más pequeño */
+  }
+  .slide-description {
+    font-size: 0.8rem; /* MODIFICADO: Más pequeño */
+  }
+  .slide-icon {
+    font-size: 2rem; /* MODIFICADO: Icono más pequeño */
+  }
+  .feature-tag {
+    padding: 0.4rem 0.6rem; /* MODIFICADO: Tags más pequeños */
+  }
+  .feature-tag span {
+    font-size: 0.75rem; /* MODIFICADO: Texto más pequeño */
   }
 }

@@ -1,6 +1,6 @@
-// frontend/src/App.jsx
-import React, { useContext } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+// src/App.jsx
+import React, { useState, useContext } from 'react';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import './App.css';
 import { AuthContext } from './context/AuthContext';
 
@@ -34,56 +34,74 @@ function HomePage() {
 // ====================================================================
 function App() {
   const { isAuthenticated, logout, user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // Estados para controlar la visibilidad de los modales de login/registro
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Redirige al inicio al cerrar sesión
+  };
 
   return (
     <div className="App">
-      {/* HEADER (Visible en todas las páginas) */}
+      {/* HEADER */}
       <header className="hero-section">
         <div className="hero-content-wrapper">
-          {/* Logo y texto */}
           <div className="hero-branding">
             <Link to="/">
               <img src={logoAlmamod} alt="Logo de Almamod" className="hero-logo" />
             </Link>
-            <div className="hero-text-container">
-              <h1>Estamos en Neuquén, Somos de Neuquén</h1>
-              <p>Soluciones habitacionales</p>
-            </div>
           </div>
-          
-          {/* Espacio vacío en el centro */}
-          <div></div>
-          
-          {/* Navegación */}
+          <div className="hero-text-container">
+            <h1>Estamos en Neuquén, Somos de Neuquén</h1>
+            <p>Soluciones habitacionales</p>
+          </div>
           <nav className="header-nav">
             {isAuthenticated ? (
               <>
                 <span className="nav-user-greeting">Hola, {user?.fullName}</span>
-                <button onClick={logout} className="nav-link-button">
+                <button onClick={handleLogout} className="nav-link-button">
                   Cerrar Sesión
                 </button>
               </>
             ) : (
               <>
-                <Link to="/registro" className="nav-link">Registrarse</Link>
-                <Link to="/login" className="nav-link">Iniciar Sesión</Link>
+                <button onClick={() => setShowRegister(true)} className="nav-link-button">Registrarse</button>
+                <button onClick={() => setShowLogin(true)} className="nav-link-button">Iniciar Sesión</button>
               </>
             )}
           </nav>
         </div>
       </header>
 
-      {/* CONTENIDO PRINCIPAL (Cambia según la ruta) */}
+      {/* MODALES DE LOGIN Y REGISTRO */}
+      {showRegister && (
+        <div className="form-modal-overlay" onClick={() => setShowRegister(false)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <RegisterForm closeModal={() => setShowRegister(false)} />
+          </div>
+        </div>
+      )}
+      {showLogin && (
+        <div className="form-modal-overlay" onClick={() => setShowLogin(false)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <LoginForm closeModal={() => setShowLogin(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* CONTENIDO PRINCIPAL */}
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/registro" element={<PageLayout><RegisterForm /></PageLayout>} />
-          <Route path="/login" element={<PageLayout><LoginForm /></PageLayout>} />
           <Route path="/verify-email" element={<PageLayout><VerifyEmail /></PageLayout>} />
         </Routes>
       </main>
 
-      {/* BOTONES FLOTANTES (Visibles en todas las páginas) */}
+      {/* BOTONES FLOTANTES */}
       <div className="floating-buttons-container">
         <ObrasCarousel />
         <CalculadoraModulo />
@@ -106,7 +124,7 @@ function App() {
         />
       </div>
 
-      {/* FOOTER (Visible en todas las páginas) */}
+      {/* FOOTER */}
       <footer className="main-footer">
         <p>&copy; 2025 Almamod. Todos los derechos reservados.</p>
         <p>Neuquén, Argentina</p>

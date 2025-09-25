@@ -1,18 +1,17 @@
 // frontend/src/components/LoginForm.jsx
-import React, { useState, useContext } from 'react'; // <-- CAMBIO: Se importa useContext
+import React, { useState, useContext } from 'react'; // <-- LETRA "a" ELIMINADA
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext'; // <-- CAMBIO: Se importa el AuthContext
+import { AuthContext } from '../context/AuthContext';
 
-function LoginForm() {
+function LoginForm({ closeModal }) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  
-  const { login } = useContext(AuthContext); // <-- CAMBIO: Se obtiene la función 'login' del contexto
+  const { login } = useContext(AuthContext);
 
   const { email, password } = formData;
 
@@ -24,13 +23,9 @@ function LoginForm() {
     setError('');
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', formData);
-      
-      // --- CAMBIO PRINCIPAL ---
-      // En lugar de solo mostrar un alert, usamos la función 'login' del contexto
-      // para guardar los datos del usuario y el token en el estado global.
       login(response.data.user, response.data.token);
-
-      // Mantenemos la redirección al inicio
+      
+      closeModal();
       navigate('/');
 
     } catch (err) {
@@ -40,29 +35,39 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={onSubmit} className="register-form" style={{ marginTop: '100px' }}>
-      <h2>Iniciar Sesión</h2>
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
-      <input
-        type="email"
-        placeholder="Correo Electrónico"
-        name="email"
-        value={email}
-        onChange={onChange}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        name="password"
-        value={password}
-        onChange={onChange}
-        required
-      />
-      <button type="submit" className="submit-button">
-        Entrar
+    <div style={{ position: 'relative' }}>
+      <button 
+        onClick={closeModal} 
+        className="close-button" 
+        style={{ position: 'absolute', top: '15px', right: '25px', zIndex: 10 }}
+      >
+        &times;
       </button>
-    </form>
+
+      <form onSubmit={onSubmit} className="register-form">
+        <h2>Iniciar Sesión</h2>
+        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+        <input
+          type="email"
+          placeholder="Correo Electrónico"
+          name="email"
+          value={email}
+          onChange={onChange}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          name="password"
+          value={password}
+          onChange={onChange}
+          required
+        />
+        <button type="submit" className="submit-button">
+          Entrar
+        </button>
+      </form>
+    </div>
   );
 }
 
