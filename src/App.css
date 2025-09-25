@@ -13,7 +13,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f0f2f5;
+  background-color: #000000; /* Fondo negro */
 }
 
 /* --- HEADER FIJO (REESTRUCTURADO CON GRID) --- */
@@ -24,7 +24,7 @@ body {
   width: 100%;
   z-index: 1000;
   padding: 10px 20px;
-  background: rgb(14, 0, 0);
+  background: #000000; /* Fondo negro */
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
@@ -35,33 +35,25 @@ body {
 
 .hero-content-wrapper {
   width: 100%;
-  max-width: 100%;
+  max-width: 1200px;
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 20px;
 }
 
-/* Contenedor Izquierda: Logo (Centrado en la primera columna) */
+/* Contenedor Izquierda: Logo y texto (Centrado en la primera columna) */
 .hero-branding {
-  grid-column: 1 / 2;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 15px;
 }
 .hero-logo {
   max-width: 200px;
   height: auto;
 }
 
-/* Nuevo contenedor para agrupar texto y auth */
-.header-main-area {
-  grid-column: 2 / 3;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Contenedor Centro: Texto (Alineado a la izquierda) */
+/* Texto del header */
 .hero-text-container {
   text-align: left;
 }
@@ -122,31 +114,29 @@ body {
 
 /* --- SECCIÓN DE ANIMACIÓN Y FOOTER (CON MARGEN CORREGIDO) --- */
 .animation-section {
-  min-height: 75vh;
-  padding: 20px 40px;
-  background: linear-gradient(to right, rgb(249, 3, 3), #4c01f9, #59fb02);
-  background-size: 400% 400%;
-  animation: animated-gradient 15s ease-in-out infinite;
+  min-height: 100vh;
+  padding: 20px;
+  background: #000000; /* Fondo negro */
   display: flex;
   justify-content: center;
-  margin-left: 260px;
+  align-items: flex-start;
+  margin-left: 260px; /* Espacio para botones flotantes */
 }
 .animation-content-wrapper {
   width: 100%;
   max-width: 1200px;
   display: flex;
   justify-content: center;
-  align-items: stretch;
+  align-items: flex-start;
 }
-.animation-container {
-  width: 40%;
-  max-width: 550px;
-}
+
+/* Eliminamos el gradiente animado que conflictúa */
 @keyframes animated-gradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
 .main-footer {
   background-color: #212529;
   color: #f8f9fa;
@@ -425,15 +415,12 @@ body {
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 992px) {
   .hero-content-wrapper {
-    flex-direction: column;
-    gap: 15px;
-    padding: 10px 0;
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 10px;
   }
   .hero-section {
     min-height: auto;
-  }
-  .hero-text-container {
-    text-align: center;
   }
   .hero-branding {
     flex-direction: column;
@@ -444,37 +431,32 @@ body {
   }
   .animation-section {
     margin-left: 0;
-  }
-  .animation-section,
-  .register-form,
-  .login-form,
-  .verify-email-container {
-    padding-top: 200px; 
+    padding-top: 150px; /* Más espacio para header responsive */
   }
   .floating-buttons-container {
-    top: 200px;
+    top: 150px;
+    left: 10px;
   }
 }
 
 @media (max-width: 480px) {
-    .hero-text-container {
-        display: none;
-    }
-    .animation-section {
-        margin-left: 0;
-    }
-    .animation-section,
-    .register-form,
-    .login-form,
-    .verify-email-container {
-        padding-top: var(--content-padding-top); 
-    }
-    .floating-buttons-container {
-      top: var(--content-padding-top);
-      left: 15px;
-    }
-    .floating-button {
-      width: 50px;
-      overflow: hidden;
-    }
+  .hero-text-container {
+    display: block; /* Muestra el texto en móviles */
+  }
+  .hero-text-container h1 {
+    font-size: 1.2rem;
+    white-space: normal;
+  }
+  .animation-section {
+    margin-left: 0;
+    padding-top: 180px; 
+  }
+  .floating-buttons-container {
+    top: 180px;
+    left: 15px;
+  }
+  .floating-button {
+    width: 50px;
+    overflow: hidden;
+  }
 }

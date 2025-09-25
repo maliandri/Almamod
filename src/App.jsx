@@ -20,8 +20,6 @@ import ServiciosCarousel from './components/ServiciosCarousel.jsx';
 // Componente para la página de inicio
 // ====================================================================
 function HomePage() {
-  // La página de inicio ahora solo contiene la sección con el fondo
-  // y el carrusel en su interior.
   return (
     <section className="animation-section">
       <div className="animation-content-wrapper">
@@ -42,6 +40,7 @@ function App() {
       {/* HEADER (Visible en todas las páginas) */}
       <header className="hero-section">
         <div className="hero-content-wrapper">
+          {/* Logo y texto */}
           <div className="hero-branding">
             <Link to="/">
               <img src={logoAlmamod} alt="Logo de Almamod" className="hero-logo" />
@@ -51,6 +50,11 @@ function App() {
               <p>Soluciones habitacionales</p>
             </div>
           </div>
+          
+          {/* Espacio vacío en el centro */}
+          <div></div>
+          
+          {/* Navegación */}
           <nav className="header-nav">
             {isAuthenticated ? (
               <>
