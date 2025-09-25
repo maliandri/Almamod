@@ -64,7 +64,7 @@ function ServiciosCarousel() {
       setCurrentIndex((prevIndex) =>
         prevIndex === servicios.length - 1 ? 0 : prevIndex + 1
       );
-    }, 5000);
+    }, 8000);
     return () => clearInterval(interval);
   }, [isAutoPlaying, servicios.length]);
 
