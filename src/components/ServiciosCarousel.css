@@ -1,17 +1,18 @@
 /* src/components/ServiciosCarousel.css */
 
 .servicios-carousel-container {
-  padding: 2rem;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.8);
+  padding: 1rem;
+  border-radius: 20px; /* Unificado */
+  background: rgba(255, 255, 255, 0.8); /* Mantuve el fondo claro que tenías */
   backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Mantuve la sombra original */
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
   margin: 1rem 0;
-  max-width: 100%;
-  width: 100%;
+  max-width: 90%;
+  width: 100%; /* Generalmente 100% es más flexible que 90% */
+  height: 75%; /* Añadido desde tu segunda versión */
 }
 
 .servicios-header {
@@ -217,19 +218,19 @@
   .servicios-carousel-container {
     padding: 1.5rem;
   }
-  
+
   .servicios-header h2 {
     font-size: 2rem;
   }
-  
+
   .carousel-main {
     height: 380px;
   }
-  
+
   .slide-title {
     font-size: 1.6rem;
   }
-  
+
   .slide-description {
     font-size: 1rem;
   }
@@ -239,74 +240,74 @@
   .servicios-carousel-container {
     padding: 1rem;
   }
-  
+
   .servicios-header h2 {
     font-size: 1.8rem;
   }
-  
+
   .carousel-main {
     height: 350px;
   }
-  
+
   .service-slide {
     padding: 1.5rem;
   }
-  
+
   .slide-header {
     flex-direction: column;
     text-align: center;
     gap: 0.5rem;
   }
-  
+
   .slide-icon {
     font-size: 2.5rem;
   }
-  
+
   .slide-title {
     font-size: 1.4rem;
   }
-  
+
   .slide-description {
     font-size: 0.95rem;
     text-align: center;
   }
-  
+
   .slide-features {
     grid-template-columns: 1fr;
     gap: 0.5rem;
   }
-  
+
   .feature-tag {
     padding: 0.5rem 0.75rem;
     text-align: center;
   }
-  
+
   .carousel-nav {
     width: 40px;
     height: 40px;
   }
-  
+
   .prev-btn {
     left: 0.5rem;
   }
-  
+
   .next-btn {
     right: 0.5rem;
   }
-  
+
   .service-thumbnails-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
   }
-  
+
   .service-thumbnail {
     padding: 0.75rem;
   }
-  
+
   .thumb-icon {
     font-size: 1.4rem;
   }
-  
+
   .thumb-title {
     font-size: 0.8rem;
   }
@@ -316,19 +317,19 @@
   .servicios-header h2 {
     font-size: 1.5rem;
   }
-  
+
   .carousel-main {
     height: 320px;
   }
-  
+
   .service-slide {
     padding: 1rem;
   }
-  
+
   .slide-title {
     font-size: 1.2rem;
   }
-  
+
   .slide-description {
     font-size: 0.9rem;
     margin-bottom: 1rem;

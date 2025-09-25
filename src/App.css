@@ -1,6 +1,6 @@
 /* --- VARIABLES GLOBALES --- */
 :root {
-  --header-height: 90px;
+  --header-height: 100px;
   --header-spacing: 30px;
   --content-padding-top: calc(var(--header-height) + var(--header-spacing));
 }
@@ -77,7 +77,7 @@ body {
 
 /* Contenedor Derecha: Navegación */
 .header-nav {
-  flex: 1;
+  flex: 10;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -87,7 +87,7 @@ body {
 .header-nav .nav-link-button {
   color: #f8f9fa;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1rem;
   white-space: nowrap;
   transition: color 0.2s ease-in-out;
@@ -120,7 +120,7 @@ body {
 
 /* --- SECCIÓN DE ANIMACIÓN Y FOOTER --- */
 .animation-section {
-  min-height: 90vh;
+  min-height: 40vh;
   padding-left: 40px;
   padding-right: 40px;
   background: linear-gradient(to right, rgb(249, 3, 3), #4c01f9, #59fb02);
@@ -162,7 +162,7 @@ body {
 .floating-buttons-container {
   position: fixed;
   top: var(--content-padding-top);
-  left: 40px;
+  left: 20px;
   z-index: 999;
   display: flex;
   flex-direction: column;
