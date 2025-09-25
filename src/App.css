@@ -1,3 +1,10 @@
+/* --- VARIABLES GLOBALES --- */
+:root {
+  --header-height: 90px;
+  --header-spacing: 30px;
+  --content-padding-top: calc(var(--header-height) + var(--header-spacing));
+}
+
 /* --- ESTILOS GENERALES --- */
 body {
   margin: 0;
@@ -23,7 +30,7 @@ body {
   justify-content: center; /* Centra el wrapper principal */
   align-items: center;
   box-sizing: border-box;
-  min-height: 90px;
+  min-height: var(--header-height);
 }
 
 /* --- CONTENIDO DEL HEADER --- */
@@ -107,7 +114,7 @@ body {
 .login-form,
 .verify-email-container {
   box-sizing: border-box;
-  padding-top: 120px;
+  padding-top: var(--content-padding-top);
   width: 100%;
 }
 
@@ -121,6 +128,8 @@ body {
   animation: animated-gradient 15s ease-in-out infinite;
   display: flex;
   justify-content: center;
+  margin-left: 280px; /* Ajusta este valor según necesites */
+  width: calc(100% - 280px); /* Esto ajusta el ancho para que no se salga de la pantalla */
 }
 .animation-content-wrapper {
   width: 100%;
@@ -152,7 +161,7 @@ body {
 /* --- BOTONES FLOTANTES Y MODALES --- */
 .floating-buttons-container {
   position: fixed;
-  top: 120px;
+  top: var(--content-padding-top);
   left: 40px;
   z-index: 999;
   display: flex;
@@ -452,10 +461,10 @@ body {
     .register-form,
     .login-form,
     .verify-email-container {
-        padding-top: 120px; 
+        padding-top: var(--content-padding-top); 
     }
     .floating-buttons-container {
-      top: 120px;
+      top: var(--content-padding-top);
       left: 15px;
     }
     .floating-button {

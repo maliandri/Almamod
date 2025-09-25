@@ -1,43 +1,43 @@
 // src/components/ServiciosCarousel.jsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import './ServiciosCarousel.css';
 
 function ServiciosCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Array de servicios actualizado con la nueva información investigada
   const servicios = [
     {
       id: 1,
       titulo: "Estructura con Paneles SIP",
-      descripcion: "Construimos con Paneles SIP (Panel Estructural Aislado), un sistema de alta ingeniería que une placas de OSB a un núcleo de espuma rígida. El resultado es una estructura monolítica de resistencia superior y una eficiencia térmica inigualable, reduciendo tus costos de calefacción y refrigeración de por vida.",
+      descripcion: "Construimos con Paneles SIP (Panel Estructural Aislado), un sistema de alta ingeniería que une placas de OSB a un núcleo de espuma rígida. El resultado es una estructura monolítica de resistencia superior y una eficiencia térmica inigualable.",
       icon: "🧱",
-      color: "from-gray-500 to-slate-600",
+      gradient: "linear-gradient(135deg, #6b7280, #4b5563)",
       features: ["Eficiencia Energética Superior", "Aislación Acústica", "Resistencia Estructural", "Construcción Eco-Sustentable"],
     },
     {
       id: 2,
       titulo: "Diseño y Revestimiento Exterior",
-      descripcion: "Protegemos tu inversión con revestimientos exteriores de última generación que garantizan durabilidad frente al clima patagónico. Elige entre una amplia gama de acabados como chapa, siding o EIFS para lograr una estética moderna y de mínimo mantenimiento, 100% personalizada a tu gusto.",
+      descripcion: "Protegemos tu inversión con revestimientos exteriores de última generación que garantizan durabilidad frente al clima patagónico. Elige entre una amplia gama de acabados como chapa, siding o EIFS para lograr una estética moderna.",
       icon: "🏡",
-      color: "from-amber-500 to-orange-600",
+      gradient: "linear-gradient(135deg, #f59e0b, #ea580c)",
       features: ["Alta Durabilidad", "Mínimo Mantenimiento", "Estética Personalizable", "Protección Climática"],
     },
     {
       id: 3,
       titulo: "Construcción Modular Inteligente",
-      descripcion: "Nuestro sistema modular permite una flexibilidad de diseño total. Adaptamos los espacios a tus necesidades, ya sea una vivienda, oficina o local. La fabricación en taller y el rápido montaje en sitio reducen drásticamente los tiempos de obra y aseguran un control de calidad superior.",
+      descripcion: "Nuestro sistema modular permite una flexibilidad de diseño total. Adaptamos los espacios a tus necesidades, ya sea una vivienda, oficina o local. La fabricación en taller y el rápido montaje en sitio reducen drásticamente los tiempos de obra.",
       icon: "⚙️",
-      color: "from-blue-500 to-indigo-600",
+      gradient: "linear-gradient(135deg, #3b82f6, #4f46e5)",
       features: ["Rapidez de Montaje", "Diseño 100% Flexible", "Control de Calidad Superior", "Potencial de Ampliación"],
     },
     {
       id: 4,
       titulo: "Hecho en Neuquén: Adaptación Regional",
-      descripcion: "Conocemos el clima y la geografía de la Patagonia. Cada proyecto está pensado y fabricado en Neuquén para resistir vientos fuertes, variaciones térmicas y nevadas. Al elegirnos, apoyas la industria local y garantizas una logística más rápida y eficiente para tu obra.",
+      descripcion: "Conocemos el clima y la geografía de la Patagonia. Cada proyecto está pensado y fabricado en Neuquén para resistir vientos fuertes, variaciones térmicas y nevadas. Al elegirnos, apoyas la industria local y garantizas una logística más rápida.",
       icon: "🏔️",
-      color: "from-sky-400 to-cyan-500",
+      gradient: "linear-gradient(135deg, #0ea5e9, #06b6d4)",
       features: ["Adaptado al Clima Patagónico", "Apoyo a la Economía Local", "Logística Eficiente", "Materiales Regionales"],
     },
     {
@@ -45,7 +45,7 @@ function ServiciosCarousel() {
       titulo: "Interiores a Medida",
       descripcion: "Creamos espacios interiores que reflejan tu estilo de vida o identidad de marca. Nos encargamos de todo: desde la distribución de ambientes hasta la selección de pisos, griferías, amoblamientos de cocina y placares, entregando un producto final listo para habitar.",
       icon: "🛋️",
-      color: "from-lime-500 to-green-600",
+      gradient: "linear-gradient(135deg, #84cc16, #16a34a)",
       features: ["Diseño de Interiores", "Amoblamientos Incluidos", "Terminaciones de Calidad", "Proyectos 'Llave en Mano'"],
     },
     {
@@ -53,12 +53,11 @@ function ServiciosCarousel() {
       titulo: "Fundaciones y Obras Civiles",
       descripcion: "Ofrecemos una solución integral que incluye el diseño y construcción de las fundaciones. Realizamos plateas de hormigón armado y sistemas de pilotes adaptados a cada tipo de suelo, garantizando una base sólida y duradera para tu proyecto modular.",
       icon: "🏗️",
-      color: "from-stone-500 to-neutral-600",
+      gradient: "linear-gradient(135deg, #78716c, #57534e)",
       features: ["Estudio de Suelos", "Plateas de Hormigón", "Sistemas de Pilotes", "Solución Integral"],
     }
   ];
 
-  // El resto de la lógica del carrusel (no necesita cambios)
   useEffect(() => {
     if (!isAutoPlaying) return;
     const interval = setInterval(() => {
@@ -118,25 +117,13 @@ function ServiciosCarousel() {
   };
 
   return (
-    <motion.section
-      id="servicios"
-      className="p-8 md:p-12 rounded-3xl bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm shadow-xl border border-gray-200 dark:border-gray-700 relative overflow-hidden"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8 }}
-    >
-      <div className="text-center mb-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-50">
-          Nuestras Soluciones Modulares
-        </h2>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Tecnología y diseño para tu próximo espacio
-        </p>
+    <div className="servicios-carousel-container">
+      <div className="servicios-header">
+        <h2>Nuestras Soluciones Modulares</h2>
+        <p>Tecnología y diseño para tu próximo espacio</p>
       </div>
       
-      {/* El resto del JSX del carrusel (no necesita cambios) */}
-      <div className="relative h-96 md:h-80 mb-8">
+      <div className="carousel-main">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={currentIndex}
@@ -149,18 +136,67 @@ function ServiciosCarousel() {
               x: { type: "spring", stiffness: 300, damping: 30 },
               opacity: { duration: 0.2 }
             }}
-            className="absolute inset-0"
+            className="slide-wrapper"
           >
-            {/* ... (resto del JSX interno del slide) ... */}
+            <div 
+              className="service-slide"
+              style={{ background: currentService.gradient }}
+            >
+              <div className="slide-header">
+                <span className="slide-icon">{currentService.icon}</span>
+                <h3 className="slide-title">{currentService.titulo}</h3>
+              </div>
+              <p className="slide-description">{currentService.descripcion}</p>
+              <div className="slide-features">
+                {currentService.features.map((feature, idx) => (
+                  <div key={idx} className="feature-tag">
+                    <span>✓ {feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </motion.div>
         </AnimatePresence>
         
-        {/* ... (botones de navegación y dots) ... */}
+        <button onClick={() => paginate(-1)} className="carousel-nav prev-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        
+        <button onClick={() => paginate(1)} className="carousel-nav next-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+
+        <div className="carousel-dots">
+          {servicios.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => goToSlide(idx)}
+              className={`dot ${idx === currentIndex ? 'active' : ''}`}
+            />
+          ))}
+        </div>
       </div>
       
-      {/* ... (miniaturas de servicios) ... */}
-    </motion.section>
+      <div className="service-thumbnails-grid">
+        {servicios.map((servicio, idx) => (
+          <motion.button
+            key={servicio.id}
+            onClick={() => goToSlide(idx)}
+            className={`service-thumbnail ${idx === currentIndex ? 'active' : ''}`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className="thumb-icon">{servicio.icon}</div>
+            <div className="thumb-title">{servicio.titulo}</div>
+          </motion.button>
+        ))}
+      </div>
+    </div>
   );
 }
 
-export default ServiciosCarousel;z
+export default ServiciosCarousel;
