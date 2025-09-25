@@ -4,7 +4,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import { AuthContext } from './context/AuthContext';
 
-// Importa todos tus componentes y assets
+// --- Imports ---
 import logoAlmamod from './assets/almamod.jpg';
 import CalculadoraModulo from './components/CalculadoraModulo.jsx';
 import ObrasCarousel from './components/ObrasCarousel.jsx';
@@ -13,24 +13,26 @@ import SocialButton from './components/SocialButton.jsx';
 import RegisterForm from './components/RegisterForm.jsx';
 import LoginForm from './components/LoginForm.jsx';
 import PageLayout from './components/PageLayout.jsx';
-import VerifyEmail from './components/VerifyEmail.jsx'; // <-- 1. Import que faltaba
+import VerifyEmail from './components/VerifyEmail.jsx';
+import ServiciosCarousel from './components/ServiciosCarousel.jsx';
 
 // ====================================================================
-// Componente para la página de inicio (ahora más simple)
+// Componente para la página de inicio
 // ====================================================================
 function HomePage() {
-  // Ahora solo contiene la sección con el fondo animado
+  // La página de inicio ahora solo contiene la sección con el fondo
+  // y el carrusel en su interior.
   return (
     <section className="animation-section">
       <div className="animation-content-wrapper">
-        {/* Puedes poner contenido específico de la home page aquí si quieres */}
+        <ServiciosCarousel />
       </div>
     </section>
   );
 }
 
 // ====================================================================
-// Componente principal App (ahora controla toda la estructura)
+// Componente principal App (controla toda la estructura)
 // ====================================================================
 function App() {
   const { isAuthenticated, logout, user } = useContext(AuthContext);
@@ -70,7 +72,7 @@ function App() {
       {/* CONTENIDO PRINCIPAL (Cambia según la ruta) */}
       <main>
         <Routes>
-          <Route path="/" element={<HomePage />} /> {/* <-- 2. Ruta de inicio que faltaba */}
+          <Route path="/" element={<HomePage />} />
           <Route path="/registro" element={<PageLayout><RegisterForm /></PageLayout>} />
           <Route path="/login" element={<PageLayout><LoginForm /></PageLayout>} />
           <Route path="/verify-email" element={<PageLayout><VerifyEmail /></PageLayout>} />
@@ -78,7 +80,6 @@ function App() {
       </main>
 
       {/* BOTONES FLOTANTES (Visibles en todas las páginas) */}
-      {/* 3. Movimos los botones aquí para que siempre estén visibles */}
       <div className="floating-buttons-container">
         <ObrasCarousel />
         <CalculadoraModulo />
@@ -102,7 +103,6 @@ function App() {
       </div>
 
       {/* FOOTER (Visible en todas las páginas) */}
-      {/* 4. Movimos el footer aquí para que siempre esté visible */}
       <footer className="main-footer">
         <p>&copy; 2025 Almamod. Todos los derechos reservados.</p>
         <p>Neuquén, Argentina</p>
