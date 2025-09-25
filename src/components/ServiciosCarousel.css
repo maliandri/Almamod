@@ -1,44 +1,49 @@
 /* src/components/ServiciosCarousel.css */
 
 .servicios-carousel-container {
-  padding: 1rem;
-  border-radius: 20px; /* Unificado */
-  background: rgba(255, 255, 255, 0.8); /* Mantuve el fondo claro que tenías */
+  padding: 2rem;
+  border-radius: 20px;
+  background: rgba(22, 14, 14, 0.8);
   backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Mantuve la sombra original */
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   position: relative;
   overflow: hidden;
   margin: 1rem 0;
-  max-width: 90%;
-  width: 100%; /* Generalmente 100% es más flexible que 90% */
-  height: 75%; /* Añadido desde tu segunda versión */
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .servicios-header {
   text-align: center;
   margin-bottom: 2rem;
+  flex-shrink: 0;
 }
 
 .servicios-header h2 {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #111827;
+  color: #f8f9fa;
   margin: 0 0 0.5rem 0;
 }
 
 .servicios-header p {
-  color: #6b7280;
+  color: #adb5bd;
   font-size: 1.1rem;
   margin: 0;
 }
 
 .carousel-main {
   position: relative;
-  height: 400px;
   margin-bottom: 2rem;
   border-radius: 16px;
   overflow: hidden;
+  height: 240px; /* Altura fija y reducida */
+  flex-grow: 0;   /* Crecimiento flexible desactivado */
+  min-height: auto; /* Altura mínima reseteada */
 }
 
 .slide-wrapper {
@@ -50,21 +55,25 @@
 }
 
 .service-slide {
+  width: 100%;
   height: 100%;
   border-radius: 16px;
-  padding: 2rem;
+  padding: 2.5rem;
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  position: relative;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  background-color: rgba(40, 40, 40, 0.5);
 }
 
 .slide-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1.5rem;
 }
 
 .slide-icon {
@@ -73,7 +82,7 @@
 }
 
 .slide-title {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
   margin: 0;
   line-height: 1.2;
@@ -82,22 +91,25 @@
 .slide-description {
   font-size: 1.1rem;
   line-height: 1.6;
-  margin-bottom: 2rem;
+  margin-top: 1.5rem;
+  max-width: 90%;
   flex-grow: 1;
 }
 
 .slide-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.75rem;
+  margin-top: 2rem;
 }
 
 .feature-tag {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
   border-radius: 8px;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .feature-tag span {
@@ -110,7 +122,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
@@ -126,7 +138,7 @@
 }
 
 .carousel-nav:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -153,13 +165,13 @@
   height: 12px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .dot:hover {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .dot.active {
@@ -169,16 +181,17 @@
 
 .service-thumbnails-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1rem;
   margin-top: 1rem;
+  flex-shrink: 0;
 }
 
 .service-thumbnail {
   padding: 1rem;
   border-radius: 12px;
-  border: 2px solid #e5e7eb;
-  background: white;
+  border: 2px solid #4a4a4a;
+  background: #1c1c1c;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
@@ -186,51 +199,45 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  color: #f0f0f0;
 }
 
 .service-thumbnail:hover {
-  border-color: #9ca3af;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-color: #3b82f6;
+  background: #252525;
   transform: translateY(-2px);
 }
 
 .service-thumbnail.active {
   border-color: #3b82f6;
-  background: #eff6ff;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+  background: #2a2a2a;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
 }
 
 .thumb-icon {
   font-size: 1.8rem;
+  color: #3b82f6;
   margin-bottom: 0.25rem;
 }
 
 .thumb-title {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #111827;
   line-height: 1.3;
   text-align: center;
 }
 
-/* Responsive Design */
+/* --- RESPONSIVE DESIGN --- */
 @media (max-width: 992px) {
   .servicios-carousel-container {
     padding: 1.5rem;
   }
-
   .servicios-header h2 {
     font-size: 2rem;
   }
-
-  .carousel-main {
-    height: 380px;
-  }
-
   .slide-title {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
-
   .slide-description {
     font-size: 1rem;
   }
@@ -239,99 +246,28 @@
 @media (max-width: 768px) {
   .servicios-carousel-container {
     padding: 1rem;
+    margin: 0.5rem 0;
   }
-
   .servicios-header h2 {
     font-size: 1.8rem;
   }
-
-  .carousel-main {
-    height: 350px;
-  }
-
   .service-slide {
     padding: 1.5rem;
   }
-
-  .slide-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
-  }
-
-  .slide-icon {
-    font-size: 2.5rem;
-  }
-
   .slide-title {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
   }
-
-  .slide-description {
-    font-size: 0.95rem;
-    text-align: center;
-  }
-
-  .slide-features {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
-
-  .feature-tag {
-    padding: 0.5rem 0.75rem;
-    text-align: center;
-  }
-
   .carousel-nav {
     width: 40px;
     height: 40px;
   }
-
   .prev-btn {
     left: 0.5rem;
   }
-
   .next-btn {
     right: 0.5rem;
   }
-
   .service-thumbnails-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-
-  .service-thumbnail {
-    padding: 0.75rem;
-  }
-
-  .thumb-icon {
-    font-size: 1.4rem;
-  }
-
-  .thumb-title {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .servicios-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .carousel-main {
-    height: 320px;
-  }
-
-  .service-slide {
-    padding: 1rem;
-  }
-
-  .slide-title {
-    font-size: 1.2rem;
-  }
-
-  .slide-description {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
