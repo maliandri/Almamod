@@ -52,8 +52,8 @@ exports.registerUser = async (req, res) => {
 
     await user.save();
     
-    // 5. Enviar email de verificación
-    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+    // 5. Enviar email de verificación - URL ACTUALIZADA para producción
+    const verifyUrl = `https://almamod.netlify.app/verify-email?token=${verificationToken}`;
     const message = `
       <h1>Verificación de Email para Almamod</h1>
       <p>Gracias por registrarte, ${user.fullName}. Por favor, haz clic en el siguiente enlace para verificar tu cuenta:</p>
@@ -90,7 +90,6 @@ exports.verifyEmail = async (req, res) => {
         await sendEmail({
             email: user.email,
             subject: '¡Bienvenido a Almamod!',
-            // Usamos fullName para consistencia
             message: `<h1>¡Hola ${user.fullName}!</h1><p>Tu cuenta ha sido verificada exitosamente. Ya puedes iniciar sesión y explorar nuestras soluciones.</p>`
         });
 

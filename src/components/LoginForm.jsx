@@ -1,5 +1,5 @@
 // frontend/src/components/LoginForm.jsx
-import React, { useState, useContext } from 'react'; // <-- LETRA "a" ELIMINADA
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -22,7 +22,8 @@ function LoginForm({ closeModal }) {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      // URL ACTUALIZADA para producción
+      const response = await axios.post('https://almamod.onrender.com/api/auth/login', formData);
       login(response.data.user, response.data.token);
       
       closeModal();
