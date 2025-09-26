@@ -1,4 +1,3 @@
-// server.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -9,17 +8,38 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors()); // Permite peticiones desde tu frontend
-app.use(express.json()); // Permite recibir datos en formato JSON
+// Middleware CORS específico
+app.use(cors({
+  origin: [
+    'https://almamod.netlify.app',
+    'http://localhost:3000'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
 
-// Rutas de la API
+app.use(express.json());
+
+// Rutas
 app.get('/', (req, res) => {
-  res.send('API de Almamod funcionando!');
+  res.json({ 
+    message: 'API de Almamod funcionando!',
+    status: 'active'
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
 app.use('/api/auth', require('./routes/authRoutes'));
 
-// Puerto
+// Manejo de errores
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
+});
