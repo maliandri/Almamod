@@ -13,6 +13,7 @@ function RegisterForm({ closeModal }) {
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); // 👈 NUEVO ESTADO PARA PREVENIR DOBLE ENVÍO
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -26,6 +27,11 @@ function RegisterForm({ closeModal }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Prevenir múltiples envíos
+    if (isSubmitting) return; // 👈 SALIR SI YA ESTÁ ENVIANDO
+    
+    setIsSubmitting(true); // 👈 BLOQUEAR BOTÓN
     setError(''); 
     setSuccess('');
     
@@ -42,11 +48,11 @@ function RegisterForm({ closeModal }) {
         street: formData.street || '',
         city: formData.city || 'Neuquén',
         department: formData.department || 'Confluencia',
-        province: 'Neuquén'  // 👈 Campo requerido por el modelo
+        province: 'Neuquén'
       },
       location: {
         type: 'Point',
-        coordinates: [markerPosition[1], markerPosition[0]] // [longitud, latitud]
+        coordinates: [markerPosition[1], markerPosition[0]]
       }
     };
 
@@ -57,18 +63,16 @@ function RegisterForm({ closeModal }) {
         closeModal();
       }, 3000);
     } catch (err) {
-      console.log('Error completo:', err.response?.data); // Para debugging
-      // Mejor manejo de errores
+      console.log('Error completo:', err.response?.data);
       if (err.response?.data?.errors) {
-        // Si hay errores de validación, muestra el primero
         setError(err.response.data.errors[0].msg);
       } else if (err.response?.data?.msg) {
-        // Si hay un mensaje de error específico
         setError(err.response.data.msg);
       } else {
-        // Error genérico
         setError('Error al registrar usuario. Por favor, verifica los datos.');
       }
+    } finally {
+      setIsSubmitting(false); // 👈 SIEMPRE DESBLOQUEAR BOTÓN AL FINAL
     }
   };
 
@@ -114,6 +118,7 @@ function RegisterForm({ closeModal }) {
           value={formData.fullName} 
           onChange={handleInputChange} 
           required 
+          disabled={isSubmitting}
         />
         
         <input 
@@ -123,6 +128,7 @@ function RegisterForm({ closeModal }) {
           value={formData.email} 
           onChange={handleInputChange} 
           required 
+          disabled={isSubmitting}
         />
         
         <input 
@@ -132,6 +138,7 @@ function RegisterForm({ closeModal }) {
           value={formData.password} 
           onChange={handleInputChange} 
           required 
+          disabled={isSubmitting}
         />
         
         <input 
@@ -141,6 +148,7 @@ function RegisterForm({ closeModal }) {
           value={formData.phone} 
           onChange={handleInputChange} 
           required 
+          disabled={isSubmitting}
         />
         
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -149,6 +157,7 @@ function RegisterForm({ closeModal }) {
             value={formData.docType} 
             onChange={handleInputChange} 
             required
+            disabled={isSubmitting}
             style={{ flex: '0 0 30%' }}
           >
             <option value="DNI">DNI</option>
@@ -162,6 +171,7 @@ function RegisterForm({ closeModal }) {
             value={formData.docNumber} 
             onChange={handleInputChange} 
             required 
+            disabled={isSubmitting}
             style={{ flex: '1' }}
           />
         </div>
@@ -171,6 +181,7 @@ function RegisterForm({ closeModal }) {
           name="birthDate" 
           value={formData.birthDate} 
           onChange={handleInputChange} 
+          disabled={isSubmitting}
           placeholder="Fecha de Nacimiento (opcional)"
         />
         
@@ -180,6 +191,7 @@ function RegisterForm({ closeModal }) {
           placeholder="Calle y Número (opcional)" 
           value={formData.street} 
           onChange={handleInputChange} 
+          disabled={isSubmitting}
         />
         
         <input 
@@ -188,6 +200,7 @@ function RegisterForm({ closeModal }) {
           placeholder="Ciudad" 
           value={formData.city} 
           onChange={handleInputChange} 
+          disabled={isSubmitting}
         />
         
         <input 
@@ -196,24 +209,35 @@ function RegisterForm({ closeModal }) {
           placeholder="Departamento" 
           value={formData.department} 
           onChange={handleInputChange} 
+          disabled={isSubmitting}
         />
 
         <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-          <button type="submit" className="submit-button" style={{ flex: 1 }}>
-            Registrarse
+          <button 
+            type="submit" 
+            className="submit-button" 
+            style={{ 
+              flex: 1,
+              backgroundColor: isSubmitting ? '#9ca3af' : '#111827',
+              cursor: isSubmitting ? 'not-allowed' : 'pointer'
+            }}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Registrando...' : 'Registrarse'}
           </button>
           
           <button 
             type="button" 
             onClick={closeModal}
+            disabled={isSubmitting}
             style={{
               flex: '0 0 30%',
               padding: '12px',
               border: '1px solid #ccc',
               borderRadius: '4px',
-              backgroundColor: '#6c757d',
+              backgroundColor: isSubmitting ? '#9ca3af' : '#6c757d',
               color: 'white',
-              cursor: 'pointer',
+              cursor: isSubmitting ? 'not-allowed' : 'pointer',
               fontSize: '1rem',
               fontWeight: '600'
             }}
