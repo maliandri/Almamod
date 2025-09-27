@@ -1,4 +1,4 @@
-// src/components/RegisterForm.jsx
+// src/components/RegisterForm.jsx - VERSIÓN MEJORADA
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,6 @@ function RegisterForm({ closeModal }) {
     };
 
     try {
-        // URL ACTUALIZADA para producción
         const response = await axios.post('https://almamod.onrender.com/api/auth/register', finalData);
         setSuccess(response.data.msg + " Redirigiendo a Login...");
         setTimeout(() => {
@@ -50,8 +49,34 @@ function RegisterForm({ closeModal }) {
   };
 
   return (
-    <div style={{ position: 'relative' }}> 
-      <button onClick={closeModal} className="close-button" style={{ position: 'absolute', top: '15px', right: '15px', zIndex: 10 }}>&times;</button>
+    <div style={{ 
+      position: 'relative',
+      transform: 'scale(0.95)', // 👈 5% más pequeño
+      transformOrigin: 'center',
+      maxWidth: '570px', // 👈 Ancho reducido
+      margin: '0 auto'
+    }}> 
+      {/* 👈 Botón X mejorado como los otros modales */}
+      <button 
+        onClick={closeModal} 
+        className="close-button" 
+        style={{ 
+          position: 'absolute', 
+          top: '15px', 
+          right: '25px', 
+          zIndex: 10,
+          background: 'transparent',
+          border: 'none',
+          fontSize: '2rem',
+          cursor: 'pointer',
+          color: '#9ca3af',
+          padding: '0',
+          lineHeight: '1'
+        }}
+      >
+        &times;
+      </button>
+      
       <form onSubmit={handleSubmit} className="register-form">
         <h2>Crear una Cuenta</h2>
         

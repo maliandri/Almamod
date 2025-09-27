@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Especificaciones Técnicas - Almamod</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .spec-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .spec-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        
+        .spec-card h2 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .spec-card .icon {
+            font-size: 1.8rem;
+        }
+        
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tech-list li {
+            background: #f7fafc;
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .version {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature {
+            background: #e6fffa;
+            padding: 12px;
+            border-radius: 10px;
+            border-left: 3px solid #38b2ac;
+            font-size: 0.9rem;
+        }
+        
+        .architecture {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .architecture h2 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 25px;
+            font-size: 2rem;
+        }
+        
+        .arch-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .arch-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .arch-arrow {
+            font-size: 2rem;
+            color: #667eea;
+        }
+        
+        .pricing-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .pricing-section h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .price-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .price-item {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 15px;
+            border-top: 4px solid #667eea;
+        }
+        
+        .price-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .total-price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #38a169;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .complexity-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            background: #4299e1;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .badge.high {
+            background: #f56565;
+        }
+        
+        .badge.medium {
+            background: #ed8936;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .arch-flow {
+                flex-direction: column;
+            }
+            
+            .arch-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ Almamod</h1>
+            <p>Especificaciones Técnicas Completas</p>
+        </div>
+
+        <div class="specs-grid">
+            <div class="spec-card">
+                <h2><span class="icon">⚛️</span>Frontend</h2>
+                <ul class="tech-list">
+                    <li>React <span class="version">19.1.1</span></li>
+                    <li>Vite <span class="version">7.1.7</span></li>
+                    <li>React Router DOM <span class="version">7.9.2</span></li>
+                    <li>Framer Motion <span class="version">12.23.21</span></li>
+                    <li>Tailwind CSS <span class="version">4.1.13</span></li>
+                    <li>Lottie React <span class="version">2.4.1</span></li>
+                    <li>React Responsive Carousel <span class="version">3.2.23</span></li>
+                </ul>
+            </div>
+
+            <div class="spec-card">
+                <h2><span class="icon">🚀</span>Backend</h2>
+                <ul class="tech-list">
+                    <li>Node.js + Express <span class="version">4.18.2</span></li>
+                    <li>MongoDB + Mongoose <span class="version">8.18.2</span></li>
+                    <li>JWT Authentication <span class="version">9.0.2</span></li>
+                    <li>bcryptjs <span class="version">3.0.2</span></li>
+                    <li>Nodemailer <span class="version">7.0.6</span></li>
+                    <li>Express Validator <span class="version">7.2.1</span></li>
+                    <li>CORS <span class="version">2.8.5</span></li>
+                </ul>
+            </div>
+
+            <div class="spec-card">
+                <h2><span class="icon">☁️</span>Deployment</h2>
+                <ul class="tech-list">
+                    <li>Frontend: Netlify</li>
+                    <li>Backend: Render</li>
+                    <li>Database: MongoDB Atlas</li>
+                    <li>Email Service: SMTP</li>
+                    <li>CDN: Cloudflare</li>
+                    <li>SSL: Automático</li>
+                </ul>
+            </div>
+
+            <div class="spec-card">
+                <h2><span class="icon">🔐</span>Seguridad</h2>
+                <div class="features-grid">
+                    <div class="feature">✅ Autenticación JWT</div>
+                    <div class="feature">✅ Encriptación bcrypt</div>
+                    <div class="feature">✅ Verificación por email</div>
+                    <div class="feature">✅ Validación de datos</div>
+                    <div class="feature">✅ CORS configurado</div>
+                    <div class="feature">✅ HTTPS obligatorio</div>
+                </div>
+            </div>
+
+            <div class="spec-card">
+                <h2><span class="icon">🎨</span>Funcionalidades</h2>
+                <div class="features-grid">
+                    <div class="feature">🏠 Calculadora de módulos</div>
+                    <div class="feature">📸 Galería de obras</div>
+                    <div class="feature">📍 Ubicación con mapa</div>
+                    <div class="feature">📱 Redes sociales</div>
+                    <div class="feature">👤 Sistema de usuarios</div>
+                    <div class="feature">📧 Emails automáticos</div>
+                    <div class="feature">📱 Diseño responsive</div>
+                    <div class="feature">🎭 Animaciones avanzadas</div>
+                </div>
+            </div>
+
+            <div class="spec-card">
+                <h2><span class="icon">📊</span>Base de Datos</h2>
+                <ul class="tech-list">
+                    <li>MongoDB (NoSQL)</li>
+                    <li>Esquema de Usuarios completo</li>
+                    <li>Geolocalización (2dsphere)</li>
+                    <li>Validaciones a nivel de BD</li>
+                    <li>Índices optimizados</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="architecture">
+            <h2>🏗️ Arquitectura del Sistema</h2>
+            <div class="arch-flow">
+                <div class="arch-item">
+                    <h3>Frontend</h3>
+                    <p>React + Vite<br>Netlify</p>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-item">
+                    <h3>API REST</h3>
+                    <p>Node.js + Express<br>Render</p>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-item">
+                    <h3>Base de Datos</h3>
+                    <p>MongoDB<br>Atlas Cloud</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pricing-section">
+            <h2>💰 Valoración del Proyecto</h2>
+            
+            <div class="complexity-badges">
+                <span class="badge high">Complejidad Alta</span>
+                <span class="badge medium">Full Stack</span>
+                <span class="badge">Producción</span>
+                <span class="badge">Responsive</span>
+            </div>
+
+            <div class="price-breakdown">
+                <div class="price-item">
+                    <h3>Desarrollo Frontend</h3>
+                    <div class="price-amount">$2,500 - $3,500 USD</div>
+                    <p>React avanzado, animaciones, UI/UX premium</p>
+                </div>
+                
+                <div class="price-item">
+                    <h3>Desarrollo Backend</h3>
+                    <div class="price-amount">$2,000 - $3,000 USD</div>
+                    <p>API completa, autenticación, base de datos</p>
+                </div>
+                
+                <div class="price-item">
+                    <h3>Funcionalidades Especiales</h3>
+                    <div class="price-amount">$1,500 - $2,000 USD</div>
+                    <p>Calculadora, mapas, emails, carruseles</p>
+                </div>
+                
+                <div class="price-item">
+                    <h3>Deployment & Testing</h3>
+                    <div class="price-amount">$500 - $800 USD</div>
+                    <p>Configuración en producción, testing</p>
+                </div>
+            </div>
+
+            <div class="total-price">$6,500 - $9,300 USD</div>
+            
+            <p style="color: #666; font-size: 1.1rem; margin-top: 20px;">
+                <strong>Estimación para mercado argentino/regional:</strong><br>
+                Entre $3,000 - $5,500 USD considerando el contexto local
+            </p>
+
+            <div style="background: #e6fffa; padding: 20px; border-radius: 15px; margin-top: 25px; text-align: left;">
+                <h3 style="color: #2d3748; margin-bottom: 15px;">✨ Factores que aumentan el valor:</h3>
+                <ul style="color: #4a5568;">
+                    <li>🎨 UI/UX de alta calidad con animaciones avanzadas</li>
+                    <li>📱 Completamente responsive y optimizado</li>
+                    <li>🔐 Sistema de autenticación robusto</li>
+                    <li>📧 Sistema de emails automáticos</li>
+                    <li>🧮 Calculadora interactiva personalizada</li>
+                    <li>🗺️ Integración con mapas y geolocalización</li>
+                    <li>☁️ Deployment en producción con SSL</li>
+                    <li>📊 Base de datos profesional en la nube</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
