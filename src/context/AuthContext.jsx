@@ -1,49 +1,78 @@
-// frontend/src/context/AuthContext.jsx
+/ src/context/AuthContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
 
-// 1. Creamos el contexto
-export const AuthContext = createContext(null);
+// Crear el contexto
+export const AuthContext = createContext();
 
-// 2. Creamos el proveedor del contexto
+// Proveedor del contexto
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token')); // Leemos el token del localStorage
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Verificar si hay un token al cargar la aplicación
   useEffect(() => {
-    // Si hay un token, podríamos verificarlo con el backend para obtener los datos del usuario.
-    // Por ahora, si hay token, asumimos que el usuario está logueado.
-    // Una implementación más robusta validaría el token aquí.
-    if (token) {
-      // Aquí podrías decodificar el token o hacer una llamada a /api/profile/me
-      // Para simplificar, lo dejamos así por ahora.
-    }
-    setLoading(false);
-  }, [token]);
+    const checkAuth = () => {
+      const savedToken = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
+      
+      if (savedToken && savedUser) {
+        try {
+          const parsedUser = JSON.parse(savedUser);
+          setToken(savedToken);
+          setUser(parsedUser);
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+          logout();
+        }
+      }
+      setLoading(false);
+    };
 
-  const login = (userData, userToken) => {
-    localStorage.setItem('token', userToken);
-    setToken(userToken);
+    checkAuth();
+  }, []);
+
+  // Función para iniciar sesión
+  const login = (userData, authToken) => {
+    localStorage.setItem('token', authToken);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setToken(authToken);
     setUser(userData);
+    setIsAuthenticated(true);
   };
 
+  // Función para cerrar sesión
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
     setUser(null);
+    setIsAuthenticated(false);
   };
 
-  const authContextValue = {
+  // Función para actualizar datos del usuario
+  const updateUser = (newUserData) => {
+    const updatedUser = { ...user, ...newUserData };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    setUser(updatedUser);
+  };
+
+  // Valores que serán accesibles en toda la aplicación
+  const value = {
     user,
     token,
+    isAuthenticated,
+    loading,
     login,
     logout,
-    isAuthenticated: !!token, // Es true si hay un token, si no, es false
+    updateUser,
   };
 
   return (
-    <AuthContext.Provider value={authContextValue}>
-      {!loading && children}
+    <AuthContext.Provider value={value}>
+      {children}
     </AuthContext.Provider>
   );
 };
