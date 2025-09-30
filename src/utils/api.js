@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Configurar la URL base según el entorno
 const getBaseURL = () => {
   if (import.meta.env.MODE === 'production') {
     return import.meta.env.VITE_API_URL_PRODUCTION || 'https://almamod.onrender.com/api';
@@ -8,7 +7,6 @@ const getBaseURL = () => {
   return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 };
 
-// Crear instancia de axios
 const api = axios.create({
   baseURL: getBaseURL(),
   timeout: 10000,
@@ -45,7 +43,6 @@ api.interceptors.response.use(
   }
 );
 
-// Funciones de API específicas
 export const authAPI = {
   register: (userData) => api.post('/auth/register', userData),
   login: (credentials) => api.post('/auth/login', credentials),
