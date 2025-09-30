@@ -1,8 +1,14 @@
-// backend/routes/authRoutes.js - VERSIÓN CORREGIDA
+// backend/routes/authRoutes.js - VERSIÓN COMPLETA
 const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
-const { registerUser, verifyEmail, loginUser } = require('../controllers/authController');
+const { 
+  registerUser, 
+  verifyEmail, 
+  loginUser, 
+  forgotPassword, 
+  resetPassword 
+} = require('../controllers/authController');
 
 // @ruta   POST /api/auth/register
 // @desc   Registrar un nuevo usuario
@@ -43,6 +49,26 @@ router.post(
     check('password', 'La contraseña es obligatoria').exists(),
   ],
   loginUser
+);
+
+// @ruta   POST /api/auth/forgot-password
+// @desc   Solicitar recuperación de contraseña
+router.post(
+  '/forgot-password',
+  [
+    check('email', 'Por favor, incluye un email válido').isEmail()
+  ],
+  forgotPassword
+);
+
+// @ruta   POST /api/auth/reset-password
+// @desc   Restablecer contraseña con token
+router.post(
+  '/reset-password',
+  [
+    check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 })
+  ],
+  resetPassword
 );
 
 module.exports = router;

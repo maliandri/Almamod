@@ -15,6 +15,7 @@ import LoginForm from './components/LoginForm.jsx';
 import PageLayout from './components/PageLayout.jsx';
 import VerifyEmail from './components/VerifyEmail.jsx';
 import ServiciosCarousel from './components/ServiciosCarousel.jsx';
+import ResetPassword from './components/ResetPassword.jsx';
 
 // ====================================================================
 // Componente para la página de inicio
@@ -98,6 +99,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/verify-email" element={<PageLayout><VerifyEmail /></PageLayout>} />
+          <Route path="/reset-password" element={<PageLayout><ResetPassword /></PageLayout>} />
         </Routes>
       </main>
 
