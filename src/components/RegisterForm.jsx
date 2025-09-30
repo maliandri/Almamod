@@ -1,19 +1,25 @@
-// src/components/RegisterForm.jsx
-import React, { useState, useEffect } from 'react';
+// src/components/RegisterForm.jsx - VERSIÓN CORREGIDA
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function RegisterForm({ closeModal }) { 
   const [formData, setFormData] = useState({
-    fullName: '', email: '', password: '', phone: '', docType: 'DNI',
-    docNumber: '', birthDate: '', street: '', city: 'Neuquén', department: 'Confluencia',
+    fullName: '', 
+    email: '', 
+    password: '', 
+    phone: '', 
+    docType: 'DNI',
+    docNumber: '', 
+    birthDate: '', 
+    street: '', 
+    city: 'Neuquén', 
+    department: 'Confluencia',
   });
-  const [mapPosition, setMapPosition] = useState([-38.9516, -68.0591]);
-  const [markerPosition, setMarkerPosition] = useState([-38.9516, -68.0591]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [markerPosition] = useState([-38.9516, -68.0591]); // Coordenadas por defecto de Neuquén
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false); // 👈 NUEVO ESTADO PARA PREVENIR DOBLE ENVÍO
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -21,33 +27,59 @@ function RegisterForm({ closeModal }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSearchAddress = async () => {
-    // Lógica de búsqueda de dirección (sin cambios)
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Prevenir múltiples envíos
-    if (isSubmitting) return; // 👈 SALIR SI YA ESTÁ ENVIANDO
+    if (isSubmitting) return;
     
-    setIsSubmitting(true); // 👈 BLOQUEAR BOTÓN
+    setIsSubmitting(true);
     setError(''); 
     setSuccess('');
     
+    // Validaciones básicas del frontend
+    if (!formData.fullName.trim()) {
+      setError('El nombre es obligatorio');
+      setIsSubmitting(false);
+      return;
+    }
+    
+    if (!formData.email.trim() || !formData.email.includes('@')) {
+      setError('Email inválido');
+      setIsSubmitting(false);
+      return;
+    }
+    
+    if (formData.password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      setIsSubmitting(false);
+      return;
+    }
+    
+    if (!formData.phone.trim()) {
+      setError('El teléfono es obligatorio');
+      setIsSubmitting(false);
+      return;
+    }
+    
+    if (!formData.docNumber.trim()) {
+      setError('El número de documento es obligatorio');
+      setIsSubmitting(false);
+      return;
+    }
+    
     // Datos estructurados correctamente para el backend
     const finalData = {
-      fullName: formData.fullName,
-      email: formData.email,
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim().toLowerCase(),
       password: formData.password,
-      phone: formData.phone,
+      phone: formData.phone.trim(),
       docType: formData.docType,
-      docNumber: formData.docNumber,
-      birthDate: formData.birthDate || null,
+      docNumber: formData.docNumber.trim(),
+      birthDate: formData.birthDate || undefined,
       address: {
-        street: formData.street || '',
-        city: formData.city || 'Neuquén',
-        department: formData.department || 'Confluencia',
+        street: formData.street.trim() || '',
+        city: formData.city.trim() || 'Neuquén',
+        department: formData.department.trim() || 'Confluencia',
         province: 'Neuquén'
       },
       location: {
@@ -56,30 +88,54 @@ function RegisterForm({ closeModal }) {
       }
     };
 
+    console.log('📤 Datos a enviar al backend:', finalData);
+
     try {
-      const response = await axios.post('https://almamod.onrender.com/api/auth/register', finalData);
-      setSuccess(response.data.msg + " Redirigiendo a Login...");
+      const response = await axios.post(
+        'https://almamod.onrender.com/api/auth/register', 
+        finalData,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      console.log('✅ Respuesta del servidor:', response.data);
+      
+      setSuccess(response.data.msg + " Redirigiendo...");
       setTimeout(() => {
         closeModal();
       }, 3000);
     } catch (err) {
-      console.log('Error completo:', err.response?.data);
-      if (err.response?.data?.errors) {
-        setError(err.response.data.errors[0].msg);
+      console.error('❌ Error completo:', err);
+      console.error('❌ Error response:', err.response?.data);
+      
+      let errorMessage = 'Error al registrar usuario. Por favor, verifica los datos.';
+      
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        // Si hay múltiples errores, mostrar el primero
+        errorMessage = err.response.data.errors[0].msg || err.response.data.errors[0];
       } else if (err.response?.data?.msg) {
-        setError(err.response.data.msg);
-      } else {
-        setError('Error al registrar usuario. Por favor, verifica los datos.');
+        errorMessage = err.response.data.msg;
+      } else if (err.message === 'Network Error') {
+        errorMessage = 'Error de conexión. Verifica tu internet.';
+      } else if (err.response?.status === 400) {
+        errorMessage = 'Datos inválidos. Verifica todos los campos.';
+      } else if (err.response?.status === 500) {
+        errorMessage = 'Error del servidor. Intenta nuevamente más tarde.';
       }
+      
+      setError(errorMessage);
     } finally {
-      setIsSubmitting(false); // 👈 SIEMPRE DESBLOQUEAR BOTÓN AL FINAL
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div style={{ 
       position: 'relative',
-      transform: 'scale(0.95)', // 5% más pequeño
+      transform: 'scale(0.95)',
       transformOrigin: 'center',
       maxWidth: '570px',
       margin: '0 auto'
@@ -108,8 +164,33 @@ function RegisterForm({ closeModal }) {
       <form onSubmit={handleSubmit} className="register-form">
         <h2>Crear una Cuenta</h2>
         
-        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
-        {success && <p style={{ color: 'green', textAlign: 'center' }}>{success}</p>}
+        {error && (
+          <div style={{ 
+            color: '#dc2626', 
+            backgroundColor: '#fee2e2',
+            padding: '12px',
+            borderRadius: '6px',
+            marginBottom: '15px',
+            textAlign: 'center',
+            border: '1px solid #fecaca'
+          }}>
+            {error}
+          </div>
+        )}
+        
+        {success && (
+          <div style={{ 
+            color: '#16a34a', 
+            backgroundColor: '#dcfce7',
+            padding: '12px',
+            borderRadius: '6px',
+            marginBottom: '15px',
+            textAlign: 'center',
+            border: '1px solid #bbf7d0'
+          }}>
+            {success}
+          </div>
+        )}
         
         <input 
           type="text" 
@@ -119,6 +200,10 @@ function RegisterForm({ closeModal }) {
           onChange={handleInputChange} 
           required 
           disabled={isSubmitting}
+          style={{
+            opacity: isSubmitting ? 0.6 : 1,
+            cursor: isSubmitting ? 'not-allowed' : 'text'
+          }}
         />
         
         <input 
@@ -129,6 +214,10 @@ function RegisterForm({ closeModal }) {
           onChange={handleInputChange} 
           required 
           disabled={isSubmitting}
+          style={{
+            opacity: isSubmitting ? 0.6 : 1,
+            cursor: isSubmitting ? 'not-allowed' : 'text'
+          }}
         />
         
         <input 
@@ -138,17 +227,26 @@ function RegisterForm({ closeModal }) {
           value={formData.password} 
           onChange={handleInputChange} 
           required 
+          minLength={6}
           disabled={isSubmitting}
+          style={{
+            opacity: isSubmitting ? 0.6 : 1,
+            cursor: isSubmitting ? 'not-allowed' : 'text'
+          }}
         />
         
         <input 
-          type="text" 
+          type="tel" 
           name="phone" 
-          placeholder="Teléfono" 
+          placeholder="Teléfono (Ej: 2995414422)" 
           value={formData.phone} 
           onChange={handleInputChange} 
           required 
           disabled={isSubmitting}
+          style={{
+            opacity: isSubmitting ? 0.6 : 1,
+            cursor: isSubmitting ? 'not-allowed' : 'text'
+          }}
         />
         
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -158,7 +256,11 @@ function RegisterForm({ closeModal }) {
             onChange={handleInputChange} 
             required
             disabled={isSubmitting}
-            style={{ flex: '0 0 30%' }}
+            style={{ 
+              flex: '0 0 30%',
+              opacity: isSubmitting ? 0.6 : 1,
+              cursor: isSubmitting ? 'not-allowed' : 'pointer'
+            }}
           >
             <option value="DNI">DNI</option>
             <option value="CUIT">CUIT</option>
@@ -172,7 +274,11 @@ function RegisterForm({ closeModal }) {
             onChange={handleInputChange} 
             required 
             disabled={isSubmitting}
-            style={{ flex: '1' }}
+            style={{ 
+              flex: '1',
+              opacity: isSubmitting ? 0.6 : 1,
+              cursor: isSubmitting ? 'not-allowed' : 'text'
+            }}
           />
         </div>
         
@@ -183,6 +289,10 @@ function RegisterForm({ closeModal }) {
           onChange={handleInputChange} 
           disabled={isSubmitting}
           placeholder="Fecha de Nacimiento (opcional)"
+          style={{
+            opacity: isSubmitting ? 0.6 : 1,
+            cursor: isSubmitting ? 'not-allowed' : 'text'
+          }}
         />
         
         <input 
@@ -192,6 +302,10 @@ function RegisterForm({ closeModal }) {
           value={formData.street} 
           onChange={handleInputChange} 
           disabled={isSubmitting}
+          style={{
+            opacity: isSubmitting ? 0.6 : 1,
+            cursor: isSubmitting ? 'not-allowed' : 'text'
+          }}
         />
         
         <input 
@@ -201,6 +315,10 @@ function RegisterForm({ closeModal }) {
           value={formData.city} 
           onChange={handleInputChange} 
           disabled={isSubmitting}
+          style={{
+            opacity: isSubmitting ? 0.6 : 1,
+            cursor: isSubmitting ? 'not-allowed' : 'text'
+          }}
         />
         
         <input 
@@ -210,6 +328,10 @@ function RegisterForm({ closeModal }) {
           value={formData.department} 
           onChange={handleInputChange} 
           disabled={isSubmitting}
+          style={{
+            opacity: isSubmitting ? 0.6 : 1,
+            cursor: isSubmitting ? 'not-allowed' : 'text'
+          }}
         />
 
         <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
@@ -219,11 +341,18 @@ function RegisterForm({ closeModal }) {
             style={{ 
               flex: 1,
               backgroundColor: isSubmitting ? '#9ca3af' : '#111827',
-              cursor: isSubmitting ? 'not-allowed' : 'pointer'
+              cursor: isSubmitting ? 'not-allowed' : 'pointer',
+              padding: '12px',
+              border: 'none',
+              borderRadius: '4px',
+              color: 'white',
+              fontSize: '1rem',
+              fontWeight: '600',
+              transition: 'background-color 0.2s'
             }}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Registrando...' : 'Registrarse'}
+            {isSubmitting ? '⏳ Registrando...' : 'Registrarse'}
           </button>
           
           <button 
@@ -239,7 +368,8 @@ function RegisterForm({ closeModal }) {
               color: 'white',
               cursor: isSubmitting ? 'not-allowed' : 'pointer',
               fontSize: '1rem',
-              fontWeight: '600'
+              fontWeight: '600',
+              transition: 'background-color 0.2s'
             }}
           >
             Cancelar

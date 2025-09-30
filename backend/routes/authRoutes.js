@@ -1,4 +1,4 @@
-// backend/routes/authRoutes.js
+// backend/routes/authRoutes.js - VERSIÓN CORREGIDA
 const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
@@ -13,7 +13,19 @@ router.post(
     check('email', 'Por favor, incluye un email válido').isEmail(),
     check('password', 'La contraseña debe tener 6 o más caracteres').isLength({ min: 6 }),
     check('phone', 'El número de teléfono es obligatorio').not().isEmpty(),
+    check('docType', 'El tipo de documento es obligatorio').isIn(['DNI', 'CUIT']),
     check('docNumber', 'El número de documento es obligatorio').not().isEmpty(),
+    // Validaciones opcionales para dirección
+    check('address.street', 'La calle es opcional').optional(),
+    check('address.city', 'La ciudad es opcional').optional(),
+    check('address.department', 'El departamento es opcional').optional(),
+    check('address.province', 'La provincia es opcional').optional(),
+    // Validaciones para location
+    check('location.type', 'El tipo de location debe ser Point').optional().equals('Point'),
+    check('location.coordinates', 'Las coordenadas deben ser un array').optional().isArray(),
+    check('location.coordinates.*', 'Las coordenadas deben ser números').optional().isFloat(),
+    // Validación opcional para fecha de nacimiento
+    check('birthDate', 'La fecha de nacimiento debe ser válida').optional().isISO8601(),
   ],
   registerUser
 );
