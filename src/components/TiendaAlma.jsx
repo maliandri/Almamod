@@ -30,7 +30,7 @@ const modulosData = [
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
     plazo: '30 días',
-    imagen: '/modulos/almamod27.jpg',
+    imagen: '/modulos/almamod_27.jpg',
     descripcion: 'Solución habitacional de 1 habitación. Compacta, eficiente y confortable.'
   },
   {
@@ -41,7 +41,7 @@ const modulosData = [
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
-    imagen: '/modulos/AlmaMod_modulo_18.jpg',
+    imagen: '/modulos/AlmaMod_18.jpg',
     descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.'
   },
   {
