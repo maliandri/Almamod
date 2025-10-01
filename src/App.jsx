@@ -16,6 +16,7 @@ import PageLayout from './components/PageLayout.jsx';
 import VerifyEmail from './components/VerifyEmail.jsx';
 import ServiciosCarousel from './components/ServiciosCarousel.jsx';
 import ResetPassword from './components/ResetPassword.jsx';
+import TiendaAlma from './components/TiendaAlma.jsx';
 
 // ====================================================================
 // Componente para la página de inicio
@@ -105,6 +106,7 @@ function App() {
 
       {/* BOTONES FLOTANTES */}
       <div className="floating-buttons-container">
+        <TiendaAlma/>
         <ObrasCarousel />
         <CalculadoraModulo />
         <Ubicacion />
