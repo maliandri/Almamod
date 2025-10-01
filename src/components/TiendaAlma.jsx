@@ -19,7 +19,7 @@ const modulosData = [
     habitaciones: '2 dormitorios',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
-    imagen: '/modulos/almamod36.jpg',
+    imagen: '/modulos/AlmaMod_36.jpg',
     descripcion: 'Solución habitacional de 2 habitaciones. Compacta, eficiente y confortable.'
   },
   {
@@ -41,7 +41,7 @@ const modulosData = [
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
-    imagen: '/modulos/almamod18.jpg',
+    imagen: '/modulos/AlmaMod_modulo_18.jpg',
     descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.'
   },
   {
@@ -52,7 +52,7 @@ const modulosData = [
     habitaciones: 'Loft con entrepiso',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
-    imagen: '/modulos/almamodloft28.jpg',
+    imagen: 'modulos/almamodloft28.jpg',
     descripcion: 'Vivienda modular estilo loft con entrepiso. Diseño funcional y moderno.'
   },
   {
@@ -63,7 +63,7 @@ const modulosData = [
     habitaciones: 'Monoambiente',
     incluye: ['Baño completo', 'Cocina-dormitorio'],
     plazo: '30 días',
-    imagen: '/modulos/micasita.jpg',
+    imagen: '/modulos/Almamod_micasita.jpeg',
     descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.'
   }
 ];
