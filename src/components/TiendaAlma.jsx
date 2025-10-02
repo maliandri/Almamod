@@ -52,7 +52,7 @@ const modulosData = [
     habitaciones: 'Loft con entrepiso',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
-    imagen: '/modulos/almamodloft28.jpg',
+    imagen: '/modulos/Almamod_loft28.jpg',
     descripcion: 'Vivienda modular estilo loft con entrepiso. Diseño funcional y moderno.'
   },
   {
