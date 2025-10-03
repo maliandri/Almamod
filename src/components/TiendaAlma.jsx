@@ -14,50 +14,50 @@ const StoreIcon = () => (
 const modulosData = [
   {
     id: 'almamod36',
-    nombre: 'AlmaMod 36',
+    nombre: 'Alma 36',
     superficie: '36 m²',
     dimensiones: '12m × 3m',
     habitaciones: '2 dormitorios',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_36_portada.jpg',
-    imagenDetalle: '/modulos/AlmaMod_36.jpg',
+    imagenesDetalle: ['/modulos/Alma36_1.jpg', '/modulos/Alma36_2.jpg'],
     descripcion: 'Solución habitacional de 2 habitaciones. Compacta, eficiente y confortable.'
   },
   {
     id: 'almamod27',
-    nombre: 'AlmaMod 27',
+    nombre: 'Alma 27',
     superficie: '27 m²',
     dimensiones: '9m × 3m',
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_27_portada.jpg',
-    imagenDetalle: '/modulos/almamod_27.jpg',
+    imagenesDetalle: ['/modulos/almamod_27.jpg'],
     descripcion: 'Solución habitacional de 1 habitación. Compacta, eficiente y confortable.'
   },
   {
     id: 'almamod18',
-    nombre: 'AlmaMod 18',
+    nombre: 'Alma 18',
     superficie: '18 m²',
     dimensiones: '6m × 3m',
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_18_portada.jpg',
-    imagenDetalle: '/modulos/AlmaMod_18.jpg',
+    imagenesDetalle: ['/modulos/AlmaMod_18.jpg'],
     descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.'
   },
   {
     id: 'almamodloft28',
-    nombre: 'AlmaMod Loft 28',
+    nombre: 'Alma Loft 28',
     superficie: '28 m²',
     dimensiones: '7m × 3m (21m² planta baja + 7m² entrepiso)',
     habitaciones: 'Loft con entrepiso',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_loft28_portada.jpg',
-    imagenDetalle: '/modulos/Almamod_loft28.jpg',
+    imagenesDetalle: ['/modulos/Almamod_loft28.jpg'],
     descripcion: 'Vivienda modular estilo loft con entrepiso. Diseño funcional y moderno.'
   },
   {
@@ -69,7 +69,7 @@ const modulosData = [
     incluye: ['Baño completo', 'Cocina-dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_micasita_portada.jpeg',
-    imagenDetalle: '/modulos/Almamod_micasita.jpeg',
+    imagenesDetalle: ['/modulos/Almamod_micasita.jpeg'],
     descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.'
   }
 ];
@@ -79,15 +79,18 @@ function TiendaAlma() {
   const [selectedModule, setSelectedModule] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const openDetails = (modulo) => {
     setSelectedModule(modulo);
+    setCurrentImageIndex(0);
     setSearchTerm('');
     setIsSearchFocused(false);
   };
 
   const closeDetails = () => {
     setSelectedModule(null);
+    setCurrentImageIndex(0);
   };
 
   // Filtrar módulos según búsqueda
@@ -105,6 +108,22 @@ function TiendaAlma() {
     const mensaje = `Hola! Estuve mirando productos en su web y me interesa el *${modulo.nombre}* (${modulo.superficie}, ${modulo.habitaciones}). ¿Podrían brindarme más información?`;
     const urlWhatsApp = `https://wa.me/5492994087106?text=${encodeURIComponent(mensaje)}`;
     window.open(urlWhatsApp, '_blank');
+  };
+
+  const nextImage = () => {
+    if (selectedModule && selectedModule.imagenesDetalle) {
+      setCurrentImageIndex((prev) => 
+        (prev + 1) % selectedModule.imagenesDetalle.length
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (selectedModule && selectedModule.imagenesDetalle) {
+      setCurrentImageIndex((prev) => 
+        prev === 0 ? selectedModule.imagenesDetalle.length - 1 : prev - 1
+      );
+    }
   };
 
   return (
@@ -241,7 +260,44 @@ function TiendaAlma() {
               
               <div className="detail-content">
                 <div className="detail-image-section">
-                  <img src={selectedModule.imagenDetalle} alt={selectedModule.nombre} />
+                  <div className="image-carousel">
+                    <AnimatePresence mode="wait">
+                      <motion.img 
+                        key={currentImageIndex}
+                        src={selectedModule.imagenesDetalle[currentImageIndex]} 
+                        alt={`${selectedModule.nombre} - Imagen ${currentImageIndex + 1}`}
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </AnimatePresence>
+                    
+                    {selectedModule.imagenesDetalle.length > 1 && (
+                      <>
+                        <button className="carousel-button prev" onClick={prevImage}>
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                          </svg>
+                        </button>
+                        <button className="carousel-button next" onClick={nextImage}>
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                          </svg>
+                        </button>
+                        
+                        <div className="carousel-indicators">
+                          {selectedModule.imagenesDetalle.map((_, index) => (
+                            <button
+                              key={index}
+                              className={`indicator ${index === currentImageIndex ? 'active' : ''}`}
+                              onClick={() => setCurrentImageIndex(index)}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="detail-info-section">
