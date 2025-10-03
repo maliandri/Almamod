@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import './TiendaAlma.css';
 
 const StoreIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -19,7 +20,8 @@ const modulosData = [
     habitaciones: '2 dormitorios',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
-    imagen: '/modulos/AlmaMod_36.jpg',
+    imagenPortada: '/modulos/AlmaMod_36_portada.jpg',
+    imagenDetalle: '/modulos/AlmaMod_36.jpg',
     descripcion: 'Solución habitacional de 2 habitaciones. Compacta, eficiente y confortable.'
   },
   {
@@ -30,7 +32,8 @@ const modulosData = [
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
     plazo: '30 días',
-    imagen: '/modulos/almamod_27.jpg',
+    imagenPortada: '/modulos/AlmaMod_27_portada.jpg',
+    imagenDetalle: '/modulos/almamod_27.jpg',
     descripcion: 'Solución habitacional de 1 habitación. Compacta, eficiente y confortable.'
   },
   {
@@ -41,7 +44,8 @@ const modulosData = [
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
-    imagen: '/modulos/AlmaMod_18.jpg',
+    imagenPortada: '/modulos/AlmaMod_18_portada.jpg',
+    imagenDetalle: '/modulos/AlmaMod_18.jpg',
     descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.'
   },
   {
@@ -52,7 +56,8 @@ const modulosData = [
     habitaciones: 'Loft con entrepiso',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
-    imagen: '/modulos/Almamod_loft28.jpg',
+    imagenPortada: '/modulos/Almamod_loft28_portada.jpg',
+    imagenDetalle: '/modulos/Almamod_loft28.jpg',
     descripcion: 'Vivienda modular estilo loft con entrepiso. Diseño funcional y moderno.'
   },
   {
@@ -63,7 +68,8 @@ const modulosData = [
     habitaciones: 'Monoambiente',
     incluye: ['Baño completo', 'Cocina-dormitorio'],
     plazo: '30 días',
-    imagen: '/modulos/Almamod_micasita.jpeg',
+    imagenPortada: '/modulos/Almamod_micasita_portada.jpeg',
+    imagenDetalle: '/modulos/Almamod_micasita.jpeg',
     descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.'
   }
 ];
@@ -159,7 +165,6 @@ function TiendaAlma() {
                   )}
                 </div>
 
-                {/* Dropdown de resultados */}
                 {isSearchFocused && searchTerm && (
                   <div className="search-dropdown">
                     {filteredModules.length > 0 ? (
@@ -169,7 +174,7 @@ function TiendaAlma() {
                           className="search-result-item"
                           onClick={() => handleSearchSelect(modulo)}
                         >
-                          <img src={modulo.imagen} alt={modulo.nombre} />
+                          <img src={modulo.imagenPortada} alt={modulo.nombre} />
                           <div className="search-result-info">
                             <strong>{modulo.nombre}</strong>
                             <span>{modulo.superficie} • {modulo.habitaciones}</span>
@@ -194,7 +199,7 @@ function TiendaAlma() {
                     onClick={() => openDetails(modulo)}
                   >
                     <div className="modulo-image-container">
-                      <img src={modulo.imagen} alt={modulo.nombre} className="modulo-image" />
+                      <img src={modulo.imagenPortada} alt={modulo.nombre} className="modulo-image" />
                       <div className="modulo-overlay">
                         <span className="ver-detalles">Ver Detalles →</span>
                       </div>
@@ -236,7 +241,7 @@ function TiendaAlma() {
               
               <div className="detail-content">
                 <div className="detail-image-section">
-                  <img src={selectedModule.imagen} alt={selectedModule.nombre} />
+                  <img src={selectedModule.imagenDetalle} alt={selectedModule.nombre} />
                 </div>
                 
                 <div className="detail-info-section">
@@ -300,433 +305,6 @@ function TiendaAlma() {
         </AnimatePresence>,
         document.getElementById('modal-portal')
       )}
-
-      <style>{`
-        .tienda-button {
-          background: linear-gradient(135deg, #d4a574 0%, #8b6f47 100%);
-        }
-
-        .tienda-overlay {
-          background: rgba(15, 23, 42, 0.85);
-          backdrop-filter: blur(8px);
-        }
-
-        .tienda-modal {
-          max-width: 1200px;
-          width: 95%;
-          max-height: 90vh;
-          overflow-y: auto;
-          background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
-        }
-
-        .tienda-header {
-          background: linear-gradient(135deg, #d4a574 0%, #8b6f47 100%);
-          padding: 24px;
-          border-radius: 12px 12px 0 0;
-          margin: -20px -20px 24px -20px;
-        }
-
-        .tienda-header h2 {
-          color: #1a1a2e;
-          font-size: 1.8rem;
-          font-weight: 700;
-          margin: 0;
-        }
-
-        .search-container {
-          position: relative;
-          margin-bottom: 32px;
-          padding: 0 8px;
-        }
-
-        .search-wrapper {
-          position: relative;
-          width: 100%;
-        }
-
-        .search-icon {
-          position: absolute;
-          left: 16px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: #d4a574;
-          pointer-events: none;
-          z-index: 1;
-        }
-
-        .search-input {
-          width: 100%;
-          padding: 16px 48px 16px 48px;
-          background: rgba(255, 255, 255, 0.08);
-          border: 2px solid rgba(212, 165, 116, 0.3);
-          border-radius: 12px;
-          color: #e2e8f0;
-          font-size: 1rem;
-          transition: all 0.3s ease;
-          outline: none;
-        }
-
-        .search-input::placeholder {
-          color: rgba(226, 232, 240, 0.5);
-        }
-
-        .search-input:focus {
-          background: rgba(255, 255, 255, 0.12);
-          border-color: #d4a574;
-          box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
-        }
-
-        .clear-search {
-          position: absolute;
-          right: 16px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: rgba(212, 165, 116, 0.2);
-          border: none;
-          color: #d4a574;
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          font-size: 1.5rem;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-          padding: 0;
-          line-height: 1;
-        }
-
-        .clear-search:hover {
-          background: rgba(212, 165, 116, 0.3);
-          transform: translateY(-50%) scale(1.1);
-        }
-
-        .search-dropdown {
-          position: absolute;
-          top: calc(100% + 8px);
-          left: 0;
-          right: 0;
-          background: #16213e;
-          border: 2px solid #d4a574;
-          border-radius: 12px;
-          max-height: 400px;
-          overflow-y: auto;
-          z-index: 1000;
-          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-        }
-
-        .search-result-item {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          padding: 16px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          border-bottom: 1px solid rgba(212, 165, 116, 0.15);
-        }
-
-        .search-result-item:last-child {
-          border-bottom: none;
-        }
-
-        .search-result-item:hover {
-          background: rgba(212, 165, 116, 0.15);
-        }
-
-        .search-result-item img {
-          width: 80px;
-          height: 60px;
-          object-fit: cover;
-          border-radius: 8px;
-          border: 2px solid rgba(212, 165, 116, 0.3);
-        }
-
-        .search-result-info {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .search-result-info strong {
-          color: #d4a574;
-          font-size: 1.1rem;
-          font-weight: 600;
-        }
-
-        .search-result-info span {
-          color: #cbd5e1;
-          font-size: 0.9rem;
-        }
-
-        .no-results {
-          padding: 32px;
-          text-align: center;
-          color: #cbd5e1;
-          font-size: 1rem;
-        }
-
-        .tienda-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-          gap: 24px;
-          padding: 0 8px;
-        }
-
-        .modulo-card {
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 16px;
-          overflow: hidden;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border: 1px solid rgba(212, 165, 116, 0.2);
-        }
-
-        .modulo-card:hover {
-          border-color: #d4a574;
-          box-shadow: 0 8px 24px rgba(212, 165, 116, 0.3);
-        }
-
-        .modulo-image-container {
-          position: relative;
-          width: 100%;
-          height: 240px;
-          overflow: hidden;
-        }
-
-        .modulo-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.5s ease;
-        }
-
-        .modulo-card:hover .modulo-image {
-          transform: scale(1.1);
-        }
-
-        .modulo-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, rgba(26, 26, 46, 0.9) 0%, transparent 50%);
-          display: flex;
-          align-items: flex-end;
-          justify-content: center;
-          padding: 20px;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-
-        .modulo-card:hover .modulo-overlay {
-          opacity: 1;
-        }
-
-        .ver-detalles {
-          color: #d4a574;
-          font-weight: 600;
-          font-size: 1.1rem;
-        }
-
-        .modulo-info {
-          padding: 20px;
-        }
-
-        .modulo-info h3 {
-          color: #d4a574;
-          font-size: 1.4rem;
-          margin: 0 0 12px 0;
-          font-weight: 700;
-        }
-
-        .modulo-specs {
-          display: flex;
-          gap: 8px;
-          margin-bottom: 12px;
-          flex-wrap: wrap;
-        }
-
-        .spec-badge {
-          background: rgba(212, 165, 116, 0.15);
-          color: #d4a574;
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          border: 1px solid rgba(212, 165, 116, 0.3);
-        }
-
-        .modulo-description {
-          color: #e2e8f0;
-          font-size: 0.95rem;
-          line-height: 1.6;
-          margin: 0;
-        }
-
-        .tienda-detail-modal {
-          max-width: 1000px;
-          width: 95%;
-          max-height: 90vh;
-          overflow-y: auto;
-          padding: 0;
-          background: #1a1a2e;
-        }
-
-        .detail-content {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 0;
-        }
-
-        .detail-image-section {
-          background: #0f172a;
-          padding: 0;
-        }
-
-        .detail-image-section img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-
-        .detail-info-section {
-          padding: 40px;
-          background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        }
-
-        .detail-info-section h2 {
-          color: #d4a574;
-          font-size: 2rem;
-          margin: 0 0 16px 0;
-          font-weight: 700;
-        }
-
-        .detail-description {
-          color: #cbd5e1;
-          font-size: 1.1rem;
-          line-height: 1.7;
-          margin-bottom: 32px;
-        }
-
-        .detail-specs {
-          background: rgba(212, 165, 116, 0.08);
-          border-radius: 12px;
-          padding: 20px;
-          margin-bottom: 28px;
-          border: 1px solid rgba(212, 165, 116, 0.2);
-        }
-
-        .spec-item {
-          display: flex;
-          justify-content: space-between;
-          padding: 10px 0;
-          border-bottom: 1px solid rgba(212, 165, 116, 0.15);
-        }
-
-        .spec-item:last-child {
-          border-bottom: none;
-        }
-
-        .spec-item strong {
-          color: #d4a574;
-          font-weight: 600;
-        }
-
-        .spec-item span {
-          color: #e2e8f0;
-        }
-
-        .detail-includes, .detail-features {
-          margin-bottom: 28px;
-        }
-
-        .detail-includes h3, .detail-features h3 {
-          color: #d4a574;
-          font-size: 1.3rem;
-          margin-bottom: 12px;
-          font-weight: 700;
-        }
-
-        .detail-includes ul, .detail-features ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .detail-includes li, .detail-features li {
-          color: #e2e8f0;
-          padding: 8px 0;
-          font-size: 1rem;
-          line-height: 1.6;
-        }
-
-        .detail-actions {
-          margin-top: 32px;
-        }
-
-        .contact-button {
-          width: 100%;
-          background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-          color: white;
-          border: none;
-          padding: 16px 24px;
-          border-radius: 12px;
-          font-size: 1.1rem;
-          font-weight: 600;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .contact-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
-        }
-
-        @media (max-width: 768px) {
-          .tienda-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .search-input {
-            font-size: 0.9rem;
-            padding: 14px 44px 14px 44px;
-          }
-
-          .search-result-item img {
-            width: 60px;
-            height: 45px;
-          }
-
-          .search-result-info strong {
-            font-size: 1rem;
-          }
-
-          .search-result-info span {
-            font-size: 0.85rem;
-          }
-
-          .detail-content {
-            grid-template-columns: 1fr;
-          }
-
-          .detail-image-section {
-            height: 300px;
-          }
-
-          .detail-info-section {
-            padding: 24px;
-          }
-
-          .tienda-header h2 {
-            font-size: 1.4rem;
-          }
-        }
-      `}</style>
     </>
   );
 }
