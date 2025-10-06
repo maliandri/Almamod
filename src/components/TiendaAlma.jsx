@@ -20,7 +20,7 @@ const modulosData = [
     habitaciones: '2 dormitorios',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
-    imagenPortada: '/modulos/AlmaMod_36_portada.jpg',
+    imagenPortada: '/modulos/AlmaMod_36_portada.webp',
     imagenesDetalle: ['/modulos/Alma36_1.webp', '/modulos/Alma36_2.webp'],
     descripcion: 'Solución habitacional de 2 habitaciones. Compacta, eficiente y confortable.'
   },
@@ -32,8 +32,8 @@ const modulosData = [
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
     plazo: '30 días',
-    imagenPortada: '/modulos/AlmaMod_27_portada.jpg',
-    imagenesDetalle: ['/modulos/almamod_27.jpg'],
+    imagenPortada: '/modulos/AlmaMod_27_portada.webp',
+    imagenesDetalle: ['/modulos/almamod_27.webp'],
     descripcion: 'Solución habitacional de 1 habitación. Compacta, eficiente y confortable.'
   },
   {
@@ -44,8 +44,8 @@ const modulosData = [
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
-    imagenPortada: '/modulos/AlmaMod_18_portada.webp', //modificado a portada 400 * 240
-    imagenesDetalle: ['/modulos/AlmaMod_18.jpg'],
+    imagenPortada: '/modulos/AlmaMod_18_portada.webp',
+    imagenesDetalle: ['/modulos/AlmaMod_18.webp'],
     descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.'
   },
   {
@@ -56,8 +56,8 @@ const modulosData = [
     habitaciones: 'Loft con entrepiso',
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
-    imagenPortada: '/modulos/Almamod_loft28_portada.jpg',
-    imagenesDetalle: ['/modulos/Almamod_loft28.jpg'],
+    imagenPortada: '/modulos/Almamod_loft28_portada.webp',
+    imagenesDetalle: ['/modulos/Almamod_loft28.webp'],
     descripcion: 'Vivienda modular estilo loft con entrepiso. Diseño funcional y moderno.'
   },
   {
@@ -68,8 +68,8 @@ const modulosData = [
     habitaciones: 'Monoambiente',
     incluye: ['Baño completo', 'Cocina-dormitorio'],
     plazo: '30 días',
-    imagenPortada: '/modulos/Almamod_micasita_portada.jpeg',
-    imagenesDetalle: ['/modulos/Almamod_micasita.jpeg'],
+    imagenPortada: '/modulos/Almamod_micasita_portada.webp',
+    imagenesDetalle: ['/modulos/Almamod_micasita.webp'],
     descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.'
   }
 ];
