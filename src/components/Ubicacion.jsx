@@ -38,7 +38,7 @@ function Ubicacion() {
                 <div className="map-container" style={{ height: '450px' }}>
                   {/* 👇 ESTA ES LA URL CORREGIDA DEL MAPA */}
                   <iframe
-                    src="https://maps.app.goo.gl/1iXvX68j5jGrNkSj6"
+                    src="https://www.google.com/maps/place/Conacsas/@-38.8995667,-68.1382786,17z/data=!3m1!4b1!4m6!3m5!1s0x960a35be6bd19e6d:0xdf42edf7c7d390a1!8m2!3d-38.8995667!4d-68.1382786!16s%2Fg%2F11qp2jkf47?entry=ttu&g_ep=EgoyMDI1MTAwNC4wIKXMDSoASAFQAw%3D%3D"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
