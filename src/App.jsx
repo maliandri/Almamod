@@ -114,7 +114,7 @@ function App() {
         <SocialButton 
           platform="whatsapp" 
           label="WhatsApp" 
-          url="https://wa.me/542997106"
+          url="https://wa.me/542994087106"
         />
         <SocialButton 
           platform="instagram" 
