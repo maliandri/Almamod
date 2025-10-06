@@ -21,7 +21,7 @@ const modulosData = [
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_36_portada.jpg',
-    imagenesDetalle: ['/modulos/Alma36_1.jpg', '/modulos/Alma36_2.jpg'],
+    imagenesDetalle: ['/modulos/Alma36_1.webp', '/modulos/Alma36_2.webp'],
     descripcion: 'Solución habitacional de 2 habitaciones. Compacta, eficiente y confortable.'
   },
   {
