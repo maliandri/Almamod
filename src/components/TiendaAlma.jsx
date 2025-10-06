@@ -44,7 +44,7 @@ const modulosData = [
     habitaciones: '1 dormitorio',
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
-    imagenPortada: '/modulos/AlmaMod_18_portada.jpg',
+    imagenPortada: '/modulos/AlmaMod_18_portada.webp', //modificado a portada 400 * 240
     imagenesDetalle: ['/modulos/AlmaMod_18.jpg'],
     descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.'
   },
