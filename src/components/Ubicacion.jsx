@@ -38,7 +38,7 @@ function Ubicacion() {
                 <div className="map-container" style={{ height: '450px' }}>
                   {/* 👇 ESTA ES LA URL CORREGIDA DEL MAPA */}
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100030.2222384232!2d-68.136055589162!3d-38.94326584558239!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x960a33ba35b2493b%3A0x53093c71b1def327!2sNeuqu%C3%A9n!5e0!3m2!1ses-419!2sar!4v1695679582888!5m2!1ses-419!2sar"
+                    src="https://maps.app.goo.gl/1iXvX68j5jGrNkSj6"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

@@ -58,8 +58,8 @@ function App() {
             </Link>
           </div>
           <div className="hero-text-container">
-            <h1>Estamos en Neuquén, Somos de Neuquén</h1>
-            <p>Soluciones habitacionales</p>
+            <h1>CONSTRUCCIÓN SIN LÍMITES</h1>
+            <p>Estamos en Neuquén, Somos de Neuquén</p>
           </div>
           <nav className="header-nav">
             {isAuthenticated ? (
@@ -114,17 +114,17 @@ function App() {
         <SocialButton 
           platform="whatsapp" 
           label="WhatsApp" 
-          url="https://wa.me/542995414422"
+          url="https://wa.me/542997106"
         />
         <SocialButton 
           platform="instagram" 
           label="Instagram" 
-          url="https://instagram.com/TUUSUARIO"
+          url="https://instagram.com/_almamod_"
         />
         <SocialButton 
           platform="facebook" 
           label="Facebook" 
-          url="https://facebook.com/TUPAGINA"
+          url="https://facebook.com/61578686948419"
         />
       </div>
 
