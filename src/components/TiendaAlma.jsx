@@ -18,7 +18,7 @@ const modulosData = [
     superficie: '36 m²',
     dimensiones: '12m × 3m',
     habitaciones: '2 dormitorios',
-    precio: 0, // AQUÍ AGREGA EL PRECIO (ejemplo: 18000000)
+    precio: 50075000, // AQUÍ AGREGA EL PRECIO (ejemplo: 18000000)
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_36_portada.webp',
@@ -31,7 +31,7 @@ const modulosData = [
     superficie: '27 m²',
     dimensiones: '9m × 3m',
     habitaciones: '1 dormitorio',
-    precio: 0, // AQUÍ AGREGA EL PRECIO
+    precio: 42120000, // AQUÍ AGREGA EL PRECIO
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_27_portada.webp',
@@ -57,7 +57,7 @@ const modulosData = [
     superficie: '28 m²',
     dimensiones: '7m × 3m (21m² planta baja + 7m² entrepiso)',
     habitaciones: 'Loft con entrepiso',
-    precio: 0, // AQUÍ AGREGA EL PRECIO
+    precio: 38500000, // AQUÍ AGREGA EL PRECIO
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_loft28_portada.webp',
@@ -70,7 +70,7 @@ const modulosData = [
     superficie: '12 m²',
     dimensiones: '4.88m × 2.44m',
     habitaciones: 'Monoambiente',
-    precio: 0, // AQUÍ AGREGA EL PRECIO
+    precio: 15300000, // AQUÍ AGREGA EL PRECIO
     incluye: ['Baño completo', 'Cocina-dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_micasita_portada.webp',
