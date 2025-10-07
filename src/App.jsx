@@ -6,12 +6,16 @@ import { AuthContext } from './context/AuthContext';
 
 // --- Imports ---
 import logoAlmamod from './assets/almamod.jpg';
+import CalculadoraModulo from './components/CalculadoraModulo.jsx';
 import ObrasCarousel from './components/ObrasCarousel.jsx';
 import Ubicacion from './components/Ubicacion.jsx';
 import SocialButton from './components/SocialButton.jsx';
+import RegisterForm from './components/RegisterForm.jsx';
+import LoginForm from './components/LoginForm.jsx';
 import PageLayout from './components/PageLayout.jsx';
 import VerifyEmail from './components/VerifyEmail.jsx';
 import ServiciosCarousel from './components/ServiciosCarousel.jsx';
+import ResetPassword from './components/ResetPassword.jsx';
 import TiendaAlma from './components/TiendaAlma.jsx';
 
 // ====================================================================
@@ -67,15 +71,21 @@ function App() {
               </>
             ) : (
               <>
-                <button onClick={() => setShowRegister(true)} className="nav-link-button">Registrarse</button>
-                <button onClick={() => setShowLogin(true)} className="nav-link-button">Iniciar Sesión</button>
+                {/* 
+                <button onClick={() => setShowRegister(true)} className="nav-link-button">
+                  Registrarse
+                </button>
+                <button onClick={() => setShowLogin(true)} className="nav-link-button">
+                  Iniciar Sesión
+                </button>
+                */}
               </>
             )}
           </nav>
         </div>
       </header>
 
-      {/* MODALES DE LOGIN Y REGISTRO */}
+      {/* MODALES DE LOGIN Y REGISTRO (comentados si se desactivan botones) */}
       {showRegister && (
         <div className="form-modal-overlay" onClick={() => setShowRegister(false)}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -95,30 +105,45 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/verify-email" element={<PageLayout><VerifyEmail /></PageLayout>} />
-          <Route path="/reset-password" element={<PageLayout><ResetPassword /></PageLayout>} />
+          <Route
+            path="/verify-email"
+            element={
+              <PageLayout>
+                <VerifyEmail />
+              </PageLayout>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PageLayout>
+                <ResetPassword />
+              </PageLayout>
+            }
+          />
         </Routes>
       </main>
 
       {/* BOTONES FLOTANTES */}
       <div className="floating-buttons-container">
-        <TiendaAlma/>
+        <TiendaAlma />
         <ObrasCarousel />
+        {/* <CalculadoraModulo /> */}
         <Ubicacion />
         <hr className="separator" />
-        <SocialButton 
-          platform="whatsapp" 
-          label="WhatsApp" 
+        <SocialButton
+          platform="whatsapp"
+          label="WhatsApp"
           url="https://wa.me/542994087106"
         />
-        <SocialButton 
-          platform="instagram" 
-          label="Instagram" 
+        <SocialButton
+          platform="instagram"
+          label="Instagram"
           url="https://instagram.com/_almamod_"
         />
-        <SocialButton 
-          platform="facebook" 
-          label="Facebook" 
+        <SocialButton
+          platform="facebook"
+          label="Facebook"
           url="https://facebook.com/61578686948419"
         />
       </div>
