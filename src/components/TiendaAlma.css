@@ -331,40 +331,42 @@
 }
 
 .detail-info-section {
-  padding: 24px;
+  padding: 20px 24px;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   height: 100%;
+  gap: 12px;
 }
 
 .detail-info-section h2 {
   color: #d4a574;
-  font-size: 1.6rem;
-  margin: 0 0 12px 0;
+  font-size: 1.4rem;
+  margin: 0;
   font-weight: 700;
+  line-height: 1.2;
 }
 
 .detail-description {
   color: #cbd5e1;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 20px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  margin: 0;
 }
 
 .detail-specs {
   background: rgba(212, 165, 116, 0.08);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 0;
   border: 1px solid rgba(212, 165, 116, 0.2);
 }
 
 .spec-item {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0;
+  padding: 6px 0;
   border-bottom: 1px solid rgba(212, 165, 116, 0.15);
 }
 
@@ -375,31 +377,31 @@
 .spec-item strong {
   color: #d4a574;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .spec-item span {
   color: #e2e8f0;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 /* Precio en el detalle del módulo */
 .spec-price {
   color: #4c01f9 !important;
   font-weight: 700 !important;
-  font-size: 1rem !important;
+  font-size: 0.95rem !important;
 }
 
 .detail-includes,
 .detail-features {
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 .detail-includes h3,
 .detail-features h3 {
   color: #d4a574;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
+  font-size: 1rem;
+  margin: 0 0 8px 0;
   font-weight: 700;
 }
 
@@ -413,14 +415,14 @@
 .detail-includes li,
 .detail-features li {
   color: #e2e8f0;
-  padding: 6px 0;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  padding: 4px 0;
+  font-size: 0.88rem;
+  line-height: 1.4;
 }
 
 .detail-actions {
   margin-top: auto;
-  padding-top: 16px;
+  padding-top: 12px;
 }
 
 .contact-button {
@@ -428,15 +430,15 @@
   background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
   color: white;
   border: none;
-  padding: 14px 20px;
-  border-radius: 12px;
-  font-size: 1rem;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
