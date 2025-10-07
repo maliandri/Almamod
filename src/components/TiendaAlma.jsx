@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import './TiendaAlma.css';
@@ -10,15 +10,23 @@ const StoreIcon = () => (
   </svg>
 );
 
+// Generar slug para URLs
+const generarSlug = (nombre) => {
+  return nombre.toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+};
+
 // Datos de los módulos según el documento
 const modulosData = [
   {
     id: 'almamod36',
     nombre: 'Alma 36',
+    slug: 'alma-36',
     superficie: '36 m²',
     dimensiones: '12m × 3m',
     habitaciones: '2 dormitorios',
-    precio: 50075000, // AQUÍ AGREGA EL PRECIO (ejemplo: 18000000)
+    precio: 50075000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_36_portada.webp',
@@ -28,10 +36,11 @@ const modulosData = [
   {
     id: 'almamod27',
     nombre: 'Alma 27',
+    slug: 'alma-27',
     superficie: '27 m²',
     dimensiones: '9m × 3m',
     habitaciones: '1 dormitorio',
-    precio: 42120000, // AQUÍ AGREGA EL PRECIO
+    precio: 42120000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_27_portada.webp',
@@ -41,10 +50,11 @@ const modulosData = [
   {
     id: 'almamod18',
     nombre: 'Alma 18',
+    slug: 'alma-18',
     superficie: '18 m²',
     dimensiones: '6m × 3m',
     habitaciones: '1 dormitorio',
-    precio: 32050000 , // AQUÍ AGREGA EL PRECIO
+    precio: 32050000,
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_18_portada.webp',
@@ -54,10 +64,11 @@ const modulosData = [
   {
     id: 'almamodloft28',
     nombre: 'Alma Loft 28',
+    slug: 'alma-loft-28',
     superficie: '28 m²',
     dimensiones: '7m × 3m (21m² planta baja + 7m² entrepiso)',
     habitaciones: 'Loft con entrepiso',
-    precio: 38500000, // AQUÍ AGREGA EL PRECIO
+    precio: 38500000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_loft28_portada.webp',
@@ -67,10 +78,11 @@ const modulosData = [
   {
     id: 'micasita',
     nombre: 'MiCasita',
+    slug: 'micasita',
     superficie: '12 m²',
     dimensiones: '4.88m × 2.44m',
     habitaciones: 'Monoambiente',
-    precio: 15300000, // AQUÍ AGREGA EL PRECIO
+    precio: 15300000,
     incluye: ['Baño completo', 'Cocina-dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_micasita_portada.webp',
@@ -97,16 +109,56 @@ function TiendaAlma() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  // Manejar URLs y navegación
+  useEffect(() => {
+    const path = window.location.pathname;
+    
+    // Si estamos en /tiendaalma, abrir la tienda
+    if (path === '/tiendaalma') {
+      setIsOpen(true);
+      setSelectedModule(null);
+    }
+    
+    // Si estamos en /tiendaalma/[slug], abrir el detalle del módulo
+    if (path.startsWith('/tiendaalma/')) {
+      const slug = path.replace('/tiendaalma/', '');
+      const modulo = modulosData.find(m => m.slug === slug);
+      if (modulo) {
+        setIsOpen(true);
+        setSelectedModule(modulo);
+        setCurrentImageIndex(0);
+      }
+    }
+  }, []);
+
+  // Actualizar URL cuando se abre/cierra la tienda o se selecciona un módulo
+  const updateURL = (path) => {
+    window.history.pushState({}, '', path);
+  };
+
+  const handleOpenStore = () => {
+    setIsOpen(true);
+    updateURL('/tiendaalma');
+  };
+
+  const handleCloseStore = () => {
+    setIsOpen(false);
+    setSelectedModule(null);
+    updateURL('/');
+  };
+
   const openDetails = (modulo) => {
     setSelectedModule(modulo);
     setCurrentImageIndex(0);
     setSearchTerm('');
     setIsSearchFocused(false);
+    updateURL(`/tiendaalma/${modulo.slug}`);
   };
 
   const closeDetails = () => {
     setSelectedModule(null);
     setCurrentImageIndex(0);
+    updateURL('/tiendaalma');
   };
 
   // Filtrar módulos según búsqueda
@@ -147,7 +199,7 @@ function TiendaAlma() {
     <>
       <motion.button 
         className="floating-button tienda-button"
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpenStore}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -159,7 +211,7 @@ function TiendaAlma() {
         <AnimatePresence>
           <motion.div 
             className="modal-overlay tienda-overlay"
-            onClick={() => setIsOpen(false)}
+            onClick={handleCloseStore}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -173,7 +225,7 @@ function TiendaAlma() {
             >
               <div className="tienda-header">
                 <h2>Tienda Alma - Nuestros Módulos</h2>
-                <button onClick={() => setIsOpen(false)} className="close-button">&times;</button>
+                <button onClick={handleCloseStore} className="close-button">&times;</button>
               </div>
 
               <div className="search-container">
