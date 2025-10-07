@@ -331,13 +331,13 @@
 }
 
 .detail-info-section {
-  padding: 18px 22px;
+  padding: 18px 22px 16px 22px;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: 10px;
+  gap: 8px;
 }
 
 .detail-info-section h2 {
@@ -415,14 +415,14 @@
 .detail-includes li,
 .detail-features li {
   color: #e2e8f0;
-  padding: 3px 0;
+  padding: 2px 0;
   font-size: 0.85rem;
   line-height: 1.3;
 }
 
 .detail-actions {
   margin-top: auto;
-  padding-top: 10px;
+  padding-top: 8px;
   flex-shrink: 0;
 }
 
