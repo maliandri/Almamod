@@ -198,7 +198,7 @@
 .modulo-image-container {
   position: relative;
   width: 100%;
-  height: 160px;
+  height: 200px;
   overflow: hidden;
   background: #0f172a;
   flex-shrink: 0;
@@ -207,9 +207,10 @@
 .modulo-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   transition: transform 0.5s ease;
+  background: #0f172a;
 }
 
 .modulo-card:hover .modulo-image {
