@@ -18,7 +18,7 @@ const modulosData = [
     superficie: '36 m²',
     dimensiones: '12m × 3m',
     habitaciones: '2 dormitorios',
-    precio: 0, // AQUÍ AGREGA EL PRECIO
+    precio: 0, // AQUÍ AGREGA EL PRECIO (ejemplo: 18000000)
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_36_portada.webp',
@@ -239,9 +239,6 @@ function TiendaAlma() {
                       <div className="modulo-overlay">
                         <span className="ver-detalles">Ver Detalles →</span>
                       </div>
-                      <div className="modulo-price-badge">
-                        {formatearPrecio(modulo.precio)}
-                      </div>
                     </div>
                     <div className="modulo-info">
                       <h3>{modulo.nombre}</h3>
@@ -250,6 +247,9 @@ function TiendaAlma() {
                         <span className="spec-badge">{modulo.habitaciones}</span>
                       </div>
                       <p className="modulo-description">{modulo.descripcion}</p>
+                      <div className="modulo-price">
+                        {formatearPrecio(modulo.precio)}
+                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -321,15 +321,14 @@ function TiendaAlma() {
                 </div>
                 
                 <div className="detail-info-section">
-                  <div className="detail-header">
-                    <h2>{selectedModule.nombre}</h2>
-                    <div className="detail-price">
-                      {formatearPrecio(selectedModule.precio)}
-                    </div>
-                  </div>
+                  <h2>{selectedModule.nombre}</h2>
                   <p className="detail-description">{selectedModule.descripcion}</p>
                   
                   <div className="detail-specs">
+                    <div className="spec-item">
+                      <strong>Precio:</strong>
+                      <span className="spec-price">{formatearPrecio(selectedModule.precio)}</span>
+                    </div>
                     <div className="spec-item">
                       <strong>Superficie:</strong>
                       <span>{selectedModule.superficie}</span>
