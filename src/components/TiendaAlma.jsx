@@ -18,6 +18,7 @@ const modulosData = [
     superficie: '36 m²',
     dimensiones: '12m × 3m',
     habitaciones: '2 dormitorios',
+    precio: 0, // AQUÍ AGREGA EL PRECIO
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_36_portada.webp',
@@ -30,6 +31,7 @@ const modulosData = [
     superficie: '27 m²',
     dimensiones: '9m × 3m',
     habitaciones: '1 dormitorio',
+    precio: 0, // AQUÍ AGREGA EL PRECIO
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_27_portada.webp',
@@ -42,6 +44,7 @@ const modulosData = [
     superficie: '18 m²',
     dimensiones: '6m × 3m',
     habitaciones: '1 dormitorio',
+    precio: 0, // AQUÍ AGREGA EL PRECIO
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_18_portada.webp',
@@ -54,6 +57,7 @@ const modulosData = [
     superficie: '28 m²',
     dimensiones: '7m × 3m (21m² planta baja + 7m² entrepiso)',
     habitaciones: 'Loft con entrepiso',
+    precio: 0, // AQUÍ AGREGA EL PRECIO
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_loft28_portada.webp',
@@ -66,6 +70,7 @@ const modulosData = [
     superficie: '12 m²',
     dimensiones: '4.88m × 2.44m',
     habitaciones: 'Monoambiente',
+    precio: 0, // AQUÍ AGREGA EL PRECIO
     incluye: ['Baño completo', 'Cocina-dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_micasita_portada.webp',
@@ -73,6 +78,17 @@ const modulosData = [
     descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.'
   }
 ];
+
+// Función para formatear precio
+const formatearPrecio = (precio) => {
+  if (precio === 0) return 'Consultar precio';
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(precio);
+};
 
 function TiendaAlma() {
   const [isOpen, setIsOpen] = useState(false);
@@ -105,7 +121,8 @@ function TiendaAlma() {
   };
 
   const handleWhatsAppClick = (modulo) => {
-    const mensaje = `Hola! Estuve mirando productos en su web y me interesa el *${modulo.nombre}* (${modulo.superficie}, ${modulo.habitaciones}). ¿Podrían brindarme más información?`;
+    const precioTexto = modulo.precio > 0 ? `Precio: ${formatearPrecio(modulo.precio)}` : '';
+    const mensaje = `Hola! Estuve mirando productos en su web y me interesa el *${modulo.nombre}* (${modulo.superficie}, ${modulo.habitaciones}). ${precioTexto} ¿Podrían brindarme más información?`;
     const urlWhatsApp = `https://wa.me/5492994087106?text=${encodeURIComponent(mensaje)}`;
     window.open(urlWhatsApp, '_blank');
   };
@@ -222,6 +239,9 @@ function TiendaAlma() {
                       <div className="modulo-overlay">
                         <span className="ver-detalles">Ver Detalles →</span>
                       </div>
+                      <div className="modulo-price-badge">
+                        {formatearPrecio(modulo.precio)}
+                      </div>
                     </div>
                     <div className="modulo-info">
                       <h3>{modulo.nombre}</h3>
@@ -301,7 +321,12 @@ function TiendaAlma() {
                 </div>
                 
                 <div className="detail-info-section">
-                  <h2>{selectedModule.nombre}</h2>
+                  <div className="detail-header">
+                    <h2>{selectedModule.nombre}</h2>
+                    <div className="detail-price">
+                      {formatearPrecio(selectedModule.precio)}
+                    </div>
+                  </div>
                   <p className="detail-description">{selectedModule.descripcion}</p>
                   
                   <div className="detail-specs">
