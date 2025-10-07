@@ -9,35 +9,40 @@
   backdrop-filter: blur(8px);
 }
 
-/* Modal principal - Ajustado para 5 productos en una pantalla */
+/* Modal principal - Una sola pantalla sin scroll */
 .tienda-modal {
-  max-width: 1400px;
-  width: 95%;
+  max-width: 1600px;
+  width: 98%;
+  height: 95vh;
   max-height: 95vh;
-  overflow-y: auto;
+  overflow: hidden;
   background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header */
+/* Header más compacto */
 .tienda-header {
   background: linear-gradient(135deg, #d4a574 0%, #8b6f47 100%);
-  padding: 24px;
+  padding: 16px 24px;
   border-radius: 12px 12px 0 0;
-  margin: -20px -20px 24px -20px;
+  margin: -20px -20px 16px -20px;
+  flex-shrink: 0;
 }
 
 .tienda-header h2 {
   color: #1a1a2e;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
 }
 
-/* Búsqueda */
+/* Búsqueda más compacta */
 .search-container {
   position: relative;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   padding: 0 8px;
+  flex-shrink: 0;
 }
 
 .search-wrapper {
@@ -289,12 +294,13 @@
   text-align: center;
 }
 
-/* Modal de detalle */
+/* Modal de detalle - TODO EN UNA PANTALLA */
 .tienda-detail-modal {
-  max-width: 1000px;
+  max-width: 1400px;
   width: 95%;
-  max-height: 90vh;
-  overflow-y: auto;
+  height: 95vh;
+  max-height: 95vh;
+  overflow: hidden;
   padding: 0;
   background: #1a1a2e;
 }
@@ -303,6 +309,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
+  height: 100%;
 }
 
 .detail-image-section {
@@ -311,6 +318,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
+  overflow: hidden;
 }
 
 .detail-image-section img {
@@ -322,36 +331,40 @@
 }
 
 .detail-info-section {
-  padding: 40px;
+  padding: 24px;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .detail-info-section h2 {
   color: #d4a574;
-  font-size: 2rem;
-  margin: 0 0 16px 0;
+  font-size: 1.6rem;
+  margin: 0 0 12px 0;
   font-weight: 700;
 }
 
 .detail-description {
   color: #cbd5e1;
-  font-size: 1.1rem;
-  line-height: 1.7;
-  margin-bottom: 32px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
 }
 
 .detail-specs {
   background: rgba(212, 165, 116, 0.08);
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 28px;
+  padding: 16px;
+  margin-bottom: 20px;
   border: 1px solid rgba(212, 165, 116, 0.2);
 }
 
 .spec-item {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
+  padding: 8px 0;
   border-bottom: 1px solid rgba(212, 165, 116, 0.15);
 }
 
@@ -362,29 +375,31 @@
 .spec-item strong {
   color: #d4a574;
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .spec-item span {
   color: #e2e8f0;
+  font-size: 0.9rem;
 }
 
 /* Precio en el detalle del módulo */
 .spec-price {
   color: #4c01f9 !important;
   font-weight: 700 !important;
-  font-size: 1.1rem !important;
+  font-size: 1rem !important;
 }
 
 .detail-includes,
 .detail-features {
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .detail-includes h3,
 .detail-features h3 {
   color: #d4a574;
-  font-size: 1.3rem;
-  margin-bottom: 12px;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
   font-weight: 700;
 }
 
@@ -398,13 +413,14 @@
 .detail-includes li,
 .detail-features li {
   color: #e2e8f0;
-  padding: 8px 0;
-  font-size: 1rem;
-  line-height: 1.6;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .detail-actions {
-  margin-top: 32px;
+  margin-top: auto;
+  padding-top: 16px;
 }
 
 .contact-button {
@@ -412,15 +428,15 @@
   background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
   color: white;
   border: none;
-  padding: 16px 24px;
+  padding: 14px 20px;
   border-radius: 12px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -542,14 +558,52 @@
 
   .detail-content {
     grid-template-columns: 1fr;
+    grid-template-rows: 40% 60%;
   }
 
   .detail-image-section {
-    height: 300px;
+    height: 100%;
   }
 
   .detail-info-section {
-    padding: 24px;
+    padding: 20px;
+    height: 100%;
+  }
+
+  .detail-info-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .detail-description {
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+  }
+
+  .detail-specs {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .detail-includes,
+  .detail-features {
+    margin-bottom: 16px;
+  }
+
+  .detail-includes h3,
+  .detail-features h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .detail-includes li,
+  .detail-features li {
+    padding: 5px 0;
+    font-size: 0.85rem;
+  }
+
+  .contact-button {
+    padding: 12px 18px;
+    font-size: 0.95rem;
   }
 
   .tienda-header h2 {
