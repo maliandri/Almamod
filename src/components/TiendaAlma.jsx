@@ -44,7 +44,7 @@ const modulosData = [
     superficie: '18 m²',
     dimensiones: '6m × 3m',
     habitaciones: '1 dormitorio',
-    precio: 0, // AQUÍ AGREGA EL PRECIO
+    precio: 32050000 , // AQUÍ AGREGA EL PRECIO
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_18_portada.webp',
