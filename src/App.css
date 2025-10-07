@@ -26,22 +26,6 @@ body {
   overflow-x: hidden;
 }
 
-/* --- HEADER FIJO --- */
-.hero-section {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  padding: 15px 30px;
-  background: #000000;
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: var(--header-height);
-}
-
 .hero-content-wrapper {
   width: 100%;
   max-width: 1200px;
@@ -522,17 +506,28 @@ body {
   padding: 20px;
 }
 
-/* ===== HEADER ===== */
+/* ================================================================== */
+/* HEADER FIJO CON EFECTO DE BARRIDO                                  */
+/* ================================================================== */
+
 .hero-section {
-  position: relative;
-  background: #000; /* fondo negro */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: #000;
   color: white;
-  padding: 1.5rem 0;
-  text-align: center;
-  overflow: hidden; /* para que el brillo no se salga */
+  padding: 15px 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: var(--header-height);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden; /* necesario para que el efecto no se salga */
 }
 
-/* === Efecto de barrido === */
+/* === Efecto de barrido (brillo animado) === */
 .hero-section::after {
   content: "";
   position: absolute;
@@ -547,21 +542,110 @@ body {
     rgba(255, 255, 255, 0) 100%
   );
   animation: sweep 3s linear infinite;
+  pointer-events: none;
 }
 
-/* === Animación del barrido === */
 @keyframes sweep {
-  0% {
-    left: -75%;
-  }
-  100% {
-    left: 125%;
-  }
+  0% { left: -75%; }
+  100% { left: 125%; }
 }
 
-/* Ajuste del contenido */
+/* === Contenedor interno === */
 .hero-content-wrapper {
   position: relative;
   z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 40px;
 }
 
+/* === Logo === */
+.hero-branding {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.hero-logo {
+  max-width: 200px;
+  height: auto;
+}
+
+/* === Título y subtítulo === */
+.hero-text-container {
+  text-align: center;
+  justify-self: center;
+}
+.hero-text-container h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f8f9fa;
+  margin: 0;
+  white-space: nowrap;
+}
+.hero-text-container p {
+  font-size: 1rem;
+  color: #adb5bd;
+  margin: 0;
+}
+
+/* === Navegación === */
+.header-nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 35px;
+  justify-self: end;
+}
+.header-nav .nav-link,
+.header-nav .nav-link-button {
+  color: #f8f9fa;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  white-space: nowrap;
+  transition: color 0.2s ease-in-out;
+}
+.header-nav .nav-link:hover,
+.header-nav .nav-link-button:hover {
+  color: #adb5bd;
+}
+.nav-user-greeting {
+  color: #adb5bd;
+  font-size: 0.9rem;
+}
+.nav-link-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+/* === Adaptativo === */
+@media (max-width: 992px) {
+  .hero-content-wrapper {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    text-align: center;
+    gap: 15px;
+  }
+  .hero-section {
+    min-height: auto;
+    padding: 20px;
+  }
+  .hero-branding {
+    justify-content: center;
+    order: 1;
+  }
+  .hero-text-container {
+    order: 2;
+  }
+  .header-nav {
+    justify-content: center;
+    justify-self: center;
+    order: 3;
+  }
+}
