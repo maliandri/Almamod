@@ -1,6 +1,19 @@
 /* ================================================================== */
-/* CSS Final Corregido y Mejorado para Almamod                         */
+/* CSS Optimizado y Consolidado para Almamod                          */
 /* ================================================================== */
+
+/* --- ESTILOS BASE DEL BODY (antes en index.css) --- */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #000000;
+  overflow-x: hidden;
+}
 
 /* --- VARIABLES GLOBALES --- */
 :root {
@@ -14,19 +27,54 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #000000;
-  overflow-x: hidden;
+/* ================================================================== */
+/* HEADER FIJO CON EFECTO DE BARRIDO                                  */
+/* ================================================================== */
+
+.hero-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: #000;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: var(--header-height);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 }
 
+/* === Efecto de barrido (brillo animado) === */
+.hero-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: sweep 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes sweep {
+  0% { left: -75%; }
+  100% { left: 125%; }
+}
+
+/* === Contenedor interno === */
 .hero-content-wrapper {
+  position: relative;
+  z-index: 2;
   width: 100%;
   max-width: 1200px;
   display: grid;
@@ -35,20 +83,24 @@ body {
   gap: 40px;
 }
 
+/* === Logo === */
 .hero-branding {
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
+
 .hero-logo {
   max-width: 200px;
   height: auto;
 }
 
+/* === Título y subtítulo === */
 .hero-text-container {
   text-align: center;
   justify-self: center;
 }
+
 .hero-text-container h1 {
   font-size: 1.5rem;
   font-weight: 600;
@@ -56,12 +108,14 @@ body {
   margin: 0;
   white-space: nowrap;
 }
+
 .hero-text-container p {
   font-size: 1rem;
   color: #adb5bd;
   margin: 0;
 }
 
+/* === Navegación === */
 .header-nav {
   display: flex;
   justify-content: flex-end;
@@ -69,6 +123,7 @@ body {
   gap: 35px;
   justify-self: end;
 }
+
 .header-nav .nav-link,
 .header-nav .nav-link-button {
   color: #f8f9fa;
@@ -78,14 +133,17 @@ body {
   white-space: nowrap;
   transition: color 0.2s ease-in-out;
 }
+
 .header-nav .nav-link:hover,
 .header-nav .nav-link-button:hover {
   color: #adb5bd;
 }
+
 .nav-user-greeting {
   color: #adb5bd;
   font-size: 0.9rem;
 }
+
 .nav-link-button {
   background: none;
   border: none;
@@ -103,7 +161,7 @@ body {
   width: 100%;
 }
 
-/* --- SECCIÓN PRINCIPAL Y FOOTER --- */
+/* --- SECCIÓN PRINCIPAL --- */
 .animation-section {
   min-height: 100vh;
   padding: 20px 20px 20px 300px;
@@ -112,6 +170,7 @@ body {
   justify-content: flex-start;
   align-items: flex-start;
 }
+
 .animation-content-wrapper {
   width: 100%;
   max-width: calc(100vw - 320px);
@@ -120,12 +179,14 @@ body {
   align-items: flex-start;
 }
 
+/* --- FOOTER --- */
 .main-footer {
   background-color: #212529;
   color: #f8f9fa;
   padding: 20px 40px;
   text-align: center;
 }
+
 .main-footer p {
   margin: 5px 0;
   font-size: 0.9rem;
@@ -188,34 +249,34 @@ body {
   left: 100%;
 }
 
-/* ================================================================== */
-/* INICIO: CORRECCIÓN DEL MODAL                                       */
-/* ================================================================== */
+/* --- MODALES --- */
 .modal-overlay {
   position: fixed;
-  inset: 0; /* Cubre toda la pantalla */
-  background-color: rgba(0, 0, 0, 0.7); /* Un poco más oscuro */
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
-  align-items: center; /* Centra verticalmente */
+  align-items: center;
   z-index: 1002;
-  padding: 20px; /* Espacio para que no pegue a los bordes en móvil */
+  padding: 20px;
 }
-/* ================================================================== */
-/* FIN: CORRECCIÓN DEL MODAL                                          */
-/* ================================================================== */
 
 .modal-content {
   background: #f0f2f5;
   padding: 0;
   border-radius: 16px;
-  width: 100%; /* Ancho completo hasta el max-width */
+  width: 100%;
   max-width: 800px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  max-height: 90vh; /* Para que no ocupe toda la altura en pantallas largas */
+  max-height: 90vh;
 }
+
+.modal-lg {
+  max-width: 800px;
+}
+
 .modal-header {
   padding: 20px 25px;
   border-bottom: 1px solid #e5e7eb;
@@ -223,11 +284,13 @@ body {
   justify-content: space-between;
   align-items: center;
 }
+
 .modal-header h2 {
   margin: 0;
   font-size: 1.5rem;
   color: #111827;
 }
+
 .close-button {
   background: transparent;
   border: none;
@@ -237,25 +300,39 @@ body {
   padding: 0;
   line-height: 1;
 }
+
 .modal-body {
   padding: 25px;
   overflow-y: auto;
 }
 
-/* --- ESTILOS VARIOS (Calculadora, Formularios, Carousel, etc.) --- */
-/* (El resto de tus estilos .calculator-step, .register-form, etc. van aquí sin cambios) */
+.form-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  padding: 20px;
+}
+
+/* --- CALCULADORA --- */
 .calculator-step {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-.calculator-step label, .checkbox-label {
+
+.calculator-step label,
+.checkbox-label {
   font-weight: 500;
   color: #374151;
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .calculator-step select {
   width: 100%;
   padding: 12px;
@@ -264,7 +341,9 @@ body {
   font-size: 1rem;
   background-color: white;
 }
-.main-action-button, .secondary-action-button {
+
+.main-action-button,
+.secondary-action-button {
   padding: 12px 20px;
   border-radius: 8px;
   border: none;
@@ -273,32 +352,39 @@ body {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
 .main-action-button {
   background-color: #111827;
   color: white;
 }
+
 .main-action-button:disabled {
   background-color: #9ca3af;
   cursor: not-allowed;
 }
+
 .secondary-action-button {
   background-color: #d1d5db;
   color: #1f2937;
 }
+
 .results {
   text-align: center;
 }
+
 .final-price {
   font-size: 2.2rem;
   font-weight: bold;
   color: #111827;
   margin: 10px 0;
 }
+
 .step-navigation {
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
 }
+
 .results-summary {
   text-align: left;
   background-color: #ffffff;
@@ -307,29 +393,36 @@ body {
   border: 1px solid #e5e7eb;
   margin: 15px 0;
 }
+
 .results-summary h4 {
   margin-top: 0;
   margin-bottom: 10px;
   border-bottom: 1px solid #e5e7eb;
   padding-bottom: 5px;
 }
+
 .results-summary ul {
   list-style: none;
   padding: 0;
   margin: 0;
   font-size: 0.9rem;
 }
+
 .results-summary ul li {
   padding: 4px 0;
 }
+
 .disclaimer {
   font-size: 0.8rem;
   color: #6b7280;
   margin-top: 10px;
 }
+
 .results-actions {
   margin-top: 20px;
 }
+
+/* --- FORMULARIOS --- */
 .register-form,
 .login-form {
   margin: 0 auto;
@@ -339,12 +432,16 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
-.register-form h2, .register-form h3,
+
+.register-form h2,
+.register-form h3,
 .login-form h2 {
   text-align: center;
   color: #333;
 }
-.register-form input, .register-form select,
+
+.register-form input,
+.register-form select,
 .login-form input {
   padding: 12px;
   border: 1px solid #ccc;
@@ -353,16 +450,20 @@ body {
   width: 100%;
   margin-bottom: 15px;
 }
+
 .register-form .doc-type-group {
   display: flex;
   gap: 10px;
 }
+
 .register-form .doc-type-group select {
   flex-basis: 30%;
 }
+
 .register-form .doc-type-group input {
   flex-basis: 70%;
 }
+
 .register-form button,
 .login-form button {
   padding: 12px;
@@ -377,13 +478,17 @@ body {
   width: 100%;
   margin-top: 10px;
 }
+
 .register-form button:disabled {
   background-color: #9ca3af;
   cursor: not-allowed;
 }
+
 .register-form button[type="button"] {
   background-color: #2563eb;
 }
+
+/* --- MAPA --- */
 .map-container {
   border-radius: 8px;
   overflow: hidden;
@@ -392,9 +497,7 @@ body {
   width: 100%;
 }
 
-.modal-lg {
-  max-width: 800px;
-}
+/* --- CARRUSEL --- */
 .image-carousel .legend {
   background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
   opacity: 1 !important;
@@ -402,27 +505,35 @@ body {
   font-size: 1rem;
   padding: 20px !important;
 }
+
 .carousel-image-container {
   height: 450px;
   background-color: #000;
 }
+
 .carousel-image-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
+/* --- BOTONES SOCIALES --- */
 .social-button.whatsapp:hover {
   background: #25D366;
 }
+
 .social-button.instagram:hover {
   background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
 }
+
 .social-button.facebook:hover {
   background: #1877F2;
 }
+
 .social-link {
   text-decoration: none;
 }
+
 .separator {
   border: none;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -437,29 +548,37 @@ body {
     text-align: center;
     gap: 15px;
   }
+  
   .hero-section {
     min-height: auto;
+    padding: 20px;
   }
+  
   .hero-branding {
     justify-content: center;
     order: 1;
   }
+  
   .hero-text-container {
     order: 2;
   }
+  
   .header-nav {
     justify-content: center;
     justify-self: center;
     order: 3;
   }
+  
   .animation-section {
     margin-left: 0;
     padding: 200px 20px 20px 20px;
   }
+  
   .animation-content-wrapper {
     justify-content: center;
     max-width: 100%;
   }
+  
   .floating-buttons-container {
     top: 200px;
     left: 10px;
@@ -472,9 +591,11 @@ body {
     font-size: 1.2rem;
     white-space: normal;
   }
+  
   .animation-section {
     padding: 220px 10px 20px 10px;
   }
+  
   .floating-buttons-container {
     top: auto;
     bottom: 15px;
@@ -484,6 +605,7 @@ body {
     width: auto;
     padding: 8px;
   }
+  
   .floating-button {
     width: 50px;
     height: 50px;
@@ -491,161 +613,8 @@ body {
     justify-content: center;
     border-radius: 50%;
   }
+  
   .floating-button span {
     display: none;
-  }
-}
-.form-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1001; /* Un poco menos que el modal principal */
-  padding: 20px;
-}
-
-/* ================================================================== */
-/* HEADER FIJO CON EFECTO DE BARRIDO                                  */
-/* ================================================================== */
-
-.hero-section {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  background: #000;
-  color: white;
-  padding: 15px 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: var(--header-height);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
-  overflow: hidden; /* necesario para que el efecto no se salga */
-}
-
-/* === Efecto de barrido (brillo animado) === */
-.hero-section::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  animation: sweep 3s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes sweep {
-  0% { left: -75%; }
-  100% { left: 125%; }
-}
-
-/* === Contenedor interno === */
-.hero-content-wrapper {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 1200px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 40px;
-}
-
-/* === Logo === */
-.hero-branding {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-.hero-logo {
-  max-width: 200px;
-  height: auto;
-}
-
-/* === Título y subtítulo === */
-.hero-text-container {
-  text-align: center;
-  justify-self: center;
-}
-.hero-text-container h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #f8f9fa;
-  margin: 0;
-  white-space: nowrap;
-}
-.hero-text-container p {
-  font-size: 1rem;
-  color: #adb5bd;
-  margin: 0;
-}
-
-/* === Navegación === */
-.header-nav {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 35px;
-  justify-self: end;
-}
-.header-nav .nav-link,
-.header-nav .nav-link-button {
-  color: #f8f9fa;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 1rem;
-  white-space: nowrap;
-  transition: color 0.2s ease-in-out;
-}
-.header-nav .nav-link:hover,
-.header-nav .nav-link-button:hover {
-  color: #adb5bd;
-}
-.nav-user-greeting {
-  color: #adb5bd;
-  font-size: 0.9rem;
-}
-.nav-link-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font-family: inherit;
-}
-
-/* === Adaptativo === */
-@media (max-width: 992px) {
-  .hero-content-wrapper {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    text-align: center;
-    gap: 15px;
-  }
-  .hero-section {
-    min-height: auto;
-    padding: 20px;
-  }
-  .hero-branding {
-    justify-content: center;
-    order: 1;
-  }
-  .hero-text-container {
-    order: 2;
-  }
-  .header-nav {
-    justify-content: center;
-    justify-self: center;
-    order: 3;
   }
 }
