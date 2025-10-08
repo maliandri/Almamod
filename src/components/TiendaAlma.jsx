@@ -244,7 +244,7 @@ function TiendaAlma() {
   const [showSpecs, setShowSpecs] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHoveringText, setIsHoveringText] = useState(false);
-  const [zoomedText, setZoomedText] = useState('');
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   // Manejar URLs y navegación
   useEffect(() => {
@@ -338,24 +338,14 @@ function TiendaAlma() {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top
     });
-    
-    // Obtener el elemento debajo del cursor
-    const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
-    if (elementUnderMouse) {
-      // Buscar el texto del elemento más cercano con clase spec-detail-item
-      const specItem = elementUnderMouse.closest('.spec-detail-item');
-      if (specItem) {
-        // Extraer solo una porción del texto alrededor del cursor
-        const text = specItem.textContent || '';
-        const words = text.split(' ');
-        // Tomar aprox. 8-10 palabras para mostrar en la lupa
-        const middleIndex = Math.floor(words.length / 2);
-        const startIndex = Math.max(0, middleIndex - 4);
-        const endIndex = Math.min(words.length, startIndex + 9);
-        const excerpt = words.slice(startIndex, endIndex).join(' ');
-        setZoomedText(excerpt);
-      }
-    }
+  };
+
+  const handleItemHover = (text) => {
+    setHoveredItem(text);
+  };
+
+  const handleItemLeave = () => {
+    setHoveredItem(null);
   };
 
   const openSpecs = () => {
@@ -365,7 +355,7 @@ function TiendaAlma() {
   const closeSpecs = () => {
     setShowSpecs(false);
     setIsHoveringText(false);
-    setZoomedText('');
+    setHoveredItem(null);
   };
 
   return (
@@ -656,7 +646,12 @@ function TiendaAlma() {
                 <div className="specs-section">
                   <h3>ESPECIFICACIONES DE CONSTRUCCIÓN</h3>
                   {selectedModule.especificacionesTecnicas.construccion.map((item, index) => (
-                    <div key={index} className="spec-detail-item">
+                    <div 
+                      key={index} 
+                      className="spec-detail-item"
+                      onMouseEnter={() => handleItemHover(`${item.titulo}: ${item.detalle}`)}
+                      onMouseLeave={handleItemLeave}
+                    >
                       <strong>{item.titulo}:</strong> {item.detalle}
                     </div>
                   ))}
@@ -665,13 +660,18 @@ function TiendaAlma() {
                 <div className="specs-section">
                   <h3>EQUIPAMIENTO INCLUIDO</h3>
                   {selectedModule.especificacionesTecnicas.equipamiento.map((item, index) => (
-                    <div key={index} className="spec-detail-item">
+                    <div 
+                      key={index} 
+                      className="spec-detail-item"
+                      onMouseEnter={() => handleItemHover(`${item.titulo}: ${item.detalle}`)}
+                      onMouseLeave={handleItemLeave}
+                    >
                       <strong>{item.titulo}:</strong> {item.detalle}
                     </div>
                   ))}
                 </div>
 
-                {isHoveringText && zoomedText && (
+                {isHoveringText && hoveredItem && (
                   <div 
                     className="magnifier"
                     style={{
@@ -680,7 +680,7 @@ function TiendaAlma() {
                     }}
                   >
                     <div className="magnifier-content">
-                      {zoomedText}
+                      {hoveredItem}
                     </div>
                   </div>
                 )}
