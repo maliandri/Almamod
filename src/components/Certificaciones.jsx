@@ -137,7 +137,7 @@ function Certificaciones() {
       id: 'sismo',
       nombre: 'Sismo Resistente',
       icono: '/certificaciones/cat-sismoresistente-icono.webp',
-      certificado: '/certificaciones/cat_propaneltermorresistente.webp',
+      certificado: '/certificaciones/cat_propaneltermoresistente.webp',
       color: '#dc2626',
       descripcion: 'Los Paneles SIP PROPANEL utilizados por AlmaMod están específicamente diseñados y certificados para zonas sísmicas. Su estructura monolítica y flexibilidad controlada brindan una resistencia superior ante movimientos telúricos, fundamental en la región patagónica.',
       beneficios: [
