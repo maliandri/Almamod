@@ -429,11 +429,14 @@
   margin-top: 0;
   padding-top: 10px;
   flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-.contact-button {
+.contact-button,
+.specs-button {
   width: 100%;
-  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
   color: white;
   border: none;
   padding: 10px 16px;
@@ -448,9 +451,22 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.contact-button {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
 .contact-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+}
+
+.specs-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.specs-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
 }
 
 /* Estilos para el carrusel de imágenes */
@@ -544,6 +560,124 @@
   border-radius: 4px;
 }
 
+/* Modal de Especificaciones Técnicas */
+.specs-modal {
+  max-width: 1200px;
+  width: 95%;
+  height: 90vh;
+  max-height: 90vh;
+  background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.specs-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px 24px;
+  border-radius: 12px 12px 0 0;
+  margin: -20px -20px 0 -20px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.specs-header h2 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.specs-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  position: relative;
+  cursor: default;
+}
+
+.specs-section {
+  margin-bottom: 32px;
+}
+
+.specs-section:last-child {
+  margin-bottom: 0;
+}
+
+.specs-section h3 {
+  color: #d4a574;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(212, 165, 116, 0.3);
+}
+
+.spec-detail-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  border-left: 3px solid #667eea;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+}
+
+.spec-detail-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-left-color: #d4a574;
+}
+
+.spec-detail-item strong {
+  color: #d4a574;
+  font-weight: 600;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+/* Efecto de Lupa */
+.magnifier {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 4px solid #d4a574;
+  background: rgba(26, 26, 46, 0.98);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(212, 165, 116, 0.3);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  overflow: hidden;
+  backdrop-filter: blur(2px);
+}
+
+.magnifier::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  pointer-events: none;
+}
+
+.magnifier-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.8);
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+  width: 200%;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  line-height: 1.4;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .tienda-grid {
@@ -572,7 +706,7 @@
     font-size: 0.85rem;
   }
 
-  /* Modal de detalle en móvil - TODO EN UNA PANTALLA */
+  /* Modal de detalle en móvil */
   .tienda-detail-modal {
     height: 100vh;
     max-height: 100vh;
@@ -658,15 +792,19 @@
     padding-top: 8px;
     margin-top: 0;
     padding-bottom: 8px;
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
-  .contact-button {
+  .contact-button,
+  .specs-button {
     padding: 11px 14px;
     font-size: 0.82rem;
     gap: 6px;
   }
 
-  .contact-button svg {
+  .contact-button svg,
+  .specs-button svg {
     width: 16px;
     height: 16px;
   }
@@ -704,5 +842,44 @@
   .modulo-price {
     font-size: 1rem;
     color: #ffffff;
+  }
+
+  /* Modal de especificaciones en móvil */
+  .specs-modal {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  .specs-header {
+    padding: 16px 20px;
+  }
+
+  .specs-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .specs-content {
+    padding: 16px;
+  }
+
+  .specs-section h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .spec-detail-item {
+    font-size: 0.85rem;
+    padding: 10px 12px;
+  }
+
+  .magnifier {
+    width: 140px;
+    height: 140px;
+    border-width: 3px;
+  }
+
+  .magnifier-content {
+    font-size: 1.1rem;
   }
 }

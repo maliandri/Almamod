@@ -31,7 +31,34 @@ const modulosData = [
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_36_portada.webp',
     imagenesDetalle: ['/modulos/Alma36_1.webp', '/modulos/Alma36_2.webp'],
-    descripcion: 'Solución habitacional de 2 habitaciones. Compacta, eficiente y confortable.'
+    descripcion: 'Solución habitacional de 2 habitaciones. Compacta, eficiente y confortable.',
+    especificacionesTecnicas: {
+      construccion: [
+        { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
+        { titulo: 'Estructura piso', detalle: 'Panel SIP PROPANEL 9cm, pintado en la cara inferior con pintura asfáltica.' },
+        { titulo: 'Muros', detalle: 'Panel SIP PROPANEL 9cm.' },
+        { titulo: 'Techo', detalle: 'Panel SIP cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
+        { titulo: 'Revestimiento de muros exterior', detalle: 'machimbre de 1era calidad protegido contra rayos UV humedad y corrosión o siding horizontal/vertical 6mm, pintado símil madera o látex exterior.' },
+        { titulo: 'Revestimiento de muros interior', detalle: 'machimbre de 1era calidad barnizado o placas de yeso con junta tomada y pintura látex lavable.' },
+        { titulo: 'Terminación piso interior', detalle: 'Pisos vinílicos SPC de alto tránsito 5.5 mm.' },
+        { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
+        { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
+        { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Revestimientos de cocina', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
+        { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
+        { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
+      ],
+      equipamiento: [
+        { titulo: 'Inodoro con depósito', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Bidet', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Fv Puelo.' },
+        { titulo: 'Vanitory', detalle: 'en MDF.' },
+        { titulo: 'Receptáculo de ducha', detalle: '120x70cm con mampara.' },
+        { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
+        { titulo: 'Puertas interior', detalle: 'Oblak Practika' }
+      ]
+    }
   },
   {
     id: 'almamod27',
@@ -45,7 +72,34 @@ const modulosData = [
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_27_portada.webp',
     imagenesDetalle: ['/modulos/almamod_27.webp'],
-    descripcion: 'Solución habitacional de 1 habitación. Compacta, eficiente y confortable.'
+    descripcion: 'Solución habitacional de 1 habitación. Compacta, eficiente y confortable.',
+    especificacionesTecnicas: {
+      construccion: [
+        { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
+        { titulo: 'Estructura piso', detalle: 'Panel SIP PROPANEL 9cm, pintado en la cara inferior con pintura asfáltica.' },
+        { titulo: 'Muros', detalle: 'Panel SIP PROPANEL 9cm.' },
+        { titulo: 'Techo', detalle: 'Panel SIP cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
+        { titulo: 'Revestimiento de muros exterior', detalle: 'machimbre de 1era calidad protegido contra rayos UV humedad y corrosión o siding horizontal/vertical 6mm, pintado símil madera o látex exterior.' },
+        { titulo: 'Revestimiento de muros interior', detalle: 'machimbre de 1era calidad barnizado o placas de yeso con junta tomada y pintura látex lavable.' },
+        { titulo: 'Terminación piso interior', detalle: 'Pisos vinílicos SPC de alto tránsito 5.5 mm.' },
+        { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
+        { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
+        { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Revestimientos de cocina', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
+        { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
+        { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
+      ],
+      equipamiento: [
+        { titulo: 'Inodoro con depósito', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Bidet', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Fv Puelo.' },
+        { titulo: 'Vanitory', detalle: 'en MDF.' },
+        { titulo: 'Receptáculo de ducha', detalle: '120x70cm con mampara.' },
+        { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
+        { titulo: 'Puertas interior', detalle: 'Oblak Practika' }
+      ]
+    }
   },
   {
     id: 'almamod18',
@@ -59,7 +113,34 @@ const modulosData = [
     plazo: '30 días',
     imagenPortada: '/modulos/AlmaMod_18_portada.webp',
     imagenesDetalle: ['/modulos/AlmaMod_18.webp'],
-    descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.'
+    descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.',
+    especificacionesTecnicas: {
+      construccion: [
+        { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
+        { titulo: 'Estructura piso', detalle: 'Panel SIP PROPANEL 9cm, pintado en la cara inferior con pintura asfáltica.' },
+        { titulo: 'Muros', detalle: 'Panel SIP PROPANEL 9cm.' },
+        { titulo: 'Techo', detalle: 'Panel SIP cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
+        { titulo: 'Revestimiento de muros exterior', detalle: 'machimbre de 1era calidad protegido contra rayos UV humedad y corrosión o siding horizontal/vertical 6mm, pintado símil madera o látex exterior.' },
+        { titulo: 'Revestimiento de muros interior', detalle: 'machimbre de 1era calidad barnizado o placas de yeso con junta tomada y pintura látex lavable.' },
+        { titulo: 'Terminación piso interior', detalle: 'Pisos vinílicos SPC de alto tránsito 5.5 mm.' },
+        { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
+        { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
+        { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Revestimientos de cocina', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
+        { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
+        { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
+      ],
+      equipamiento: [
+        { titulo: 'Inodoro con depósito', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Bidet', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Fv Puelo.' },
+        { titulo: 'Vanitory', detalle: 'en MDF.' },
+        { titulo: 'Receptáculo de ducha', detalle: '120x70cm con mampara.' },
+        { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
+        { titulo: 'Puertas interior', detalle: 'Oblak Practika' }
+      ]
+    }
   },
   {
     id: 'almamodloft28',
@@ -73,7 +154,34 @@ const modulosData = [
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_loft28_portada.webp',
     imagenesDetalle: ['/modulos/Almamod_loft28.webp'],
-    descripcion: 'Vivienda modular estilo loft con entrepiso. Diseño funcional y moderno.'
+    descripcion: 'Vivienda modular estilo loft con entrepiso. Diseño funcional y moderno.',
+    especificacionesTecnicas: {
+      construccion: [
+        { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
+        { titulo: 'Estructura piso', detalle: 'Panel SIP PROPANEL 9cm, pintado en la cara inferior con pintura asfáltica.' },
+        { titulo: 'Muros', detalle: 'Panel SIP PROPANEL 9cm.' },
+        { titulo: 'Techo', detalle: 'Panel SIP cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
+        { titulo: 'Revestimiento de muros exterior', detalle: 'machimbre de 1era calidad protegido contra rayos UV humedad y corrosión o siding horizontal/vertical 6mm, pintado símil madera o látex exterior.' },
+        { titulo: 'Revestimiento de muros interior', detalle: 'machimbre de 1era calidad barnizado o placas de yeso con junta tomada y pintura látex lavable.' },
+        { titulo: 'Terminación piso interior', detalle: 'Pisos vinílicos SPC de alto tránsito 5.5 mm.' },
+        { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
+        { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
+        { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Revestimientos de cocina', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
+        { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
+        { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
+      ],
+      equipamiento: [
+        { titulo: 'Inodoro con depósito', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Bidet', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Fv Puelo.' },
+        { titulo: 'Vanitory', detalle: 'en MDF.' },
+        { titulo: 'Receptáculo de ducha', detalle: '120x70cm con mampara.' },
+        { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
+        { titulo: 'Puertas interior', detalle: 'Oblak Practika' }
+      ]
+    }
   },
   {
     id: 'micasita',
@@ -87,7 +195,32 @@ const modulosData = [
     plazo: '30 días',
     imagenPortada: '/modulos/Almamod_micasita_portada.webp',
     imagenesDetalle: ['/modulos/Almamod_micasita.webp'],
-    descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.'
+    descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.',
+    especificacionesTecnicas: {
+      construccion: [
+        { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
+        { titulo: 'Estructura piso', detalle: 'Panel SIP PROPANEL 9cm, pintado en la cara inferior con pintura asfáltica.' },
+        { titulo: 'Muros', detalle: 'Panel SIP PROPANEL 9cm.' },
+        { titulo: 'Techo', detalle: 'Panel SIP cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
+        { titulo: 'Revestimiento de muros exterior', detalle: 'machimbre de 1era calidad protegido contra rayos UV humedad y corrosión o siding horizontal/vertical 6mm, pintado símil madera o látex exterior.' },
+        { titulo: 'Revestimiento de muros interior', detalle: 'machimbre de 1era calidad barnizado o placas de yeso con junta tomada y pintura látex lavable.' },
+        { titulo: 'Terminación piso interior', detalle: 'Pisos vinílicos SPC de alto tránsito 5.5 mm.' },
+        { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
+        { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
+        { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
+        { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
+        { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
+      ],
+      equipamiento: [
+        { titulo: 'Inodoro con depósito', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Griferías ducha, bacha cocina', detalle: 'Fv Puelo.' },
+        { titulo: 'Vanitory', detalle: 'en MDF.' },
+        { titulo: 'Receptáculo de ducha', detalle: '120x70cm con mampara.' },
+        { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
+        { titulo: 'Puertas interior', detalle: 'Oblak Practika' }
+      ]
+    }
   }
 ];
 
@@ -108,6 +241,10 @@ function TiendaAlma() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showSpecs, setShowSpecs] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHoveringText, setIsHoveringText] = useState(false);
+  const [zoomedText, setZoomedText] = useState('');
 
   // Manejar URLs y navegación
   useEffect(() => {
@@ -193,6 +330,42 @@ function TiendaAlma() {
         prev === 0 ? selectedModule.imagenesDetalle.length - 1 : prev - 1
       );
     }
+  };
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+    
+    // Obtener el elemento debajo del cursor
+    const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
+    if (elementUnderMouse) {
+      // Buscar el texto del elemento más cercano con clase spec-detail-item
+      const specItem = elementUnderMouse.closest('.spec-detail-item');
+      if (specItem) {
+        // Extraer solo una porción del texto alrededor del cursor
+        const text = specItem.textContent || '';
+        const words = text.split(' ');
+        // Tomar aprox. 8-10 palabras para mostrar en la lupa
+        const middleIndex = Math.floor(words.length / 2);
+        const startIndex = Math.max(0, middleIndex - 4);
+        const endIndex = Math.min(words.length, startIndex + 9);
+        const excerpt = words.slice(startIndex, endIndex).join(' ');
+        setZoomedText(excerpt);
+      }
+    }
+  };
+
+  const openSpecs = () => {
+    setShowSpecs(true);
+  };
+
+  const closeSpecs = () => {
+    setShowSpecs(false);
+    setIsHoveringText(false);
+    setZoomedText('');
   };
 
   return (
@@ -430,8 +603,87 @@ function TiendaAlma() {
                       </svg>
                       Consultar por WhatsApp
                     </button>
+                    <button 
+                      className="specs-button"
+                      onClick={openSpecs}
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                      </svg>
+                      Especificaciones Técnicas
+                    </button>
                   </div>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>,
+        document.getElementById('modal-portal')
+      )}
+
+      {showSpecs && selectedModule && createPortal(
+        <AnimatePresence>
+          <motion.div
+            className="modal-overlay tienda-overlay"
+            onClick={closeSpecs}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{ zIndex: 10001 }}
+          >
+            <motion.div
+              className="modal-content specs-modal"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+            >
+              <div className="specs-header">
+                <h2>Especificaciones Técnicas - {selectedModule.nombre}</h2>
+                <button onClick={closeSpecs} className="close-button">&times;</button>
+              </div>
+
+              <div 
+                className="specs-content"
+                onMouseMove={handleMouseMove}
+                onMouseEnter={() => setIsHoveringText(true)}
+                onMouseLeave={() => setIsHoveringText(false)}
+              >
+                <div className="specs-section">
+                  <h3>ESPECIFICACIONES DE CONSTRUCCIÓN</h3>
+                  {selectedModule.especificacionesTecnicas.construccion.map((item, index) => (
+                    <div key={index} className="spec-detail-item">
+                      <strong>{item.titulo}:</strong> {item.detalle}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="specs-section">
+                  <h3>EQUIPAMIENTO INCLUIDO</h3>
+                  {selectedModule.especificacionesTecnicas.equipamiento.map((item, index) => (
+                    <div key={index} className="spec-detail-item">
+                      <strong>{item.titulo}:</strong> {item.detalle}
+                    </div>
+                  ))}
+                </div>
+
+                {isHoveringText && zoomedText && (
+                  <div 
+                    className="magnifier"
+                    style={{
+                      left: `${mousePosition.x}px`,
+                      top: `${mousePosition.y}px`,
+                    }}
+                  >
+                    <div className="magnifier-content">
+                      {zoomedText}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           </motion.div>
