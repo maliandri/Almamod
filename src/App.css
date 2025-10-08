@@ -175,8 +175,10 @@ body {
   width: 100%;
   max-width: calc(100vw - 320px);
   display: flex;
+  flex-direction: column; /* ← AGREGADO: Para apilar verticalmente */
+  gap: 2rem; /* ← AGREGADO: Espacio entre componentes */
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: stretch; /* ← CAMBIADO: Para que ocupen todo el ancho */
 }
 
 /* --- FOOTER --- */
