@@ -639,51 +639,6 @@
   margin-right: 8px;
 }
 
-/* Efecto de Lupa - Optimizado y ligero */
-.magnifier {
-  position: absolute;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  border: 4px solid #d4a574;
-  background: rgba(26, 26, 46, 0.96);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  overflow: hidden;
-  will-change: transform;
-}
-
-.magnifier::before {
-  content: '';
-  position: absolute;
-  inset: 10px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.magnifier-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffffff;
-  font-size: 0.85rem;
-  font-weight: 500;
-  text-align: center;
-  width: 85%;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
-  line-height: 1.4;
-  padding: 8px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .tienda-grid {
@@ -877,18 +832,5 @@
   .spec-detail-item {
     font-size: 0.85rem;
     padding: 10px 12px;
-  }
-
-  .magnifier {
-    width: 140px;
-    height: 140px;
-    border-width: 3px;
-  }
-
-  .magnifier-content {
-    font-size: 0.75rem;
-    padding: 6px;
-    width: 80%;
-    -webkit-line-clamp: 5;
   }
 }
