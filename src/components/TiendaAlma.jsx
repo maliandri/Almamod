@@ -242,9 +242,6 @@ function TiendaAlma() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showSpecs, setShowSpecs] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHoveringText, setIsHoveringText] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState(null);
 
   // Manejar URLs y navegación
   useEffect(() => {
@@ -332,30 +329,12 @@ function TiendaAlma() {
     }
   };
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
-  };
-
-  const handleItemHover = (text) => {
-    setHoveredItem(text);
-  };
-
-  const handleItemLeave = () => {
-    setHoveredItem(null);
-  };
-
   const openSpecs = () => {
     setShowSpecs(true);
   };
 
   const closeSpecs = () => {
     setShowSpecs(false);
-    setIsHoveringText(false);
-    setHoveredItem(null);
   };
 
   return (
@@ -637,20 +616,13 @@ function TiendaAlma() {
                 <button onClick={closeSpecs} className="close-button">&times;</button>
               </div>
 
-              <div 
-                className="specs-content"
-                onMouseMove={handleMouseMove}
-                onMouseEnter={() => setIsHoveringText(true)}
-                onMouseLeave={() => setIsHoveringText(false)}
-              >
+              <div className="specs-content">
                 <div className="specs-section">
                   <h3>ESPECIFICACIONES DE CONSTRUCCIÓN</h3>
                   {selectedModule.especificacionesTecnicas.construccion.map((item, index) => (
                     <div 
                       key={index} 
                       className="spec-detail-item"
-                      onMouseEnter={() => handleItemHover(`${item.titulo}: ${item.detalle}`)}
-                      onMouseLeave={handleItemLeave}
                     >
                       <strong>{item.titulo}:</strong> {item.detalle}
                     </div>
@@ -663,27 +635,11 @@ function TiendaAlma() {
                     <div 
                       key={index} 
                       className="spec-detail-item"
-                      onMouseEnter={() => handleItemHover(`${item.titulo}: ${item.detalle}`)}
-                      onMouseLeave={handleItemLeave}
                     >
                       <strong>{item.titulo}:</strong> {item.detalle}
                     </div>
                   ))}
                 </div>
-
-                {isHoveringText && hoveredItem && (
-                  <div 
-                    className="magnifier"
-                    style={{
-                      left: `${mousePosition.x}px`,
-                      top: `${mousePosition.y}px`,
-                    }}
-                  >
-                    <div className="magnifier-content">
-                      {hoveredItem}
-                    </div>
-                  </div>
-                )}
               </div>
             </motion.div>
           </motion.div>
