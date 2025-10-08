@@ -1,0 +1,524 @@
+/* Certificaciones.css */
+
+.certificaciones-container {
+  width: 100%;
+  max-width: 1140px;
+  margin: 2rem auto;
+  padding: 0 1.9rem;
+  box-sizing: border-box;
+}
+
+.certificaciones-barra {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(212, 165, 116, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.certificaciones-barra::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #f59e0b, #16a34a, #dc2626);
+}
+
+.certificaciones-titulo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.certificaciones-titulo h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #d4a574;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.certificaciones-titulo h3 svg {
+  color: #d4a574;
+}
+
+.certificaciones-botones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.cert-boton {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.cert-boton::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--cert-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cert-boton:hover::before {
+  opacity: 0.1;
+}
+
+.cert-boton:hover {
+  border-color: var(--cert-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transform: translateY(-4px);
+}
+
+.cert-boton-imagen {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.cert-boton:hover .cert-boton-imagen {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.1);
+}
+
+.cert-boton-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cert-boton span {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  line-height: 1.3;
+}
+
+/* Modal */
+.cert-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+}
+
+.cert-modal {
+  background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  max-width: 1000px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(212, 165, 116, 0.2);
+}
+
+.cert-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.cert-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.cert-modal-header {
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 3px solid;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cert-modal-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert-modal-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cert-modal-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.cert-modal-body {
+  padding: 2rem;
+}
+
+.cert-modal-certificado {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(212, 165, 116, 0.3);
+}
+
+.cert-modal-certificado img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.cert-modal-content {
+  color: #e2e8f0;
+}
+
+.cert-descripcion {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(212, 165, 116, 0.08);
+  border-radius: 12px;
+  border-left: 4px solid #d4a574;
+}
+
+.cert-descripcion p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin: 0;
+  color: #cbd5e1;
+}
+
+.cert-beneficios,
+.cert-specs {
+  margin-bottom: 2rem;
+}
+
+.cert-beneficios h3,
+.cert-specs h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #d4a574;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.beneficios-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.beneficio-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.beneficio-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(212, 165, 116, 0.3);
+  transform: translateY(-2px);
+}
+
+.beneficio-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.beneficio-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.beneficio-header h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #d4a574;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.beneficio-item p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.specs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.specs-list li {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  border-left: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.specs-list li:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-left-color: #d4a574;
+  transform: translateX(4px);
+}
+
+.spec-bullet {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.cert-footer {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+.cert-garantia {
+  background: rgba(212, 165, 116, 0.08);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.cert-garantia svg {
+  flex-shrink: 0;
+}
+
+.cert-garantia strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #d4a574;
+  margin-bottom: 0.5rem;
+}
+
+.cert-garantia p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .certificaciones-botones {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .beneficios-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cert-modal-header h2 {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .certificaciones-container {
+    padding: 0 1rem;
+    margin: 1.5rem auto;
+  }
+  
+  .certificaciones-barra {
+    padding: 1.5rem;
+  }
+  
+  .certificaciones-titulo h3 {
+    font-size: 1.4rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .certificaciones-botones {
+    gap: 1rem;
+  }
+  
+  .cert-boton {
+    padding: 1rem 0.75rem;
+  }
+  
+  .cert-boton-imagen {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .cert-boton span {
+    font-size: 0.85rem;
+  }
+  
+  .cert-modal-body {
+    padding: 1.5rem;
+  }
+  
+  .cert-modal-header {
+    padding: 1.5rem;
+  }
+  
+  .cert-modal-icon {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .cert-modal-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .cert-descripcion p {
+    font-size: 1rem;
+  }
+  
+  .cert-garantia {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .certificaciones-barra {
+    padding: 1rem;
+  }
+  
+  .certificaciones-titulo h3 {
+    font-size: 1.2rem;
+  }
+  
+  .certificaciones-botones {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .cert-boton {
+    padding: 1rem;
+    flex-direction: row;
+    text-align: left;
+  }
+  
+  .cert-boton-imagen {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .cert-boton span {
+    font-size: 0.9rem;
+    text-align: left;
+  }
+  
+  .cert-modal-body {
+    padding: 1rem;
+  }
+  
+  .cert-modal-header {
+    padding: 1rem;
+  }
+  
+  .cert-modal-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .cert-beneficios h3,
+  .cert-specs h3 {
+    font-size: 1.2rem;
+  }
+  
+  .beneficio-header h4 {
+    font-size: 0.95rem;
+  }
+  
+  .beneficio-item p {
+    font-size: 0.85rem;
+  }
+  
+  .specs-list li {
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+  }
+}

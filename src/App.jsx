@@ -17,6 +17,7 @@ import VerifyEmail from './components/VerifyEmail.jsx';
 import ServiciosCarousel from './components/ServiciosCarousel.jsx';
 import ResetPassword from './components/ResetPassword.jsx';
 import TiendaAlma from './components/TiendaAlma.jsx';
+import Certificaciones from './components/certificaciones.jsx';
 
 // ====================================================================
 // Componente para la página de inicio
@@ -26,6 +27,7 @@ function HomePage() {
     <section className="animation-section">
       <div className="animation-content-wrapper">
         <ServiciosCarousel />
+        <Certificaciones />
       </div>
     </section>
   );
