@@ -5,7 +5,7 @@ import './App.css';
 import { AuthContext } from './context/AuthContext';
 
 // --- Imports ---
-import logoAlmamod from './assets/almamod.jpg';
+import logoAlmamod from './assets/almamod.webp';
 import CalculadoraModulo from './components/CalculadoraModulo.jsx';
 import ObrasCarousel from './components/ObrasCarousel.jsx';
 import Ubicacion from './components/Ubicacion.jsx';
