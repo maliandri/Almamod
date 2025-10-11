@@ -645,6 +645,50 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  /*
+   * CORRECCIONES PRINCIPALES PARA EL SCROLL
+   */
+  .tienda-modal,
+  .tienda-detail-modal,
+  .specs-modal {
+    width: 100%;
+    height: auto; /* CAMBIO CLAVE: La altura se adapta al contenido */
+    max-height: 100vh; /* Opcional: asegura que no exceda la altura de la pantalla */
+    overflow-y: auto; /* CAMBIO CLAVE: Permite el scroll DENTRO del modal si es necesario */
+    -webkit-overflow-scrolling: touch; /* Mejora la experiencia de scroll en iOS */
+  }
+
+  /*
+   * AJUSTES DE LAYOUT PARA EL MODAL DE DETALLE
+   */
+  .detail-content {
+    grid-template-columns: 1fr;
+    height: auto; /* La altura se adapta al contenido */
+  }
+
+  .detail-image-section {
+    /* Mantiene una proporción para que la imagen no ocupe toda la pantalla */
+    height: 300px;
+    max-height: 40vh;
+  }
+  
+  .detail-info-section {
+    height: auto; /* Se adapta a su propio contenido */
+    padding: 10px 14px 20px 14px; /* Aumentado el padding inferior para que no quede pegado */
+    gap: 8px; /* Un poco más de espacio entre elementos */
+  }
+
+  .detail-actions {
+    padding-top: 12px;
+    margin-top: auto; /* Empuja los botones hacia abajo */
+    padding-bottom: 8px;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  /*
+   * ESTILOS ADICIONALES (YA LOS TENÍAS, SE MANTIENEN)
+   */
   .tienda-grid {
     grid-template-columns: 1fr;
   }
@@ -670,97 +714,26 @@
   .search-result-info span {
     font-size: 0.85rem;
   }
-
-  /* Modal de detalle en móvil */
-  .tienda-detail-modal {
-    height: 100vh;
-    max-height: 100vh;
-    width: 100%;
-  }
-
-  .detail-content {
-    grid-template-columns: 1fr;
-    grid-template-rows: 40% 60%;
-    height: 100%;
-    max-height: 100%;
-  }
-
-  .detail-image-section {
-    height: 100%;
-    max-height: 100%;
-  }
-
-  .detail-image-section img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-  }
-
-  .detail-info-section {
-    padding: 10px 14px 10px 14px;
-    height: 100%;
-    gap: 5px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-  }
-
+  
   .detail-info-section h2 {
     font-size: 1.15rem;
-    margin: 0;
   }
 
-  .detail-description {
-    font-size: 0.78rem;
-    line-height: 1.2;
-    margin: 0;
-  }
-
-  .detail-specs {
-    padding: 7px 10px;
-    margin: 0;
-  }
-
-  .spec-item {
-    padding: 3px 0;
-  }
-
+  .detail-description,
   .spec-item strong,
-  .spec-item span {
-    font-size: 0.78rem;
+  .spec-item span,
+  .detail-includes li,
+  .detail-features li {
+    font-size: 0.82rem; /* Unificado para consistencia */
   }
 
   .spec-price {
-    font-size: 0.82rem !important;
-    color: #ffffff !important;
-  }
-
-  .detail-includes,
-  .detail-features {
-    margin: 0;
+    font-size: 0.85rem !important;
   }
 
   .detail-includes h3,
   .detail-features h3 {
     font-size: 0.88rem;
-    margin: 0 0 3px 0;
-  }
-
-  .detail-includes li,
-  .detail-features li {
-    padding: 1.5px 0;
-    font-size: 0.78rem;
-    line-height: 1.15;
-  }
-
-  .detail-actions {
-    padding-top: 8px;
-    margin-top: 0;
-    padding-bottom: 8px;
-    grid-template-columns: 1fr;
-    gap: 8px;
   }
 
   .contact-button,
@@ -785,37 +758,15 @@
     height: 32px;
   }
   
-  .carousel-button.prev {
-    left: 8px;
-  }
+  .carousel-button.prev { left: 8px; }
+  .carousel-button.next { right: 8px; }
   
-  .carousel-button.next {
-    right: 8px;
-  }
-  
-  .carousel-indicators {
-    bottom: 12px;
-  }
-  
-  .indicator {
-    width: 6px;
-    height: 6px;
-  }
-  
-  .indicator.active {
-    width: 18px;
-  }
+  .carousel-indicators { bottom: 12px; }
+  .indicator { width: 6px; height: 6px; }
+  .indicator.active { width: 18px; }
 
   .modulo-price {
     font-size: 1rem;
-    color: #ffffff;
-  }
-
-  /* Modal de especificaciones en móvil */
-  .specs-modal {
-    width: 100%;
-    height: 100vh;
-    max-height: 100vh;
   }
 
   .specs-header {
@@ -838,31 +789,5 @@
   .spec-detail-item {
     font-size: 0.85rem;
     padding: 10px 12px;
-  }
-}
-@media (max-width: 768px) {
-  .tienda-modal {
-    height: auto;
-    max-height: none;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .tienda-detail-modal {
-    height: auto;
-    max-height: none;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .specs-modal {
-    height: auto;
-    max-height: none;
-    overflow-y: auto;
-  }
-
-  body,
-  html {
-    overflow-y: auto !important;
   }
 }
