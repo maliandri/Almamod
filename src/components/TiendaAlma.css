@@ -343,6 +343,8 @@
   flex-direction: column;
   height: 100%;
   gap: 6px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .detail-info-section h2 {
@@ -596,6 +598,8 @@
   padding: 24px;
   position: relative;
   cursor: default;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .specs-section {
@@ -699,6 +703,8 @@
     gap: 5px;
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   .detail-info-section h2 {
