@@ -840,3 +840,29 @@
     padding: 10px 12px;
   }
 }
+@media (max-width: 768px) {
+  .tienda-modal {
+    height: auto;
+    max-height: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tienda-detail-modal {
+    height: auto;
+    max-height: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .specs-modal {
+    height: auto;
+    max-height: none;
+    overflow-y: auto;
+  }
+
+  body,
+  html {
+    overflow-y: auto !important;
+  }
+}
