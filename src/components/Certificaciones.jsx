@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getImageUrl, IMG_CARD, IMG_DETAIL } from './cloudinary';
+import { getImageUrl, IMG_CARD, IMG_DETAIL } from '../config/cloudinary';
 import './Certificaciones.css';
 
 function Certificaciones() {
