@@ -17,7 +17,7 @@ export const extractImageName = (path) => {
  * @param {number} width - Ancho deseado
  */
 export const getImageUrl = (imageName, width = 400) => {
-  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_${width},q_auto,f_auto/modulos/${imageName}`;
+  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_${width},q_auto,f_auto/Modulos/${imageName}`;
 };
 
 /**
