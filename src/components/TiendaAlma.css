@@ -3,22 +3,29 @@
   background: linear-gradient(135deg, #d4a574 0%, #8b6f47 100%);
 }
 
-/* Overlay del modal */
+/* Overlay del modal - CLAVE: Permitir scroll aquí */
 .tienda-overlay {
   background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(8px);
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: flex;
+  align-items: center;
+  padding: 20px;
 }
 
-/* Modal principal - Una sola pantalla sin scroll */
+/* Modal principal - CORREGIDO: Sin altura fija, permite crecimiento */
 .tienda-modal {
   max-width: 1600px;
   width: 98%;
-  height: 95vh;
   max-height: 95vh;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
   display: flex;
   flex-direction: column;
+  -webkit-overflow-scrolling: touch;
+  margin: auto;
 }
 
 /* Header más compacto */
@@ -294,23 +301,23 @@
   text-align: center;
 }
 
-/* Modal de detalle - TODO EN UNA PANTALLA */
+/* Modal de detalle - CORREGIDO: Permite scroll */
 .tienda-detail-modal {
   max-width: 1400px;
   width: 95%;
-  height: 95vh;
   max-height: 95vh;
   overflow: hidden;
   padding: 0;
   background: #1a1a2e;
+  margin: auto;
 }
 
 .detail-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  height: 100%;
-  max-height: 100%;
+  min-height: 500px;
+  max-height: 95vh;
 }
 
 .detail-image-section {
@@ -319,8 +326,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  max-height: 100%;
   overflow: hidden;
 }
 
@@ -334,6 +339,7 @@
   display: block;
 }
 
+/* CLAVE: El scroll está aquí en la columna de info */
 .detail-info-section {
   padding: 16px 20px 14px 20px;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -341,10 +347,29 @@
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  max-height: 95vh;
   gap: 6px;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+}
+
+/* Scrollbar personalizada para detail-info-section */
+.detail-info-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.detail-info-section::-webkit-scrollbar-track {
+  background: rgba(212, 165, 116, 0.1);
+  border-radius: 10px;
+}
+
+.detail-info-section::-webkit-scrollbar-thumb {
+  background: rgba(212, 165, 116, 0.5);
+  border-radius: 10px;
+}
+
+.detail-info-section::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 165, 116, 0.7);
 }
 
 .detail-info-section h2 {
@@ -562,16 +587,16 @@
   border-radius: 4px;
 }
 
-/* Modal de Especificaciones Técnicas */
+/* Modal de Especificaciones Técnicas - CORREGIDO */
 .specs-modal {
   max-width: 1200px;
   width: 95%;
-  height: 90vh;
   max-height: 90vh;
   background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  margin: auto;
 }
 
 .specs-header {
@@ -592,14 +617,35 @@
   margin: 0;
 }
 
+/* CLAVE: Scroll en el contenido de specs */
 .specs-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 24px;
   position: relative;
   cursor: default;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+}
+
+/* Scrollbar personalizada para specs-content */
+.specs-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.specs-content::-webkit-scrollbar-track {
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 10px;
+}
+
+.specs-content::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.5);
+  border-radius: 10px;
+}
+
+.specs-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.7);
 }
 
 .specs-section {
@@ -645,50 +691,43 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  /*
-   * CORRECCIONES PRINCIPALES PARA EL SCROLL
-   */
+  .tienda-overlay {
+    padding: 10px;
+  }
+
   .tienda-modal,
   .tienda-detail-modal,
   .specs-modal {
     width: 100%;
-    height: auto; /* CAMBIO CLAVE: La altura se adapta al contenido */
-    max-height: 100vh; /* Opcional: asegura que no exceda la altura de la pantalla */
-    overflow-y: auto; /* CAMBIO CLAVE: Permite el scroll DENTRO del modal si es necesario */
-    -webkit-overflow-scrolling: touch; /* Mejora la experiencia de scroll en iOS */
+    max-height: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
-  /*
-   * AJUSTES DE LAYOUT PARA EL MODAL DE DETALLE
-   */
   .detail-content {
     grid-template-columns: 1fr;
-    height: auto; /* La altura se adapta al contenido */
+    max-height: none;
   }
 
   .detail-image-section {
-    /* Mantiene una proporción para que la imagen no ocupe toda la pantalla */
     height: 300px;
     max-height: 40vh;
   }
   
   .detail-info-section {
-    height: auto; /* Se adapta a su propio contenido */
-    padding: 10px 14px 20px 14px; /* Aumentado el padding inferior para que no quede pegado */
-    gap: 8px; /* Un poco más de espacio entre elementos */
+    max-height: none;
+    padding: 10px 14px 20px 14px;
+    gap: 8px;
   }
 
   .detail-actions {
     padding-top: 12px;
-    margin-top: auto; /* Empuja los botones hacia abajo */
+    margin-top: auto;
     padding-bottom: 8px;
     grid-template-columns: 1fr;
     gap: 8px;
   }
 
-  /*
-   * ESTILOS ADICIONALES (YA LOS TENÍAS, SE MANTIENEN)
-   */
   .tienda-grid {
     grid-template-columns: 1fr;
   }
@@ -724,7 +763,7 @@
   .spec-item span,
   .detail-includes li,
   .detail-features li {
-    font-size: 0.82rem; /* Unificado para consistencia */
+    font-size: 0.82rem;
   }
 
   .spec-price {
