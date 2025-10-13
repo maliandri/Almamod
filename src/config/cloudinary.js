@@ -1,5 +1,5 @@
 // ✅ TU CLOUD NAME CORRECTO
-const CLOUD_NAME = 'dishym1te'; 
+const CLOUD_NAME = 'dlshym1te'; 
 
 /**
  * Extrae el nombre del archivo sin extensión
