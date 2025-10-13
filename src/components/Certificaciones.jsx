@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getImageUrl, IMG_CARD, IMG_DETAIL } from './cloudinary';
 import './Certificaciones.css';
 
 function Certificaciones() {
@@ -10,8 +11,8 @@ function Certificaciones() {
     {
       id: 'propanel',
       nombre: 'Sistema PROPANEL',
-      icono: '/certificaciones/PROPANEL-iicono.webp',
-      certificado: '/certificaciones/cat_propanelcert.webp',
+      icono: getImageUrl('certificaciones/PROPANEL-iicono.webp', IMG_CARD),
+      certificado: getImageUrl('certificaciones/cat_propanelcert.webp', IMG_DETAIL),
       color: '#3b82f6',
       descripcion: 'AlmaMod utiliza exclusivamente Paneles SIP PROPANEL, el sistema constructivo más avanzado de Argentina. Fabricados con tecnología de última generación, estos paneles estructurales aislados combinan placas de OSB de alta densidad con núcleo de espuma rígida de poliuretano.',
       beneficios: [
@@ -52,8 +53,8 @@ function Certificaciones() {
     {
       id: 'cacmi',
       nombre: 'Certificación CACMI',
-      icono: '/certificaciones/cacmi-icono.webp',
-      certificado: '/certificaciones/cacmicert.webp',
+      icono: getImageUrl('certificaciones/cacmi-icono.webp', IMG_CARD),
+      certificado: getImageUrl('certificaciones/cacmicert.webp', IMG_DETAIL),
       color: '#f59e0b',
       descripcion: 'AlmaMod es miembro certificado de CACMI (Cámara Argentina de la Construcción Modular e Industrializada), la entidad que regula y certifica los más altos estándares de calidad en construcción modular en Argentina.',
       beneficios: [
@@ -94,8 +95,8 @@ function Certificaciones() {
     {
       id: 'edge',
       nombre: 'EDGE Advanced Certified',
-      icono: '/certificaciones/edge-icono.webp',
-      certificado: '/certificaciones/edge_advance_propanelCERT.webp',
+      icono: getImageUrl('certificaciones/edge-icono.webp', IMG_CARD),
+      certificado: getImageUrl('certificaciones/edge_advance_propanelCERT.webp', IMG_DETAIL),
       color: '#16a34a',
       descripcion: 'Nuestras construcciones con sistema PROPANEL están certificadas EDGE Advanced, el estándar internacional de construcción sustentable del International Finance Corporation (Grupo Banco Mundial). Esto nos posiciona como líderes en construcción verde en Argentina.',
       beneficios: [
@@ -136,8 +137,8 @@ function Certificaciones() {
     {
       id: 'sismo',
       nombre: 'Sismo Resistente',
-      icono: '/certificaciones/cat-sismoresistente-icono.webp',
-      certificado: '/certificaciones/cat_propaneltermoresistente.webp',
+      icono: getImageUrl('certificaciones/cat-sismoresistente-icono.webp', IMG_CARD),
+      certificado: getImageUrl('certificaciones/cat_propaneltermoresistente.webp', IMG_DETAIL),
       color: '#dc2626',
       descripcion: 'Los Paneles SIP PROPANEL utilizados por AlmaMod están específicamente diseñados y certificados para zonas sísmicas. Su estructura monolítica y flexibilidad controlada brindan una resistencia superior ante movimientos telúricos, fundamental en la región patagónica.',
       beneficios: [
