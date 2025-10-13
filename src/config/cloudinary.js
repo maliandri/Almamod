@@ -30,6 +30,9 @@ export const getCloudinaryUrlFromPath = (localPath, width = 400) => {
   return getImageUrl(imageName, width);
 };
 
+// ✅ Alias para compatibilidad con TiendaAlma.jsx
+export const getCloudinaryUrl = getCloudinaryUrlFromPath;
+
 // Tamaños predefinidos
 export const IMG_CARD = 400;      // Para las tarjetas en el grid
 export const IMG_DETAIL = 800;    // Para el modal de detalle
