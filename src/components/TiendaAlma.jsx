@@ -3,6 +3,9 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import './TiendaAlma.css';
 
+// ✅ IMPORTAR CLOUDINARY
+import { getCloudinaryUrl, IMG_CARD, IMG_DETAIL, IMG_THUMB } from '../config/cloudinary';
+
 const StoreIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -17,21 +20,69 @@ const generarSlug = (nombre) => {
     .replace(/[^a-z0-9-]/g, '');
 };
 
-// Datos de los módulos según el documento
+// ✅ DATOS DE LOS MÓDULOS CON NOMBRES REALES DE CLOUDINARY
 const modulosData = [
   {
-    id: 'almamod36',
-    nombre: 'Alma 36',
-    slug: 'alma-36',
-    superficie: '36 m²',
-    dimensiones: '12m × 3m',
-    habitaciones: '2 dormitorios',
-    precio: 50075000,
-    incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
+    id: 'micasita',
+    nombre: 'MiCasita',
+    slug: 'micasita',
+    superficie: '12 m²',
+    dimensiones: '4.88m × 2.44m',
+    habitaciones: 'Monoambiente',
+    precio: 15300000,
+    incluye: ['Baño completo', 'Cocina-dormitorio'],
     plazo: '30 días',
-    imagenPortada: '/modulos/AlmaMod_36_portada.webp',
-    imagenesDetalle: ['/modulos/Alma36_1.webp', '/modulos/Alma36_2.webp'],
-    descripcion: 'Solución habitacional de 2 habitaciones. Compacta, eficiente y confortable.',
+    imagenPortada: 'ALMAMOD_MICASITA_PORTADA.webp',
+    imagenesDetalle: [
+      'ALMAMOD_MICASITA_PORTADA.webp',
+      'ALMAMOD_MICASITA_1.webp',
+      'ALMAMOD_MICASITA_PLANIMETRIA.webp'
+    ],
+    descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.',
+    especificacionesTecnicas: {
+      construccion: [
+        { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
+        { titulo: 'Estructura piso', detalle: 'Panel SIP PROPANEL 9cm, pintado en la cara inferior con pintura asfáltica.' },
+        { titulo: 'Muros', detalle: 'Panel SIP PROPANEL 9cm.' },
+        { titulo: 'Techo', detalle: 'Panel SIP cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
+        { titulo: 'Revestimiento de muros exterior', detalle: 'machimbre de 1era calidad protegido contra rayos UV humedad y corrosión o siding horizontal/vertical 6mm, pintado símil madera o látex exterior.' },
+        { titulo: 'Revestimiento de muros interior', detalle: 'machimbre de 1era calidad barnizado o placas de yeso con junta tomada y pintura látex lavable.' },
+        { titulo: 'Terminación piso interior', detalle: 'Pisos vinílicos SPC de alto tránsito 5.5 mm.' },
+        { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
+        { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
+        { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
+        { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
+        { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
+      ],
+      equipamiento: [
+        { titulo: 'Inodoro con depósito', detalle: ' Italiana' },
+        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Hidromet' },
+        { titulo: 'Vanitory', detalle: 'en MDF.' },
+        { titulo: 'Receptáculo de ducha', detalle: '70x70cm con mampara.' },
+        { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
+        { titulo: 'Puertas interior', detalle: 'Placa con marco de aluminio' }
+      ]
+    }
+  },
+  {
+    id: 'almamod18',
+    nombre: 'Alma 18',
+    slug: 'alma-18',
+    superficie: '18 m²',
+    dimensiones: '6m × 3m',
+    habitaciones: '1 dormitorio',
+    precio: 32050000,
+    incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
+    plazo: '30 días',
+    imagenPortada: 'ALMAMOD_18_PORTADA.webp',
+    imagenesDetalle: [
+      'ALMAMOD_18_PORTADA.webp',
+      'ALMAMOD_18_RENDER_EXTERIOR.webp',
+      'ALMAMOD_18_PLANIMETRÍA.webp',
+      'ALMAMOD_18_PLANIMETRÍA_MOD.webp'
+    ],
+    descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.',
     especificacionesTecnicas: {
       construccion: [
         { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
@@ -70,50 +121,14 @@ const modulosData = [
     precio: 42120000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
     plazo: '30 días',
-    imagenPortada: '/modulos/AlmaMod_27_portada.webp',
-    imagenesDetalle: ['/modulos/almamod_27.webp'],
+    imagenPortada: 'ALMAMOD_27_PORTADA.webp',
+    imagenesDetalle: [
+      'ALMAMOD_27_PORTADA.webp',
+      'ALMAMOD_27_1.webp',
+      'ALMAMOD_27_RENDER_EXTERIOR.webp',
+      'ALMAMOD_27_PLANIMETRÍA.webp'
+    ],
     descripcion: 'Solución habitacional de 1 habitación. Compacta, eficiente y confortable.',
-    especificacionesTecnicas: {
-      construccion: [
-        { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
-        { titulo: 'Estructura piso', detalle: 'Panel SIP PROPANEL 9cm, pintado en la cara inferior con pintura asfáltica.' },
-        { titulo: 'Muros', detalle: 'Panel SIP PROPANEL 9cm.' },
-        { titulo: 'Techo', detalle: 'Panel SIP cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
-        { titulo: 'Revestimiento de muros exterior', detalle: 'machimbre de 1era calidad protegido contra rayos UV humedad y corrosión o siding horizontal/vertical 6mm, pintado símil madera o látex exterior.' },
-        { titulo: 'Revestimiento de muros interior', detalle: 'machimbre de 1era calidad barnizado o placas de yeso con junta tomada y pintura látex lavable.' },
-        { titulo: 'Terminación piso interior', detalle: 'Pisos vinílicos SPC de alto tránsito 5.5 mm.' },
-        { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
-        { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
-        { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
-        { titulo: 'Revestimientos de cocina', detalle: 'placas PVC símil mármol a elección' },
-        { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
-        { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
-        { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
-      ],
-      equipamiento: [
-        { titulo: 'Inodoro con depósito', detalle: 'Ferrúm Bari.' },
-        { titulo: 'Bidet', detalle: 'Ferrúm Bari.' },
-        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Fv Puelo.' },
-        { titulo: 'Vanitory', detalle: 'en MDF.' },
-        { titulo: 'Receptáculo de ducha', detalle: '120x70cm con mampara.' },
-        { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
-        { titulo: 'Puertas interior', detalle: 'Oblak Practika' }
-      ]
-    }
-  },
-  {
-    id: 'almamod18',
-    nombre: 'Alma 18',
-    slug: 'alma-18',
-    superficie: '18 m²',
-    dimensiones: '6m × 3m',
-    habitaciones: '1 dormitorio',
-    precio: 32050000,
-    incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
-    plazo: '30 días',
-    imagenPortada: '/modulos/AlmaMod_18_portada.webp',
-    imagenesDetalle: ['/modulos/AlmaMod_18.webp'],
-    descripcion: 'Solución habitacional compacta de 1 habitación. Ideal para parejas o personas solas.',
     especificacionesTecnicas: {
       construccion: [
         { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
@@ -152,8 +167,12 @@ const modulosData = [
     precio: 38500000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
-    imagenPortada: '/modulos/Almamod_loft28_portada.webp',
-    imagenesDetalle: ['/modulos/Almamod_loft28.webp'],
+    imagenPortada: 'ALMAMOD_28_LOFT_PORTADA.webp',
+    imagenesDetalle: [
+      'ALMAMOD_28_LOFT_PORTADA.webp',
+      'ALMAMOD_28_LOFT_RENDER_EXTERIOR.webp',
+      'ALMAMOD_28_LOFT_RENDER_INTERIOR.webp'
+    ],
     descripcion: 'Vivienda modular estilo loft con entrepiso. Diseño funcional y moderno.',
     especificacionesTecnicas: {
       construccion: [
@@ -184,18 +203,25 @@ const modulosData = [
     }
   },
   {
-    id: 'micasita',
-    nombre: 'MiCasita',
-    slug: 'micasita',
-    superficie: '12 m²',
-    dimensiones: '4.88m × 2.44m',
-    habitaciones: 'Monoambiente',
-    precio: 15300000,
-    incluye: ['Baño completo', 'Cocina-dormitorio'],
+    id: 'almamod36',
+    nombre: 'Alma 36',
+    slug: 'alma-36',
+    superficie: '36 m²',
+    dimensiones: '12m × 3m',
+    habitaciones: '2 dormitorios',
+    precio: 50075000,
+    incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
-    imagenPortada: '/modulos/Almamod_micasita_portada.webp',
-    imagenesDetalle: ['/modulos/Almamod_micasita.webp'],
-    descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.',
+    imagenPortada: 'ALMAMOD_36_PORTADA.webp',
+    imagenesDetalle: [
+      'ALMAMOD_36_PORTADA.webp',
+      'ALMAMOD_36_1.webp',
+      'ALMAMOD_36_2.webp',
+      'ALMAMOD_36_3.webp',
+      'ALMAMOD_36_RENDER_EXT-INT.webp',
+      'ALMAMOD_36_PLANIMETRIA.webp'
+    ],
+    descripcion: 'Solución habitacional de 2 habitaciones. Compacta, eficiente y confortable.',
     especificacionesTecnicas: {
       construccion: [
         { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
@@ -208,20 +234,66 @@ const modulosData = [
         { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
         { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
         { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Revestimientos de cocina', detalle: 'placas PVC símil mármol a elección' },
         { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
         { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
         { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
       ],
       equipamiento: [
         { titulo: 'Inodoro con depósito', detalle: 'Ferrúm Bari.' },
-        { titulo: 'Griferías ducha, bacha cocina', detalle: 'Fv Puelo.' },
+        { titulo: 'Bidet', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Fv Puelo.' },
         { titulo: 'Vanitory', detalle: 'en MDF.' },
         { titulo: 'Receptáculo de ducha', detalle: '120x70cm con mampara.' },
         { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
         { titulo: 'Puertas interior', detalle: 'Oblak Practika' }
       ]
     }
-  }
+  },
+  {
+    id: 'almamod36Refugio',
+    nombre: 'Alma 36 Refugio',
+    slug: 'alma-36-refugio',
+    superficie: '36 m²',
+    dimensiones: '12m × 3m',
+    habitaciones: '2 dormitorios',
+    precio: 54800000,
+    incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
+    plazo: '30 días',
+    imagenPortada: 'ALMAMOD_36_REFUGIO_PORTADA.webp',
+    imagenesDetalle: [
+      'ALMAMOD_36_REFUGIO_PORTADA.webp',
+      'ALMAMOD_36_REFUGIO_PLANIMETRIA_2D.webp'
+    ],
+    descripcion: 'Solución habitacional de 2 habitaciones tipo refugio. Compacta, eficiente y confortable.',
+    especificacionesTecnicas: {
+      construccion: [
+        { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
+        { titulo: 'Estructura piso', detalle: 'Panel SIP PROPANEL 9cm, pintado en la cara inferior con pintura asfáltica.' },
+        { titulo: 'Muros', detalle: 'Panel SIP PROPANEL 9cm.' },
+        { titulo: 'Techo', detalle: 'Panel SIP cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
+        { titulo: 'Revestimiento de muros exterior', detalle: 'machimbre de 1era calidad protegido contra rayos UV humedad y corrosión o siding horizontal/vertical 6mm, pintado símil madera o látex exterior.' },
+        { titulo: 'Revestimiento de muros interior', detalle: 'machimbre de 1era calidad barnizado o placas de yeso con junta tomada y pintura látex lavable.' },
+        { titulo: 'Terminación piso interior', detalle: 'Pisos vinílicos SPC de alto tránsito 5.5 mm.' },
+        { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
+        { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
+        { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Revestimientos de cocina', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
+        { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
+        { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
+      ],
+      equipamiento: [
+        { titulo: 'Inodoro con depósito', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Bidet', detalle: 'Ferrúm Bari.' },
+        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Fv Puelo.' },
+        { titulo: 'Vanitory', detalle: 'en MDF.' },
+        { titulo: 'Receptáculo de ducha', detalle: '120x70cm con mampara.' },
+        { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
+        { titulo: 'Puertas interior', detalle: 'Oblak Practika' }
+      ]
+    }
+  },
 ];
 
 // Función para formatear precio
@@ -404,7 +476,12 @@ function TiendaAlma() {
                           className="search-result-item"
                           onClick={() => handleSearchSelect(modulo)}
                         >
-                          <img src={modulo.imagenPortada} alt={modulo.nombre} />
+                          {/* ✅ CLOUDINARY - Thumbnails en búsqueda */}
+                          <img 
+                            src={getCloudinaryUrl(modulo.imagenPortada, IMG_THUMB)} 
+                            alt={modulo.nombre}
+                            loading="lazy"
+                          />
                           <div className="search-result-info">
                             <strong>{modulo.nombre}</strong>
                             <span>{modulo.superficie} • {modulo.habitaciones}</span>
@@ -429,7 +506,13 @@ function TiendaAlma() {
                     onClick={() => openDetails(modulo)}
                   >
                     <div className="modulo-image-container">
-                      <img src={modulo.imagenPortada} alt={modulo.nombre} className="modulo-image" />
+                      {/* ✅ CLOUDINARY - Imágenes en tarjetas */}
+                      <img 
+                        src={getCloudinaryUrl(modulo.imagenPortada, IMG_CARD)} 
+                        alt={modulo.nombre} 
+                        className="modulo-image"
+                        loading="lazy"
+                      />
                       <div className="modulo-overlay">
                         <span className="ver-detalles">Ver Detalles →</span>
                       </div>
@@ -476,9 +559,10 @@ function TiendaAlma() {
                 <div className="detail-image-section">
                   <div className="image-carousel">
                     <AnimatePresence mode="wait">
+                      {/* ✅ CLOUDINARY - Imágenes en carrusel del modal */}
                       <motion.img 
                         key={currentImageIndex}
-                        src={selectedModule.imagenesDetalle[currentImageIndex]} 
+                        src={getCloudinaryUrl(selectedModule.imagenesDetalle[currentImageIndex], IMG_DETAIL)} 
                         alt={`${selectedModule.nombre} - Imagen ${currentImageIndex + 1}`}
                         style={{ objectFit: 'contain' }}
                         initial={{ opacity: 0, x: 100 }}
