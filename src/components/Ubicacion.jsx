@@ -1,9 +1,7 @@
-/ src/components/Ubicacion.jsx
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- Icono para el Botón de Ubicación ---
 const LocationIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -16,7 +14,6 @@ function Ubicacion() {
 
   return (
     <>
-      {/* --- BOTÓN FLOTANTE --- */}
       <motion.button
         className="floating-button"
         onClick={() => setIsOpen(true)}
@@ -27,7 +24,6 @@ function Ubicacion() {
         <span>Ubicación</span>
       </motion.button>
 
-      {/* --- MODAL CON EL MAPA (USANDO PORTAL) --- */}
       {isOpen && createPortal(
         <AnimatePresence>
           <motion.div 
@@ -51,7 +47,6 @@ function Ubicacion() {
               <div className="modal-body">
                 <p>Nuestra base de operaciones se encuentra en Neuquén, Argentina.</p>
                 <div className="map-container" style={{ height: '450px' }}>
-                  {/* ✅ URL CORREGIDA - Usando Google Maps Embed API */}
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3299.5348467891234!2d-68.14046788476562!3d-38.89956677957234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x960a35be6bd19e6d%3A0xdf42edf7c7d390a1!2sConacsas!5e0!3m2!1ses!2sar!4v1234567890123!5m2!1ses!2sar"
                     width="100%"
@@ -64,7 +59,6 @@ function Ubicacion() {
                   ></iframe>
                 </div>
                 
-                {/* Información adicional de contacto */}
                 <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(212, 165, 116, 0.1)', borderRadius: '8px' }}>
                   <h3 style={{ fontSize: '1.1rem', color: '#d4a574', marginBottom: '0.5rem' }}>Información de Contacto</h3>
                   <p style={{ margin: '0.25rem 0' }}>📍 Neuquén, Argentina</p>
