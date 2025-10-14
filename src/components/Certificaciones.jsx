@@ -11,8 +11,8 @@ function Certificaciones() {
     {
       id: 'propanel',
       nombre: 'Sistema PROPANEL',
-      icono: 'certificaciones/PROPANEL-iicono.webp',
-      certificado: 'certificaciones/cat_propanelcert.webp',
+      icono: 'PROPANEL-iicono.webp',
+      certificado: 'cat_propanelcert.webp',
       color: '#3b82f6',
       descripcion: 'AlmaMod utiliza exclusivamente Paneles SIP PROPANEL, el sistema constructivo más avanzado de Argentina. Fabricados con tecnología de última generación, estos paneles estructurales aislados combinan placas de OSB de alta densidad con núcleo de espuma rígida de poliuretano.',
       beneficios: [
@@ -53,8 +53,8 @@ function Certificaciones() {
     {
       id: 'cacmi',
       nombre: 'Certificación CACMI',
-      icono: 'certificaciones/cacmi-icono.webp',
-      certificado: 'certificaciones/cacmicert.webp',
+      icono: 'cacmi-icono.webp',
+      certificado: 'cacmicert.webp',
       color: '#f59e0b',
       descripcion: 'AlmaMod es miembro certificado de CACMI (Cámara Argentina de la Construcción Modular e Industrializada), la entidad que regula y certifica los más altos estándares de calidad en construcción modular en Argentina.',
       beneficios: [
@@ -95,8 +95,8 @@ function Certificaciones() {
     {
       id: 'edge',
       nombre: 'EDGE Advanced Certified',
-      icono: 'certificaciones/edge-icono.webp',
-      certificado: 'certificaciones/edge_advance_propanelCERT.webp',
+      icono: 'edge-icono.webp',
+      certificado: 'edge_advance_propanelCERT.webp',
       color: '#16a34a',
       descripcion: 'Nuestras construcciones con sistema PROPANEL están certificadas EDGE Advanced, el estándar internacional de construcción sustentable del International Finance Corporation (Grupo Banco Mundial). Esto nos posiciona como líderes en construcción verde en Argentina.',
       beneficios: [
@@ -137,8 +137,8 @@ function Certificaciones() {
     {
       id: 'sismo',
       nombre: 'Sismo Resistente',
-      icono: 'certificaciones/cat-sismoresistente-icono.webp',
-      certificado: 'certificaciones/cat_propaneltermoresistente.webp',
+      icono: 'cat-sismoresistente-icono.webp',
+      certificado: 'cat_propaneltermoresistente.webp',
       color: '#dc2626',
       descripcion: 'Los Paneles SIP PROPANEL utilizados por AlmaMod están específicamente diseñados y certificados para zonas sísmicas. Su estructura monolítica y flexibilidad controlada brindan una resistencia superior ante movimientos telúricos, fundamental en la región patagónica.',
       beneficios: [
