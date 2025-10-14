@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getCloudinaryUrl, IMG_CARD, IMG_DETAIL } from '../config/cloudinary';
 import './Certificaciones.css';
 
 function Certificaciones() {
@@ -10,8 +11,8 @@ function Certificaciones() {
     {
       id: 'propanel',
       nombre: 'Sistema PROPANEL',
-      icono: 'https://res.cloudinary.com/dlshym1te/image/upload/w_400,q_auto,f_auto/certificaciones/PROPANEL-iicono.webp',
-      certificado: 'https://res.cloudinary.com/dlshym1te/image/upload/w_800,q_auto,f_auto/certificaciones/cat_propanelcert.webp',
+      icono: 'certificaciones/PROPANEL-iicono.webp',
+      certificado: 'certificaciones/cat_propanelcert.webp',
       color: '#3b82f6',
       descripcion: 'AlmaMod utiliza exclusivamente Paneles SIP PROPANEL, el sistema constructivo más avanzado de Argentina. Fabricados con tecnología de última generación, estos paneles estructurales aislados combinan placas de OSB de alta densidad con núcleo de espuma rígida de poliuretano.',
       beneficios: [
@@ -52,8 +53,8 @@ function Certificaciones() {
     {
       id: 'cacmi',
       nombre: 'Certificación CACMI',
-      icono: 'https://res.cloudinary.com/dlshym1te/image/upload/w_400,q_auto,f_auto/certificaciones/cacmi-icono.webp',
-      certificado: 'https://res.cloudinary.com/dlshym1te/image/upload/w_800,q_auto,f_auto/certificaciones/cacmicert.webp',
+      icono: 'certificaciones/cacmi-icono.webp',
+      certificado: 'certificaciones/cacmicert.webp',
       color: '#f59e0b',
       descripcion: 'AlmaMod es miembro certificado de CACMI (Cámara Argentina de la Construcción Modular e Industrializada), la entidad que regula y certifica los más altos estándares de calidad en construcción modular en Argentina.',
       beneficios: [
@@ -94,8 +95,8 @@ function Certificaciones() {
     {
       id: 'edge',
       nombre: 'EDGE Advanced Certified',
-      icono: 'https://res.cloudinary.com/dlshym1te/image/upload/w_400,q_auto,f_auto/certificaciones/edge-icono.webp',
-      certificado: 'https://res.cloudinary.com/dlshym1te/image/upload/w_800,q_auto,f_auto/certificaciones/edge_advance_propanelCERT.webp',
+      icono: 'certificaciones/edge-icono.webp',
+      certificado: 'certificaciones/edge_advance_propanelCERT.webp',
       color: '#16a34a',
       descripcion: 'Nuestras construcciones con sistema PROPANEL están certificadas EDGE Advanced, el estándar internacional de construcción sustentable del International Finance Corporation (Grupo Banco Mundial). Esto nos posiciona como líderes en construcción verde en Argentina.',
       beneficios: [
@@ -136,8 +137,8 @@ function Certificaciones() {
     {
       id: 'sismo',
       nombre: 'Sismo Resistente',
-      icono: 'https://res.cloudinary.com/dlshym1te/image/upload/w_400,q_auto,f_auto/certificaciones/cat-sismoresistente-icono.webp',
-      certificado: 'https://res.cloudinary.com/dlshym1te/image/upload/w_800,q_auto,f_auto/certificaciones/cat_propaneltermoresistente.webp',
+      icono: 'certificaciones/cat-sismoresistente-icono.webp',
+      certificado: 'certificaciones/cat_propaneltermoresistente.webp',
       color: '#dc2626',
       descripcion: 'Los Paneles SIP PROPANEL utilizados por AlmaMod están específicamente diseñados y certificados para zonas sísmicas. Su estructura monolítica y flexibilidad controlada brindan una resistencia superior ante movimientos telúricos, fundamental en la región patagónica.',
       beneficios: [
@@ -210,7 +211,12 @@ function Certificaciones() {
                 style={{ '--cert-color': cert.color }}
               >
                 <div className="cert-boton-imagen">
-                  <img src={cert.icono} alt={cert.nombre} />
+                  {/* ✅ Usando getCloudinaryUrl igual que TiendaAlma */}
+                  <img 
+                    src={getCloudinaryUrl(cert.icono, IMG_CARD)} 
+                    alt={cert.nombre}
+                    loading="lazy"
+                  />
                 </div>
                 <span>{cert.nombre}</span>
               </motion.button>
@@ -240,14 +246,24 @@ function Certificaciones() {
               
               <div className="cert-modal-header" style={{ borderColor: selectedCert.color }}>
                 <div className="cert-modal-icon">
-                  <img src={selectedCert.icono} alt={selectedCert.nombre} />
+                  {/* ✅ Usando getCloudinaryUrl igual que TiendaAlma */}
+                  <img 
+                    src={getCloudinaryUrl(selectedCert.icono, IMG_CARD)} 
+                    alt={selectedCert.nombre}
+                    loading="lazy"
+                  />
                 </div>
                 <h2 style={{ color: selectedCert.color }}>{selectedCert.nombre}</h2>
               </div>
 
               <div className="cert-modal-body">
                 <div className="cert-modal-certificado">
-                  <img src={selectedCert.certificado} alt={`Certificado ${selectedCert.nombre}`} />
+                  {/* ✅ Usando getCloudinaryUrl igual que TiendaAlma */}
+                  <img 
+                    src={getCloudinaryUrl(selectedCert.certificado, IMG_DETAIL)} 
+                    alt={`Certificado ${selectedCert.nombre}`}
+                    loading="lazy"
+                  />
                 </div>
 
                 <div className="cert-modal-content">
