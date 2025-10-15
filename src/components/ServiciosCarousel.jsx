@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './ServiciosCarousel.css';
+import panelSipIcon from '../assets/panel_sip_icon_64.png';
 
 function ServiciosCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -12,7 +13,7 @@ function ServiciosCarousel() {
       id: 1,
       titulo: "Estructura con Paneles SIP",
       descripcion: "Construimos con Paneles SIP (Panel Estructural Aislado), un sistema de alta ingeniería que une placas de OSB a un núcleo de espuma rígida. El resultado es una estructura monolítica de resistencia superior y una eficiencia térmica inigualable.",
-      icon: "/assets/panel_sip_icon_64.png",
+      icon: panelSipIcon,
       gradient: "linear-gradient(135deg, #6b7280, #4b5563)",
       features: ["Eficiencia Energética Superior", "Aislación Acústica", "Resistencia Estructural", "Construcción Eco-Sustentable"],
     },
