@@ -87,6 +87,15 @@
   line-height: 1;
 }
 
+/* NUEVO: Estilos para imágenes dentro de slide-icon */
+.slide-icon img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
 .slide-title {
   font-size: 1.71rem; /* 1.8rem - 5% */
   font-weight: 700;
@@ -238,6 +247,16 @@
   margin-bottom: 0.2375rem; /* 0.25rem - 5% */
 }
 
+/* NUEVO: Estilos para imágenes dentro de thumb-icon */
+.thumb-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  filter: brightness(0) saturate(100%) invert(47%) sepia(96%) saturate(1875%) hue-rotate(201deg) brightness(98%) contrast(92%);
+}
+
 .thumb-title {
   font-size: 0.8075rem; /* 0.85rem - 5% */
   font-weight: 600;
@@ -276,6 +295,14 @@
   .carousel-nav {
     width: 47.5px; /* 50px - 5% */
     height: 47.5px;
+  }
+  .slide-icon img {
+    width: 56px;
+    height: 56px;
+  }
+  .thumb-icon img {
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -326,6 +353,14 @@
     gap: 0.7125rem; /* 0.75rem - 5% */
     padding: 0 0.475rem; /* 0.5rem - 5% */
   }
+  .slide-icon img {
+    width: 48px;
+    height: 48px;
+  }
+  .thumb-icon img {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -358,6 +393,10 @@
   }
   .slide-icon {
     font-size: 1.71rem; /* 1.8rem - 5% */
+  }
+  .slide-icon img {
+    width: 40px;
+    height: 40px;
   }
   .slide-features {
     gap: 0.38rem; /* 0.4rem - 5% */
@@ -394,6 +433,10 @@
   }
   .thumb-icon {
     font-size: 1.425rem; /* 1.5rem - 5% */
+  }
+  .thumb-icon img {
+    width: 28px;
+    height: 28px;
   }
   .thumb-title {
     font-size: 0.684rem; /* 0.72rem - 5% */
@@ -433,6 +476,10 @@
   .thumb-icon {
     font-size: 1.235rem; /* 1.3rem - 5% */
   }
+  .thumb-icon img {
+    width: 24px;
+    height: 24px;
+  }
   .thumb-title {
     font-size: 0.646rem; /* 0.68rem - 5% */
   }
@@ -452,6 +499,10 @@
   }
   .slide-icon {
     font-size: 1.52rem; /* 1.6rem - 5% */
+  }
+  .slide-icon img {
+    width: 36px;
+    height: 36px;
   }
   .feature-tag {
     padding: 0.285rem 0.38rem; /* 0.3rem y 0.4rem - 5% */
