@@ -116,6 +116,9 @@ function ServiciosCarousel() {
     }
   };
 
+  // Función helper para detectar si el icono es una imagen o emoji
+  const isImageIcon = (icon) => icon.includes('.png') || icon.includes('.jpg') || icon.includes('.svg');
+
   return (
     <div className="servicios-carousel-container">
       <div className="servicios-header">
@@ -143,7 +146,16 @@ function ServiciosCarousel() {
               style={{ background: currentService.gradient }}
             >
               <div className="slide-header">
-                <span className="slide-icon">{currentService.icon}</span>
+                {isImageIcon(currentService.icon) ? (
+                  <img 
+                    src={currentService.icon} 
+                    alt={currentService.titulo}
+                    className="slide-icon"
+                    style={{ width: '64px', height: '64px', objectFit: 'contain' }}
+                  />
+                ) : (
+                  <span className="slide-icon">{currentService.icon}</span>
+                )}
                 <h3 className="slide-title">{currentService.titulo}</h3>
               </div>
               <p className="slide-description">{currentService.descripcion}</p>
@@ -190,7 +202,16 @@ function ServiciosCarousel() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="thumb-icon">{servicio.icon}</div>
+            {isImageIcon(servicio.icon) ? (
+              <img 
+                src={servicio.icon} 
+                alt={servicio.titulo}
+                className="thumb-icon"
+                style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+              />
+            ) : (
+              <div className="thumb-icon">{servicio.icon}</div>
+            )}
             <div className="thumb-title">{servicio.titulo}</div>
           </motion.button>
         ))}
