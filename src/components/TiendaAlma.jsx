@@ -3,6 +3,9 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import './TiendaAlma.css';
 
+// ✅ IMPORTAR SEO
+import SEO from './SEO';
+
 // ✅ IMPORTAR CLOUDINARY
 import { getCloudinaryUrl, IMG_CARD, IMG_DETAIL, IMG_THUMB } from '../config/cloudinary';
 
@@ -411,6 +414,84 @@ function TiendaAlma() {
 
   return (
     <>
+      {/* ✅ SEO PARA CATÁLOGO DE PRODUCTOS */}
+      {isOpen && !selectedModule && (
+        <SEO 
+          title="Tienda Alma - Módulos Habitacionales"
+          description="Explora nuestra línea completa de módulos habitacionales desde 12m² hasta 36m². MiCasita, Alma 18, Alma 27, Alma 36. Entrega en 30 días. Construcción modular sustentable certificada."
+          keywords="tienda almamod, módulos habitacionales, viviendas modulares precio, casas prefabricadas neuquén, MiCasita precio, Alma 18, Alma 27, Alma 36"
+          canonical="/tiendaalma"
+        />
+      )}
+
+      {/* ✅ SEO PARA PRODUCTO ESPECÍFICO */}
+      {selectedModule && (
+        <SEO 
+          title={`${selectedModule.nombre} - ${selectedModule.superficie} - ${selectedModule.habitaciones}`}
+          description={`${selectedModule.descripcion} Precio: ${formatearPrecio(selectedModule.precio)}. Incluye: ${selectedModule.incluye.join(', ')}. Plazo: ${selectedModule.plazo}.`}
+          keywords={`${selectedModule.nombre}, módulo ${selectedModule.superficie}, ${selectedModule.habitaciones}, precio ${selectedModule.nombre}`}
+          canonical={`/tiendaalma/${selectedModule.slug}`}
+          type="product"
+          image={getCloudinaryUrl(selectedModule.imagenPortada, IMG_DETAIL)}
+          product={{
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": selectedModule.nombre,
+            "image": getCloudinaryUrl(selectedModule.imagenPortada, IMG_DETAIL),
+            "description": selectedModule.descripcion,
+            "sku": `ALMA-${selectedModule.id.toUpperCase()}`,
+            "brand": {
+              "@type": "Brand",
+              "name": "AlmaMod"
+            },
+            "offers": {
+              "@type": "Offer",
+              "url": `https://www.almamod.com.ar/tiendaalma/${selectedModule.slug}`,
+              "priceCurrency": "ARS",
+              "price": selectedModule.precio,
+              "availability": "https://schema.org/PreOrder",
+              "itemCondition": "https://schema.org/NewCondition"
+            },
+            "additionalProperty": [
+              {
+                "@type": "PropertyValue",
+                "name": "Superficie",
+                "value": selectedModule.superficie
+              },
+              {
+                "@type": "PropertyValue",
+                "name": "Habitaciones",
+                "value": selectedModule.habitaciones
+              }
+            ]
+          }}
+          breadcrumb={{
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Inicio",
+                "item": "https://www.almamod.com.ar"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Tienda Alma",
+                "item": "https://www.almamod.com.ar/tiendaalma"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": selectedModule.nombre,
+                "item": `https://www.almamod.com.ar/tiendaalma/${selectedModule.slug}`
+              }
+            ]
+          }}
+        />
+      )}
+
       <motion.button 
         className="floating-button tienda-button"
         onClick={handleOpenStore}

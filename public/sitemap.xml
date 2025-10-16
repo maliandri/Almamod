@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Página Principal -->
+  <url>
+    <loc>https://www.almamod.com.ar/</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="es-ar" href="https://www.almamod.com.ar/" />
+  </url>
+  
+  <!-- Tienda Alma - Catálogo -->
+  <url>
+    <loc>https://www.almamod.com.ar/tiendaalma</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.almamod.com.ar/images/tienda-alma-preview.jpg</image:loc>
+      <image:title>Tienda Alma - Módulos Habitacionales</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Producto: MiCasita -->
+  <url>
+    <loc>https://www.almamod.com.ar/tiendaalma/micasita</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_MICASITA_PORTADA.webp</image:loc>
+      <image:title>MiCasita - Módulo 12m²</image:title>
+      <image:caption>Módulo monoambiente compacto de 12m² con baño y cocina</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Producto: Alma 18 -->
+  <url>
+    <loc>https://www.almamod.com.ar/tiendaalma/alma-18</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_18_PORTADA.webp</image:loc>
+      <image:title>Alma 18 - Módulo 18m²</image:title>
+      <image:caption>Vivienda modular de 18m² con 1 dormitorio</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Producto: Alma 27 -->
+  <url>
+    <loc>https://www.almamod.com.ar/tiendaalma/alma-27</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_27_PORTADA.webp</image:loc>
+      <image:title>Alma 27 - Módulo 27m²</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Producto: Alma Loft 28 -->
+  <url>
+    <loc>https://www.almamod.com.ar/tiendaalma/alma-loft-28</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_28_LOFT_PORTADA.webp</image:loc>
+      <image:title>Alma Loft 28 - Módulo con entrepiso</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Producto: Alma 36 -->
+  <url>
+    <loc>https://www.almamod.com.ar/tiendaalma/alma-36</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_36_PORTADA.webp</image:loc>
+      <image:title>Alma 36 - Módulo 36m²</image:title>
+      <image:caption>Vivienda modular de 36m² con 2 dormitorios</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Producto: Alma 36 Refugio -->
+  <url>
+    <loc>https://www.almamod.com.ar/tiendaalma/alma-36-refugio</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_36_REFUGIO_PORTADA.webp</image:loc>
+      <image:title>Alma 36 Refugio - Módulo tipo refugio</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Servicios -->
+  <url>
+    <loc>https://www.almamod.com.ar/servicios</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Certificaciones -->
+  <url>
+    <loc>https://www.almamod.com.ar/certificaciones</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Sobre Nosotros / Contacto (si existen estas páginas) -->
+  <url>
+    <loc>https://www.almamod.com.ar/sobre-nosotros</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.almamod.com.ar/contacto</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>

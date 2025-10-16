@@ -1,0 +1,40 @@
+# robots.txt para AlmaMod
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.almamod.com.ar/sitemap.xml
+
+# Específico para Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Específico para Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+
+# Bloquear acceso a archivos específicos
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /node_modules/
+Disallow: /src/
+
+# Permitir crawling de imágenes
+User-agent: Googlebot-Image
+Allow: /assets/
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.png
+Allow: /*.webp
+Allow: /*.svg
+
+# Social Media Crawlers
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
