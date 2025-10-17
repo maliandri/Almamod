@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';  // ← SOLO AGREGAR ESTA LÍNEA
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App.jsx';
 import './App.css';
 import { AuthProvider } from './context/AuthContext.jsx';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const rootElement = document.getElementById('root');
+
+// Componente wrapper con todos los providers
+const AppWithProviders = () => (
   <React.StrictMode>
     <HelmetProvider>
       <BrowserRouter>
@@ -15,5 +18,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </AuthProvider>
       </BrowserRouter>
     </HelmetProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
+
+// Soporte para pre-rendering con react-snap
+if (rootElement.hasChildNodes()) {
+  ReactDOM.hydrateRoot(rootElement, <AppWithProviders />);
+} else {
+  ReactDOM.createRoot(rootElement).render(<AppWithProviders />);
+}
