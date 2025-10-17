@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "postbuild": "react-snap",
     "lint": "eslint .",
     "preview": "vite preview",
     "tailwind-init": "tailwindcss init -p"
@@ -36,31 +35,5 @@
     "react-snap": "^1.23.0",
     "tailwindcss": "^4.1.13",
     "vite": "^7.1.7"
-  },
-  "reactSnap": {
-    "source": "dist",
-    "include": [
-      "/",
-      "/tiendaalma",
-      "/tiendaalma/micasita",
-      "/tiendaalma/alma-18",
-      "/tiendaalma/alma-27",
-      "/tiendaalma/alma-loft-28",
-      "/tiendaalma/alma-36",
-      "/tiendaalma/alma-36-refugio"
-    ],
-    "skipThirdPartyRequests": true,
-    "cacheAjaxRequests": false,
-    "waitFor": 5000,
-    "minifyHtml": {
-      "collapseWhitespace": true,
-      "removeComments": true
-    },
-    "puppeteerArgs": [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage"
-    ],
-    "puppeteerExecutablePath": null
   }
 }
