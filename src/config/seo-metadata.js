@@ -55,11 +55,11 @@ export const ORGANIZATION_SCHEMA = {
   "name": "AlmaMod",
   "alternateName": "AlmaMod Construcción Modular",
   "url": "https://www.almamod.com.ar",
-  "logo": "https://www.almamod.com.ar/logo-almamod.png",
+  "logo": "https://www.almamod.com.ar/almamod1.png",
   "description": "Empresa de construcción modular especializada en viviendas sustentables con Paneles SIP PROPANEL en Neuquén, Patagonia Argentina.",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Dirección de AlmaMod",
+    "streetAddress": "Neuquén Capital",
     "addressLocality": "Neuquén",
     "addressRegion": "Neuquén",
     "postalCode": "8300",
@@ -77,10 +77,6 @@ export const ORGANIZATION_SCHEMA = {
     "https://www.instagram.com/almamod",
     "https://www.linkedin.com/company/almamod"
   ],
-  "founder": {
-    "@type": "Person",
-    "name": "Fundador de AlmaMod"
-  },
   "foundingDate": "2020",
   "areaServed": {
     "@type": "GeoCircle",
@@ -102,7 +98,7 @@ export const PRODUCT_SCHEMAS = {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "MiCasita - Módulo Habitacional 12m²",
-    "image": "https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_MICASITA_PORTADA.webp",
+    "image": "https://res.cloudinary.com/dlshym1te/image/upload/v1/ALMAMOD_MICASITA_PORTADA.webp",
     "description": "Módulo monoambiente compacto de 12m² con baño completo y cocina-dormitorio. Construcción modular con Paneles SIP PROPANEL. Ideal para primera vivienda o espacio de trabajo.",
     "sku": "ALMA-MICASITA-12",
     "brand": {
@@ -161,7 +157,7 @@ export const PRODUCT_SCHEMAS = {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "Alma 18 - Módulo Habitacional 18m²",
-    "image": "https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_18_PORTADA.webp",
+    "image": "https://res.cloudinary.com/dlshym1te/image/upload/v1/ALMAMOD_18_PORTADA.webp",
     "description": "Vivienda modular compacta de 18m² con 1 dormitorio, baño completo y cocina-comedor. Construcción con Paneles SIP PROPANEL. Ideal para parejas o personas solas.",
     "sku": "ALMA-18",
     "brand": {
@@ -175,8 +171,18 @@ export const PRODUCT_SCHEMAS = {
       "price": "32050000",
       "priceValidUntil": "2025-12-31",
       "availability": "https://schema.org/PreOrder",
-      "itemCondition": "https://schema.org/NewCondition"
+      "itemCondition": "https://schema.org/NewCondition",
+      "seller": {
+        "@type": "Organization",
+        "name": "AlmaMod"
+      },
+      "deliveryLeadTime": {
+        "@type": "QuantitativeValue",
+        "value": 30,
+        "unitCode": "DAY"
+      }
     },
+    "category": "Vivienda Modular",
     "additionalProperty": [
       {
         "@type": "PropertyValue",
@@ -187,15 +193,21 @@ export const PRODUCT_SCHEMAS = {
         "@type": "PropertyValue",
         "name": "Habitaciones",
         "value": "1 dormitorio"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Certificación",
+        "value": "EDGE Advanced"
       }
-    ]
+    ],
+    "material": "Panel SIP PROPANEL"
   },
   
   alma27: {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "Alma 27 - Módulo Habitacional 27m²",
-    "image": "https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_27_PORTADA.webp",
+    "image": "https://res.cloudinary.com/dlshym1te/image/upload/v1/ALMAMOD_27_PORTADA.webp",
     "description": "Vivienda modular de 27m² con 1 dormitorio, baño completo, cocina y estar-comedor separado. Sistema PROPANEL certificado EDGE Advanced.",
     "sku": "ALMA-27",
     "brand": {
@@ -207,15 +219,45 @@ export const PRODUCT_SCHEMAS = {
       "url": "https://www.almamod.com.ar/tiendaalma/alma-27",
       "priceCurrency": "ARS",
       "price": "42120000",
-      "availability": "https://schema.org/PreOrder"
-    }
+      "priceValidUntil": "2025-12-31",
+      "availability": "https://schema.org/PreOrder",
+      "itemCondition": "https://schema.org/NewCondition",
+      "seller": {
+        "@type": "Organization",
+        "name": "AlmaMod"
+      },
+      "deliveryLeadTime": {
+        "@type": "QuantitativeValue",
+        "value": 30,
+        "unitCode": "DAY"
+      }
+    },
+    "category": "Vivienda Modular",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "Superficie",
+        "value": "27 m²"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Habitaciones",
+        "value": "1 dormitorio"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Certificación",
+        "value": "EDGE Advanced"
+      }
+    ],
+    "material": "Panel SIP PROPANEL"
   },
   
   alma36: {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "Alma 36 - Módulo Habitacional 36m²",
-    "image": "https://res.cloudinary.com/tu-cloud/image/upload/ALMAMOD_36_PORTADA.webp",
+    "image": "https://res.cloudinary.com/dlshym1te/image/upload/v1/ALMAMOD_36_PORTADA.webp",
     "description": "Vivienda modular completa de 36m² con 2 dormitorios, baño, cocina y estar-comedor. Construcción sustentable certificada.",
     "sku": "ALMA-36",
     "brand": {
@@ -227,8 +269,20 @@ export const PRODUCT_SCHEMAS = {
       "url": "https://www.almamod.com.ar/tiendaalma/alma-36",
       "priceCurrency": "ARS",
       "price": "50075000",
-      "availability": "https://schema.org/PreOrder"
+      "priceValidUntil": "2025-12-31",
+      "availability": "https://schema.org/PreOrder",
+      "itemCondition": "https://schema.org/NewCondition",
+      "seller": {
+        "@type": "Organization",
+        "name": "AlmaMod"
+      },
+      "deliveryLeadTime": {
+        "@type": "QuantitativeValue",
+        "value": 30,
+        "unitCode": "DAY"
+      }
     },
+    "category": "Vivienda Modular",
     "additionalProperty": [
       {
         "@type": "PropertyValue",
@@ -239,8 +293,14 @@ export const PRODUCT_SCHEMAS = {
         "@type": "PropertyValue",
         "name": "Habitaciones",
         "value": "2 dormitorios"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Certificación",
+        "value": "EDGE Advanced"
       }
-    ]
+    ],
+    "material": "Panel SIP PROPANEL"
   }
 };
 
@@ -503,14 +563,14 @@ export const LOCAL_BUSINESS_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "AlmaMod - Construcción Modular",
-  "image": "https://www.almamod.com.ar/logo-almamod.png",
+  "image": "https://www.almamod.com.ar/almamod1.png",
   "@id": "https://www.almamod.com.ar",
   "url": "https://www.almamod.com.ar",
   "telephone": "+54-299-408-7106",
   "priceRange": "$$$$",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Dirección",
+    "streetAddress": "Neuquén Capital",
     "addressLocality": "Neuquén",
     "addressRegion": "Neuquén",
     "postalCode": "8300",
