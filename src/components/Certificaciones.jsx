@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import SEO from './SEO';
+import { motion } from 'framer-motion';
 import { getCloudinaryUrl, IMG_CARD, IMG_DETAIL } from '../config/cloudinary';
-import './Certificaciones.css';
+import './CertificacionesPage.css';
 
-function Certificaciones() {
-  const [selectedCert, setSelectedCert] = useState(null);
-
+function CertificacionesPage() {
   const certificaciones = [
     {
       id: 'propanel',
@@ -178,171 +177,174 @@ function Certificaciones() {
     }
   ];
 
-  const openModal = (cert) => {
-    setSelectedCert(cert);
-  };
-
-  const closeModal = () => {
-    setSelectedCert(null);
-  };
-
   return (
     <>
-      <div className="certificaciones-container">
-        <div className="certificaciones-barra">
-          <div className="certificaciones-titulo">
-            <h3>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                <path d="M9 12l2 2 4-4"></path>
+      <SEO 
+        title="Certificaciones - PROPANEL, CACMI, EDGE Advanced"
+        description="AlmaMod cuenta con certificaciones PROPANEL, CACMI y EDGE Advanced del Banco Mundial. Construcción modular sustentable certificada con los más altos estándares de calidad."
+        keywords="certificaciones almamod, propanel certificado, cacmi construcción modular, edge advanced argentina, construcción sustentable certificada, sismo resistente"
+        canonical="/certificaciones"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "AlmaMod",
+          "url": "https://www.almamod.com.ar",
+          "logo": "https://www.almamod.com.ar/logo.png",
+          "description": "Construcción modular sustentable certificada",
+          "hasCredential": [
+            {
+              "@type": "EducationalOccupationalCredential",
+              "name": "Certificación PROPANEL",
+              "credentialCategory": "Construcción Modular"
+            },
+            {
+              "@type": "EducationalOccupationalCredential",
+              "name": "Certificación CACMI",
+              "credentialCategory": "Construcción Modular Industrializada"
+            },
+            {
+              "@type": "EducationalOccupationalCredential",
+              "name": "EDGE Advanced Certification",
+              "credentialCategory": "Construcción Sustentable",
+              "recognizedBy": {
+                "@type": "Organization",
+                "name": "International Finance Corporation - World Bank Group"
+              }
+            }
+          ]
+        }}
+      />
+
+      <div className="certificaciones-page">
+        {/* Header con navegación */}
+        <header className="cert-page-header">
+          <div className="cert-header-content">
+            <Link to="/" className="back-link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
-              Certificaciones y Estándares de Calidad
-            </h3>
+              Volver al inicio
+            </Link>
+            <h1>Nuestras Certificaciones y Estándares de Calidad</h1>
+            <p className="cert-subtitle">
+              AlmaMod está respaldado por las certificaciones más prestigiosas de la industria de construcción modular y sustentable en Argentina y el mundo.
+            </p>
           </div>
-          
-          <div className="certificaciones-botones">
-            {certificaciones.map((cert) => (
-              <motion.button
+        </header>
+
+        {/* Grid de certificaciones */}
+        <section className="cert-grid-section">
+          <div className="cert-grid">
+            {certificaciones.map((cert, index) => (
+              <motion.article
                 key={cert.id}
-                className="cert-boton"
-                onClick={() => openModal(cert)}
-                whileHover={{ scale: 1.05, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                style={{ '--cert-color': cert.color }}
+                className="cert-card-full"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
               >
-                <div className="cert-boton-imagen">
-                  {/* ✅ Usando getCloudinaryUrl igual que TiendaAlma */}
+                {/* Header de la certificación */}
+                <div className="cert-card-header" style={{ borderColor: cert.color }}>
+                  <div className="cert-icon-large">
+                    <img 
+                      src={getCloudinaryUrl(cert.icono, IMG_CARD)} 
+                      alt={cert.nombre}
+                      loading="lazy"
+                    />
+                  </div>
+                  <h2 style={{ color: cert.color }}>{cert.nombre}</h2>
+                </div>
+
+                {/* Imagen del certificado */}
+                <div className="cert-image-container">
                   <img 
-                    src={getCloudinaryUrl(cert.icono, IMG_CARD)} 
-                    alt={cert.nombre}
+                    src={getCloudinaryUrl(cert.certificado, IMG_DETAIL)} 
+                    alt={`Certificado ${cert.nombre}`}
                     loading="lazy"
                   />
                 </div>
-                <span>{cert.nombre}</span>
-              </motion.button>
+
+                {/* Descripción */}
+                <div className="cert-description">
+                  <p>{cert.descripcion}</p>
+                </div>
+
+                {/* Beneficios */}
+                <div className="cert-benefits">
+                  <h3 style={{ color: cert.color }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Beneficios y Ventajas
+                  </h3>
+                  <div className="benefits-grid">
+                    {cert.beneficios.map((beneficio, idx) => (
+                      <div key={idx} className="benefit-item">
+                        <div className="benefit-icon" style={{ background: cert.color }}>✓</div>
+                        <div className="benefit-content">
+                          <h4>{beneficio.titulo}</h4>
+                          <p>{beneficio.detalle}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Especificaciones técnicas */}
+                <div className="cert-specs-section">
+                  <h3 style={{ color: cert.color }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    Especificaciones Técnicas
+                  </h3>
+                  <ul className="specs-list">
+                    {cert.specs.map((spec, idx) => (
+                      <li key={idx}>
+                        <span className="spec-bullet" style={{ color: cert.color }}>→</span>
+                        {spec}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.article>
             ))}
           </div>
-        </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="cert-cta">
+          <div className="cert-cta-content">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d4a574" strokeWidth="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="M9 12l2 2 4-4"></path>
+            </svg>
+            <h2>Garantía de Calidad AlmaMod</h2>
+            <p>
+              Todos nuestros módulos cuentan con certificaciones vigentes y garantía de calidad respaldada por las instituciones más prestigiosas del sector.
+            </p>
+            <div className="cta-buttons">
+              <Link to="/tiendaalma" className="cta-button primary">
+                Ver Módulos Certificados
+              </Link>
+              <a 
+                href="https://wa.me/5492994087106?text=Hola! Me gustaría conocer más sobre las certificaciones de AlmaMod"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-button secondary"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+                Consultar por WhatsApp
+              </a>
+            </div>
+          </div>
+        </section>
       </div>
-
-      {selectedCert && createPortal(
-        <AnimatePresence>
-          <motion.div
-            className="cert-modal-overlay"
-            onClick={closeModal}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="cert-modal"
-              onClick={(e) => e.stopPropagation()}
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            >
-              <button onClick={closeModal} className="cert-modal-close">&times;</button>
-              
-              <div className="cert-modal-header" style={{ borderColor: selectedCert.color }}>
-                <div className="cert-modal-icon">
-                  {/* ✅ Usando getCloudinaryUrl igual que TiendaAlma */}
-                  <img 
-                    src={getCloudinaryUrl(selectedCert.icono, IMG_CARD)} 
-                    alt={selectedCert.nombre}
-                    loading="lazy"
-                  />
-                </div>
-                <h2 style={{ color: selectedCert.color }}>{selectedCert.nombre}</h2>
-              </div>
-
-              <div className="cert-modal-body">
-                <div className="cert-modal-certificado">
-                  {/* ✅ Usando getCloudinaryUrl igual que TiendaAlma */}
-                  <img 
-                    src={getCloudinaryUrl(selectedCert.certificado, IMG_DETAIL)} 
-                    alt={`Certificado ${selectedCert.nombre}`}
-                    loading="lazy"
-                  />
-                </div>
-
-                <div className="cert-modal-content">
-                  <div className="cert-descripcion">
-                    <p>{selectedCert.descripcion}</p>
-                  </div>
-
-                  <div className="cert-beneficios">
-                    <h3>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                      Beneficios y Ventajas
-                    </h3>
-                    <div className="beneficios-grid">
-                      {selectedCert.beneficios.map((beneficio, idx) => (
-                        <motion.div
-                          key={idx}
-                          className="beneficio-item"
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: idx * 0.1 }}
-                        >
-                          <div className="beneficio-header">
-                            <span className="beneficio-icon" style={{ background: selectedCert.color }}>✓</span>
-                            <h4>{beneficio.titulo}</h4>
-                          </div>
-                          <p>{beneficio.detalle}</p>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="cert-specs">
-                    <h3>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                      </svg>
-                      Especificaciones Técnicas
-                    </h3>
-                    <ul className="specs-list">
-                      {selectedCert.specs.map((spec, idx) => (
-                        <motion.li
-                          key={idx}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.5 + idx * 0.05 }}
-                        >
-                          <span className="spec-bullet" style={{ background: selectedCert.color }}>→</span>
-                          {spec}
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="cert-footer">
-                    <div className="cert-garantia" style={{ borderColor: selectedCert.color }}>
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={selectedCert.color} strokeWidth="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                        <path d="M9 12l2 2 4-4"></path>
-                      </svg>
-                      <div>
-                        <strong>Garantía AlmaMod</strong>
-                        <p>Todos nuestros módulos cuentan con certificaciones vigentes y garantía de calidad respaldada</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </AnimatePresence>,
-        document.getElementById('modal-portal')
-      )}
     </>
   );
 }
 
-export default Certificaciones;
+export default CertificacionesPage;
