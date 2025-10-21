@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SEO from './SEO';
 import { motion } from 'framer-motion';
 import { getCloudinaryUrl, IMG_CARD, IMG_DETAIL } from '../config/cloudinary';
-import './CertificacionesPage.css';
+import './Certificaciones.css';
 
 function CertificacionesPage() {
   const certificaciones = [
