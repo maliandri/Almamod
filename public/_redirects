@@ -1,7 +1,0 @@
-# Forzar HTTPS y WWW
-http://almamod.com.ar/*  https://www.almamod.com.ar/:splat  301!
-http://www.almamod.com.ar/*  https://www.almamod.com.ar/:splat  301!
-https://almamod.com.ar/*  https://www.almamod.com.ar/:splat  301!
-
-# SPA fallback
-/*    /index.html   200
