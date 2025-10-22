@@ -22,24 +22,24 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 # ========== REDIRECTS HTTPS/WWW ==========
-# Forzar sin-www a con-www
+# Forzar con-www a sin-www (canónico)
 [[redirects]]
-  from = "https://almamod.com.ar/*"
-  to = "https://www.almamod.com.ar/:splat"
+  from = "https://www.almamod.com.ar/*"
+  to = "https://almamod.com.ar/:splat"
   status = 301
   force = true
 
-# HTTP sin-www a HTTPS con-www
-[[redirects]]
-  from = "http://almamod.com.ar/*"
-  to = "https://www.almamod.com.ar/:splat"
-  status = 301
-  force = true
-
-# HTTP con-www a HTTPS con-www
+# HTTP con-www a HTTPS sin-www
 [[redirects]]
   from = "http://www.almamod.com.ar/*"
-  to = "https://www.almamod.com.ar/:splat"
+  to = "https://almamod.com.ar/:splat"
+  status = 301
+  force = true
+
+# HTTP sin-www a HTTPS sin-www
+[[redirects]]
+  from = "http://almamod.com.ar/*"
+  to = "https://almamod.com.ar/:splat"
   status = 301
   force = true
 
