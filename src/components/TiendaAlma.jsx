@@ -7,7 +7,7 @@ import './TiendaAlma.css';
 import SEO from './SEO';
 
 // ✅ IMPORTAR CLOUDINARY
-import { getCloudinaryUrl, IMG_CARD, IMG_DETAIL, IMG_THUMB } from '../config/cloudinary';
+import { getCloudinaryUrl, getVideoUrl,IMG_CARD, IMG_DETAIL, IMG_THUMB } from '../config/cloudinary';
 
 const StoreIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
