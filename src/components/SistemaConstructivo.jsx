@@ -228,15 +228,15 @@ function SistemaConstructivo({ isOpen, onClose }) {
                       </div>
                     </div>
 
-                    {/* Iconos flotantes de beneficios */}
+                    {/* Iconos flotantes de beneficios - CORREGIDOS */}
                     <div className="floating-benefit benefit-1">
                       🌡️ Aislación Térmica
                     </div>
                     <div className="floating-benefit benefit-2">
-                      🛡️ Resistencia
+                      ⚡ Eficiencia
                     </div>
                     <div className="floating-benefit benefit-3">
-                      ⚡ Eficiencia
+                      🛡️ Resistencia
                     </div>
                   </motion.div>
                 </div>
