@@ -266,7 +266,11 @@ const modulosData = [
     imagenPortada: 'ALMAMOD_36_REFUGIO_PORTADA.webp',
     imagenesDetalle: [
       'ALMAMOD_36_REFUGIO_PORTADA.webp',
-      'ALMAMOD_36_REFUGIO_PLANIMETRIA_2D.webp'
+      'ALMAMOD_36_REFUGIO_PLANIMETRIA_2D.webp',
+      'ALMAMOD_36_REFUGIO_PORTADA_dobleext1',
+      'ALMAMOD_36_REFUGIO_PORTADA_dobleext2',
+      'ALMAMOD_36_REFUGIO_PORTADA_dobleint1',
+      'ALMAMOD_36_REFUGIO_PORTADA_dobleint2'
     ],
     descripcion: 'Solución habitacional de 2 habitaciones tipo refugio. Compacta, eficiente y confortable.',
     especificacionesTecnicas: {
