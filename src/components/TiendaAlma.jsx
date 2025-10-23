@@ -324,6 +324,31 @@ function TiendaAlma() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showSpecs, setShowSpecs] = useState(false);
 
+  // ✅ FUNCIÓN PARA COMBINAR IMÁGENES Y VIDEOS EN UN SOLO ARRAY
+  const getMediaItems = (modulo) => {
+    if (!modulo) return [];
+    
+    const items = [];
+    
+    // Agregar todas las imágenes primero
+    modulo.imagenesDetalle.forEach(imagen => {
+      items.push({
+        type: 'image',
+        url: imagen
+      });
+    });
+    
+    // Agregar video al final si existe
+    if (modulo.video) {
+      items.push({
+        type: 'video',
+        url: modulo.video
+      });
+    }
+    
+    return items;
+  };
+
   // Manejar URLs y navegación
   useEffect(() => {
     const path = window.location.pathname;
@@ -394,18 +419,19 @@ function TiendaAlma() {
     window.open(urlWhatsApp, '_blank');
   };
 
+  // ✅ FUNCIONES DE NAVEGACIÓN ACTUALIZADAS PARA TRABAJAR CON MEDIA ITEMS
   const nextImage = () => {
-    if (selectedModule && selectedModule.imagenesDetalle) {
-      setCurrentImageIndex((prev) => 
-        (prev + 1) % selectedModule.imagenesDetalle.length
-      );
+    if (selectedModule) {
+      const mediaItems = getMediaItems(selectedModule);
+      setCurrentImageIndex((prev) => (prev + 1) % mediaItems.length);
     }
   };
 
   const prevImage = () => {
-    if (selectedModule && selectedModule.imagenesDetalle) {
+    if (selectedModule) {
+      const mediaItems = getMediaItems(selectedModule);
       setCurrentImageIndex((prev) => 
-        prev === 0 ? selectedModule.imagenesDetalle.length - 1 : prev - 1
+        prev === 0 ? mediaItems.length - 1 : prev - 1
       );
     }
   };
@@ -644,22 +670,53 @@ function TiendaAlma() {
               
               <div className="detail-content">
                 <div className="detail-image-section">
+                  {/* ✅ CARRUSEL UNIFICADO CON IMÁGENES Y VIDEOS */}
                   <div className="image-carousel">
                     <AnimatePresence mode="wait">
-                      {/* ✅ CLOUDINARY - Imágenes en carrusel del modal */}
-                      <motion.img 
-                        key={currentImageIndex}
-                        src={getCloudinaryUrl(selectedModule.imagenesDetalle[currentImageIndex], IMG_DETAIL)} 
-                        alt={`${selectedModule.nombre} - Imagen ${currentImageIndex + 1}`}
-                        style={{ objectFit: 'contain' }}
-                        initial={{ opacity: 0, x: 100 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -100 }}
-                        transition={{ duration: 0.3 }}
-                      />
+                      {(() => {
+                        const mediaItems = getMediaItems(selectedModule);
+                        const currentItem = mediaItems[currentImageIndex];
+                        
+                        if (currentItem.type === 'image') {
+                          return (
+                            <motion.img 
+                              key={`image-${currentImageIndex}`}
+                              src={getCloudinaryUrl(currentItem.url, IMG_DETAIL)} 
+                              alt={`${selectedModule.nombre} - Media ${currentImageIndex + 1}`}
+                              style={{ objectFit: 'contain' }}
+                              initial={{ opacity: 0, x: 100 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -100 }}
+                              transition={{ duration: 0.3 }}
+                            />
+                          );
+                        } else {
+                          return (
+                            <motion.video 
+                              key={`video-${currentImageIndex}`}
+                              controls 
+                              style={{ 
+                                width: '100%', 
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: 'contain',
+                                backgroundColor: '#0f172a'
+                              }}
+                              preload="metadata"
+                              initial={{ opacity: 0, x: 100 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -100 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <source src={getVideoUrl(currentItem.url, 800)} type="video/mp4" />
+                              Tu navegador no soporta el tag de video.
+                            </motion.video>
+                          );
+                        }
+                      })()}
                     </AnimatePresence>
                     
-                    {selectedModule.imagenesDetalle.length > 1 && (
+                    {getMediaItems(selectedModule).length > 1 && (
                       <>
                         <button className="carousel-button prev" onClick={prevImage}>
                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -673,46 +730,18 @@ function TiendaAlma() {
                         </button>
                         
                         <div className="carousel-indicators">
-                          {selectedModule.imagenesDetalle.map((_, index) => (
+                          {getMediaItems(selectedModule).map((item, index) => (
                             <button
                               key={index}
                               className={`indicator ${index === currentImageIndex ? 'active' : ''}`}
                               onClick={() => setCurrentImageIndex(index)}
+                              title={item.type === 'video' ? '📹 Video' : '🖼️ Imagen'}
                             />
                           ))}
                         </div>
                       </>
                     )}
                   </div>
-
-                  {/* ✅ VIDEO DEL MÓDULO (si existe) */}
-                  {selectedModule.video && (
-                    <div className="module-video-container" style={{ 
-                      marginTop: '25px',
-                      width: '100%'
-                    }}>
-                      <h3 style={{ 
-                        marginBottom: '15px',
-                        fontSize: '1.2rem',
-                        color: '#333',
-                        fontWeight: '600'
-                      }}>🎥 Video del módulo</h3>
-                      <video 
-                        controls 
-                        style={{ 
-                          width: '100%', 
-                          maxWidth: '100%',
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                          backgroundColor: '#000'
-                        }}
-                        preload="metadata"
-                      >
-                        <source src={getVideoUrl(selectedModule.video, 800)} type="video/mp4" />
-                        Tu navegador no soporta el tag de video.
-                      </video>
-                    </div>
-                  )}
                 </div>
                 
                 <div className="detail-info-section">
