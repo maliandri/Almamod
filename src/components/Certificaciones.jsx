@@ -10,11 +10,11 @@ function Certificaciones() {
   const certificaciones = [
     {
       id: 'propanel',
-      nombre: 'Sistema PROPANEL',
-      icono: 'PROPANEL-iicono.webp',
+      nombre: 'Certificado de Aptitud Técnica (CAT)',
+      icono: 'CAT-CERTIFICADO_APTITUD_TECNICA.WEBP',
       certificado: 'cat_propanelcert.webp',
       color: '#3b82f6',
-      descripcion: 'AlmaMod utiliza exclusivamente Paneles SIP PROPANEL, el sistema constructivo más avanzado de Argentina. Fabricados con tecnología de última generación, estos paneles estructurales aislados combinan placas de OSB de alta densidad con núcleo de espuma rígida de poliuretano.',
+      descripcion: 'El Certificado de Aptitud Técnica (CAT) es un certificado que extiende el Ministerio de Desarrollo Territorial y Hábitat a todo sistema constructivo considerado "no tradicional". Este certificado regula, clasifica y aprueba aquellos sistemas constructivos no tradicionales que se implementan en planes de vivienda social o en toda construcción financiada con fondos estatales. AlmaMod utiliza exclusivamente Paneles SIP PROPANEL certificados con CAT, garantizando el cumplimiento de todos los estándares técnicos requeridos.',
       beneficios: [
         {
           titulo: 'Eficiencia Térmica Superior',
@@ -51,45 +51,45 @@ function Certificaciones() {
       ]
     },
     {
-      id: 'cacmi',
-      nombre: 'Certificación CACMI',
-      icono: 'cacmi-icono.webp',
-      certificado: 'cacmicert.webp',
-      color: '#f59e0b',
-      descripcion: 'AlmaMod es miembro certificado de CACMI (Cámara Argentina de la Construcción Modular e Industrializada), la entidad que regula y certifica los más altos estándares de calidad en construcción modular en Argentina.',
+      id: 'sismo',
+      nombre: 'Certificado de Aptitud Sismorresistente (CAS)',
+      icono: 'cat-sismoresistente-icono.webp',
+      certificado: 'cat_propaneltermoresistente.webp',
+      color: '#dc2626',
+      descripcion: 'El Sistema Constructivo PROPANEL® posee Certificado de Aptitud Sismorresistente (CAS) otorgado por el Instituto Nacional de Prevención Sísmica (INPRES), dependiente del Ministerio de Obras - Secretaría de Obras Públicas. Los requerimientos reglamentarios varían según la zona de emplazamiento de la obra, siendo más severos para la zona 4 y disminuyendo según la peligrosidad sísmica de cada zona.',
       beneficios: [
         {
-          titulo: 'Garantía de Calidad',
-          detalle: 'Cumplimiento verificado de todas las normativas argentinas de construcción modular y estándares internacionales.'
+          titulo: 'Estructura Monolítica',
+          detalle: 'El sistema de panel completo actúa como una sola unidad estructural, distribuyendo las cargas sísmicas de manera uniforme y eficiente.'
         },
         {
-          titulo: 'Proceso Certificado',
-          detalle: 'Nuestros procesos de fabricación están auditados y certificados por CACMI, garantizando excelencia en cada etapa.'
+          titulo: 'Flexibilidad Controlada',
+          detalle: 'Capacidad de absorber y disipar energía sísmica sin comprometer la integridad estructural. Diseño que se mueve con el sismo.'
         },
         {
-          titulo: 'Respaldo Institucional',
-          detalle: 'Contás con el respaldo de la entidad más importante de construcción modular del país.'
+          titulo: 'Peso Reducido',
+          detalle: 'Hasta 10 veces más liviano que construcción tradicional, reduciendo las fuerzas de inercia en caso de sismo.'
         },
         {
-          titulo: 'Innovación Constante',
-          detalle: 'Acceso a las últimas tecnologías y mejores prácticas de la industria modular.'
+          titulo: 'Sin Colapso',
+          detalle: 'A diferencia de mampostería tradicional, el sistema PROPANEL no se desmorona ni colapsa ante movimientos sísmicos intensos.'
         },
         {
-          titulo: 'Compromiso Ético',
-          detalle: 'Adherimos al código de ética y buenas prácticas de CACMI, garantizando transparencia y profesionalismo.'
+          titulo: 'Seguridad Comprobada',
+          detalle: 'Ensayos y certificaciones en zonas sísmicas de alta actividad. Construcciones aprobadas en Chile y California.'
         },
         {
-          titulo: 'Red de Excelencia',
-          detalle: 'Formamos parte de una red de empresas líderes comprometidas con la calidad y la innovación.'
+          titulo: 'Adaptado a Patagonia',
+          detalle: 'Diseño específico para resistir las condiciones sísmicas y climáticas extremas de la región patagónica.'
         }
       ],
       specs: [
-        'Certificación CACMI vigente',
-        'Cumplimiento normas IRAM',
-        'Auditorías periódicas de calidad',
-        'Procesos de fabricación certificados',
-        'Capacitación continua del personal',
-        'Trazabilidad completa de materiales'
+        'Certificación sismo-resistente IRAM',
+        'Zona sísmica: 2-4 (alta resistencia)',
+        'Ensayos sísmicos aprobados',
+        'Coeficiente sísmico optimizado',
+        'Uniones estructurales reforzadas',
+        'Fundaciones adaptadas a sismicidad'
       ]
     },
     {
@@ -135,45 +135,45 @@ function Certificaciones() {
       ]
     },
     {
-      id: 'sismo',
-      nombre: 'Sismo Resistente',
-      icono: 'cat-sismoresistente-icono.webp',
-      certificado: 'cat_propaneltermoresistente.webp',
-      color: '#dc2626',
-      descripcion: 'Los Paneles SIP PROPANEL utilizados por AlmaMod están específicamente diseñados y certificados para zonas sísmicas. Su estructura monolítica y flexibilidad controlada brindan una resistencia superior ante movimientos telúricos, fundamental en la región patagónica.',
+      id: 'cacmi',
+      nombre: 'Certificación CACMI',
+      icono: 'cacmi-icono.webp',
+      certificado: 'cacmicert.webp',
+      color: '#f59e0b',
+      descripcion: 'AlmaMod es miembro certificado de CACMI (Cámara Argentina de la Construcción Modular e Industrializada), la entidad que regula y certifica los más altos estándares de calidad en construcción modular en Argentina.',
       beneficios: [
         {
-          titulo: 'Estructura Monolítica',
-          detalle: 'El sistema de panel completo actúa como una sola unidad estructural, distribuyendo las cargas sísmicas de manera uniforme y eficiente.'
+          titulo: 'Garantía de Calidad',
+          detalle: 'Cumplimiento verificado de todas las normativas argentinas de construcción modular y estándares internacionales.'
         },
         {
-          titulo: 'Flexibilidad Controlada',
-          detalle: 'Capacidad de absorber y disipar energía sísmica sin comprometer la integridad estructural. Diseño que se mueve con el sismo.'
+          titulo: 'Proceso Certificado',
+          detalle: 'Nuestros procesos de fabricación están auditados y certificados por CACMI, garantizando excelencia en cada etapa.'
         },
         {
-          titulo: 'Peso Reducido',
-          detalle: 'Hasta 10 veces más liviano que construcción tradicional, reduciendo las fuerzas de inercia en caso de sismo.'
+          titulo: 'Respaldo Institucional',
+          detalle: 'Contás con el respaldo de la entidad más importante de construcción modular del país.'
         },
         {
-          titulo: 'Sin Colapso',
-          detalle: 'A diferencia de mampostería tradicional, el sistema PROPANEL no se desmorona ni colapsa ante movimientos sísmicos intensos.'
+          titulo: 'Innovación Constante',
+          detalle: 'Acceso a las últimas tecnologías y mejores prácticas de la industria modular.'
         },
         {
-          titulo: 'Seguridad Comprobada',
-          detalle: 'Ensayos y certificaciones en zonas sísmicas de alta actividad. Construcciones aprobadas en Chile y California.'
+          titulo: 'Compromiso Ético',
+          detalle: 'Adherimos al código de ética y buenas prácticas de CACMI, garantizando transparencia y profesionalismo.'
         },
         {
-          titulo: 'Adaptado a Patagonia',
-          detalle: 'Diseño específico para resistir las condiciones sísmicas y climáticas extremas de la región patagónica.'
+          titulo: 'Red de Excelencia',
+          detalle: 'Formamos parte de una red de empresas líderes comprometidas con la calidad y la innovación.'
         }
       ],
       specs: [
-        'Certificación sismo-resistente IRAM',
-        'Zona sísmica: 2-4 (alta resistencia)',
-        'Ensayos sísmicos aprobados',
-        'Coeficiente sísmico optimizado',
-        'Uniones estructurales reforzadas',
-        'Fundaciones adaptadas a sismicidad'
+        'Certificación CACMI vigente',
+        'Cumplimiento normas IRAM',
+        'Auditorías periódicas de calidad',
+        'Procesos de fabricación certificados',
+        'Capacitación continua del personal',
+        'Trazabilidad completa de materiales'
       ]
     }
   ];
