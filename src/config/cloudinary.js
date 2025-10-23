@@ -8,7 +8,9 @@ const CLOUD_NAME = 'dlshym1te';
  */
 export const getImageUrl = (fileName, width = 400) => {
   if (!fileName) return '';
-  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_${width},q_auto,f_auto/${fileName}`;
+  // Usa la fecha actual para forzar actualización de caché diariamente
+  const version = new Date().toISOString().split('T')[0].replace(/-/g, '');
+  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_${width},q_auto,f_auto/${fileName}?v=${version}`;
 };
 
 // Alias usado por TiendaAlma.jsx
