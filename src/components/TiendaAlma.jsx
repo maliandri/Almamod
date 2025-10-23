@@ -7,7 +7,7 @@ import './TiendaAlma.css';
 import SEO from './SEO';
 
 // ✅ IMPORTAR CLOUDINARY
-import { getCloudinaryUrl, getVideoUrl,IMG_CARD, IMG_DETAIL, IMG_THUMB } from '../config/cloudinary';
+import { getCloudinaryUrl, getVideoUrl, IMG_CARD, IMG_DETAIL, IMG_THUMB } from '../config/cloudinary';
 
 const StoreIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -273,8 +273,7 @@ const modulosData = [
       'ALMAMOD_36_REFUGIO_PORTADA_dobleint1',
       'ALMAMOD_36_REFUGIO_PORTADA_dobleint2'
     ],
-     video: 'VIDEO CABAÑERO HORIZONTAL.mp4',
-      video: 'VIDEO CABAÑERO HORIZONTAL.mp4',
+    video: 'VIDEO CABAÑERO HORIZONTAL.mp4',
     descripcion: 'Solución habitacional de 2 habitaciones tipo refugio. Compacta, eficiente y confortable.',
     especificacionesTecnicas: {
       construccion: [
@@ -685,6 +684,35 @@ function TiendaAlma() {
                       </>
                     )}
                   </div>
+
+                  {/* ✅ VIDEO DEL MÓDULO (si existe) */}
+                  {selectedModule.video && (
+                    <div className="module-video-container" style={{ 
+                      marginTop: '25px',
+                      width: '100%'
+                    }}>
+                      <h3 style={{ 
+                        marginBottom: '15px',
+                        fontSize: '1.2rem',
+                        color: '#333',
+                        fontWeight: '600'
+                      }}>🎥 Video del módulo</h3>
+                      <video 
+                        controls 
+                        style={{ 
+                          width: '100%', 
+                          maxWidth: '100%',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                          backgroundColor: '#000'
+                        }}
+                        preload="metadata"
+                      >
+                        <source src={getVideoUrl(selectedModule.video, 800)} type="video/mp4" />
+                        Tu navegador no soporta el tag de video.
+                      </video>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="detail-info-section">
