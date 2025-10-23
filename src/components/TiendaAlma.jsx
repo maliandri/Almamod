@@ -41,7 +41,7 @@ const modulosData = [
       'ALMAMOD_MICASITA_1.webp',
       'ALMAMOD_MICASITA_PLANIMETRIA.webp'
     ],
-    video: 'VIDEO MI CASITA VERTICAL.mp4',
+    video: 'VIDEO_MI_CASITA_VERTICAL.mp4',
     descripcion: 'Módulo monoambiente compacto y accesible. Ideal para primera vivienda o espacio de trabajo.',
     especificacionesTecnicas: {
       construccion: [
@@ -273,7 +273,7 @@ const modulosData = [
       'ALMAMOD_36_REFUGIO_PORTADA_dobleint1',
       'ALMAMOD_36_REFUGIO_PORTADA_dobleint2'
     ],
-    video: 'VIDEO CABAÑERO HORIZONTAL.mp4',
+    video: 'VIDEO_CABAÑERO_HORIZONTAL.mp4',
     descripcion: 'Solución habitacional de 2 habitaciones tipo refugio. Compacta, eficiente y confortable.',
     especificacionesTecnicas: {
       construccion: [
