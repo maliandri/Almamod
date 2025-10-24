@@ -18,7 +18,7 @@ import ResetPassword from './components/ResetPassword.jsx';
 import TiendaAlma from './components/TiendaAlma.jsx';
 import Certificaciones from './components/Certificaciones.jsx';
 import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
-import AIChatBot from './components/aichatbot.jsx';
+import AIChatBot from './components/aichatbot';
 
 // ====================================================================
 // Componente para la página de inicio
