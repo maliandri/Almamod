@@ -6,7 +6,6 @@ import { AuthContext } from './context/AuthContext';
 
 // --- Imports ---
 import logoAlmamod from './assets/almamod.webp';
-import CalculadoraModulo from './components/CalculadoraModulo.jsx';
 import ObrasCarousel from './components/ObrasCarousel.jsx';
 import Ubicacion from './components/Ubicacion.jsx';
 import SocialButton from './components/SocialButton.jsx';
@@ -19,6 +18,7 @@ import ResetPassword from './components/ResetPassword.jsx';
 import TiendaAlma from './components/TiendaAlma.jsx';
 import Certificaciones from './components/Certificaciones.jsx';
 import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
+import AIChatBot from './components/Aichatbot.jsx';
 
 // ====================================================================
 // Componente para la página de inicio
@@ -105,7 +105,7 @@ function App() {
         </div>
       )}
 
-      {/* MODAL DE SISTEMA CONSTRUCTIVO - Ahora fuera del contenedor flotante */}
+      {/* MODAL DE SISTEMA CONSTRUCTIVO */}
       {showSistemaConstructivo && (
         <SistemaConstructivo 
           isOpen={showSistemaConstructivo}
@@ -140,9 +140,10 @@ function App() {
       <div className="floating-buttons-container">
         <TiendaAlma />
         <ObrasCarousel />
-        {/* <CalculadoraModulo /> */}
         <Ubicacion />
+        
         <hr className="separator" />
+        
         <SocialButton
           platform="whatsapp"
           label="WhatsApp"
@@ -158,8 +159,10 @@ function App() {
           label="Facebook"
           url="https://facebook.com/61578686948419"
         />
-        {/* Botón para abrir Sistema Constructivo */}
+        
         <hr className="separator" />
+        
+        {/* Botón Sistema Constructivo */}
         <button 
           className="floating-button sistema-constructivo-button"
           onClick={() => setShowSistemaConstructivo(true)}
@@ -168,6 +171,14 @@ function App() {
           <SistemaConstructivoIcon />
           <span className="button-label">Sistema Constructivo</span>
         </button>
+        
+        {/* 🆕 SEPARADOR VISUAL */}
+        <div className="separator-line"></div>
+        
+        {/* 🆕 BOTONES ALMITA Y THEME EN HORIZONTAL */}
+        <div className="mini-buttons-row">
+          <AIChatBot/>
+        </div>
       </div>
 
       {/* FOOTER */}

@@ -1,234 +1,50 @@
-# robots.txt para AlmaMod - Optimizado para SEO y Bots de IA
-# Última actualización: Octubre 2025
-
-# ========== CONFIGURACIÓN GENERAL ==========
+# robots.txt para AlmaMod - Optimizado
 User-agent: *
 Allow: /
 Crawl-delay: 1
 
-# Bloquear acceso a archivos específicos (aplica a todos)
+# Bloquear rutas privadas
 Disallow: /admin/
 Disallow: /api/
-Disallow: /*.json$
-Disallow: /node_modules/
-Disallow: /src/
-Disallow: /private/
-Disallow: /.env
-Disallow: /config/
 
-# ========== SITEMAP ==========
+# Sitemap
 Sitemap: https://www.almamod.com.ar/sitemap.xml
 
-# ========== MOTORES DE BÚSQUEDA PRINCIPALES ==========
-
-# Google Search
+# Motores de búsqueda principales
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 0
 
-# Google Images
-User-agent: Googlebot-Image
-Allow: /
-Allow: /assets/
-Allow: /*.jpg
-Allow: /*.jpeg
-Allow: /*.png
-Allow: /*.webp
-Allow: /*.svg
-Allow: /*.gif
-Crawl-delay: 0
-
-# Bing Search
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 0
 
-# Yahoo
-User-agent: Slurp
-Allow: /
-Crawl-delay: 1
-
-# DuckDuckGo
-User-agent: DuckDuckBot
-Allow: /
-Crawl-delay: 1
-
-# Yandex
-User-agent: YandexBot
-Allow: /
-Crawl-delay: 1
-
-# Baidu
-User-agent: Baiduspider
-Allow: /
-Crawl-delay: 1
-
-# ========== BOTS DE INTELIGENCIA ARTIFICIAL ==========
-
-# OpenAI - ChatGPT, GPT-4, DALL-E
+# BOTS DE IA
 User-agent: GPTBot
 Allow: /
-Crawl-delay: 1
 
-# Anthropic - Claude AI
 User-agent: ClaudeBot
 Allow: /
-Crawl-delay: 1
 
-# Common Crawl (usado por múltiples IAs para entrenamiento)
-User-agent: CCBot
-Allow: /
-Crawl-delay: 1
-
-# Google Gemini/Bard (AI de Google)
 User-agent: Google-Extended
 Allow: /
-Crawl-delay: 1
 
-# Apple Intelligence (Siri, Apple AI)
-User-agent: Applebot-Extended
-Allow: /
-Crawl-delay: 1
-
-# Perplexity AI
-User-agent: PerplexityBot
-Allow: /
-Crawl-delay: 1
-
-# Amazon Alexa AI
-User-agent: Amazonbot
-Allow: /
-Crawl-delay: 1
-
-# Meta AI (Facebook/Instagram AI)
-User-agent: FacebookBot
-Allow: /
-Crawl-delay: 1
-
-# ByteDance AI (TikTok, Douyin)
-User-agent: Bytespider
-Allow: /
-Crawl-delay: 1
-
-# Cohere AI
-User-agent: cohere-ai
-Allow: /
-Crawl-delay: 1
-
-# AI2Bot (Allen Institute for AI)
-User-agent: AI2Bot
-Allow: /
-Crawl-delay: 1
-
-# Diffbot (extracción de datos para IA)
-User-agent: Diffbot
-Allow: /
-Crawl-delay: 1
-
-# YouBot (You.com AI search)
-User-agent: YouBot
-Allow: /
-Crawl-delay: 1
-
-# Anthropic Research
-User-agent: anthropic-ai
-Allow: /
-Crawl-delay: 1
-
-# ========== REDES SOCIALES ==========
-
-# Facebook (Open Graph, compartir links)
-User-agent: facebookexternalhit
-Allow: /
-Crawl-delay: 0
-
-# Twitter/X (Twitter Cards)
-User-agent: Twitterbot
-Allow: /
-Crawl-delay: 0
-
-# LinkedIn
-User-agent: LinkedInBot
-Allow: /
-Crawl-delay: 1
-
-# Pinterest
-User-agent: Pinterestbot
-Allow: /
-Crawl-delay: 1
-
-# Instagram
-User-agent: Instagram
-Allow: /
-Crawl-delay: 1
-
-# WhatsApp (preview de links)
-User-agent: WhatsApp
-Allow: /
-Crawl-delay: 0
-
-# Telegram (preview de links)
-User-agent: TelegramBot
-Allow: /
-Crawl-delay: 0
-
-# ========== OTROS CRAWLERS ÚTILES ==========
-
-# Archive.org (Wayback Machine)
-User-agent: ia_archiver
-Allow: /
-Crawl-delay: 2
-
-# Ahrefs (SEO tools)
+# SEO TOOLS (CORREGIDO - antes había contradicción)
 User-agent: AhrefsBot
 Allow: /
-Crawl-delay: 2
-
-# Semrush (SEO tools)
-User-agent: SemrushBot
-Allow: /
-Crawl-delay: 2
-
-# Moz (SEO tools)
-User-agent: rogerbot
-Allow: /
-Crawl-delay: 2
-
-# ========== BLOQUEAR BOTS MALICIOSOS/SPAM ==========
-
-# Scrapers agresivos
-User-agent: SemrushBot
 Disallow: /admin/
 Disallow: /api/
+Crawl-delay: 2
 
-User-agent: AhrefsBot
+User-agent: SemrushBot
+Allow: /
 Disallow: /admin/
 Disallow: /api/
+Crawl-delay: 2
 
-# Bots de spam conocidos
+# Bloquear bots maliciosos
 User-agent: MJ12bot
 Disallow: /
 
 User-agent: DotBot
 Disallow: /
-
-User-agent: Scrapy
-Disallow: /
-
-User-agent: wget
-Disallow: /
-
-User-agent: curl
-Disallow: /
-
-# ========== NOTAS ==========
-# Este archivo permite el acceso a todos los bots de IA principales
-# para maximizar la visibilidad de AlmaMod en búsquedas asistidas por IA.
-# 
-# Si en el futuro deseas BLOQUEAR algún bot de IA, cambia "Allow: /" por "Disallow: /"
-# 
-# Ejemplo para bloquear OpenAI:
-# User-agent: GPTBot
-# Disallow: /
-#
-# Más información: https://www.almamod.com.ar
