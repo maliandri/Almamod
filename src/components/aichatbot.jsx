@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import './AIChatbot.css';
+import './aichatbot.css';
 
 function AIChatBot() {
   const [isOpen, setIsOpen] = useState(false);
