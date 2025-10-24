@@ -54,7 +54,8 @@ function Certificaciones() {
       id: 'sismo',
       nombre: 'Certificado de Aptitud Sismorresistente (CAS)',
       icono: 'cat-sismoresistente-icono.webp',
-      certificado: 'cat_propaneltermoresistente.webp',
+      certificado: 'cas_propanel_1.webp',
+      certificado2: 'zona_sismicas_argentina.webp',
       color: '#dc2626',
       descripcion: 'El Sistema Constructivo PROPANEL® posee Certificado de Aptitud Sismorresistente (CAS) otorgado por el Instituto Nacional de Prevención Sísmica (INPRES), dependiente del Ministerio de Obras - Secretaría de Obras Públicas. Los requerimientos reglamentarios varían según la zona de emplazamiento de la obra, siendo más severos para la zona 4 y disminuyendo según la peligrosidad sísmica de cada zona.',
       beneficios: [
