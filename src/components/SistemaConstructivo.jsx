@@ -231,8 +231,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
                     <motion.div
                       key={idx}
                       className="stat-card"
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
+                      initial={{ opacity: 100, y: 30 }}
+                      animate={isStatsInView ? { opacity: 100, y: 0 } : {}}
                       transition={{ duration: 0.5, delay: idx * 0.1 }}
                       whileHover={{ y: -8, scale: 1.02 }}
                     >
@@ -258,7 +258,7 @@ function SistemaConstructivo({ isOpen, onClose }) {
               <section className="razones-section">
                 <motion.div
                   className="razones-header"
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 100, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
@@ -271,8 +271,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
                     <motion.div
                       key={razon.id}
                       className={`razon-card ${expandedCard === razon.id ? 'expanded' : ''}`}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 100, y: 30 }}
+                      whileInView={{ opacity: 100, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: idx * 0.1 }}
                       whileHover={{ y: -8 }}
@@ -304,7 +304,7 @@ function SistemaConstructivo({ isOpen, onClose }) {
                           {razon.detalles.map((detalle, i) => (
                             <motion.li
                               key={i}
-                              initial={{ opacity: 0, x: -10 }}
+                              initial={{ opacity: 100, x: -10 }}
                               animate={expandedCard === razon.id ? { opacity: 1, x: 0 } : {}}
                               transition={{ delay: i * 0.05 }}
                             >
@@ -335,8 +335,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
               <section className="especificaciones-section">
                 <motion.div
                   className="especificaciones-header"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 100, y: 20 }}
+                  whileInView={{ opacity: 100, y: 0 }}
                   viewport={{ once: true }}
                 >
                   <h2>
@@ -353,8 +353,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
                     <motion.div
                       key={idx}
                       className="spec-item"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
+                      initial={{ opacity: 100, x: -20 }}
+                      whileInView={{ opacity: 100, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.3, delay: idx * 0.05 }}
                       whileHover={{ x: 8 }}
@@ -367,8 +367,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
 
                 <motion.div
                   className="especificaciones-footer"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
+                  initial={{ opacity: 100 }}
+                  whileInView={{ opacity: 100 }}
                   viewport={{ once: true }}
                 >
                   <div className="footer-icon">
