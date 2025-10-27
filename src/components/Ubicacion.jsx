@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -9,26 +9,34 @@ const LocationIcon = () => (
   </svg>
 );
 
-function Ubicacion() {
-  const [isOpen, setIsOpen] = useState(false);
+// ✅ AHORA RECIBE isOpen y onClose COMO PROPS
+function Ubicacion({ isOpen: isOpenProp, onClose: onCloseProp }) {
+  // ✅ SI NO SE PASAN PROPS, USAR CONTROL INTERNO (RETROCOMPATIBILIDAD)
+  const [isOpenInternal, setIsOpenInternal] = React.useState(false);
+  
+  const isOpen = isOpenProp !== undefined ? isOpenProp : isOpenInternal;
+  const onClose = onCloseProp || (() => setIsOpenInternal(false));
 
   return (
     <>
-      <motion.button
-        className="floating-button"
-        onClick={() => setIsOpen(true)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <LocationIcon />
-        <span>Ubicación</span>
-      </motion.button>
+      {/* ✅ BOTÓN SOLO SI NO VIENE CONTROLADO POR PROPS */}
+      {isOpenProp === undefined && (
+        <motion.button
+          className="floating-button"
+          onClick={() => setIsOpenInternal(true)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <LocationIcon />
+          <span>Ubicación</span>
+        </motion.button>
+      )}
 
       {isOpen && createPortal(
         <AnimatePresence>
           <motion.div 
             className="modal-overlay" 
-            onClick={() => setIsOpen(false)} 
+            onClick={onClose} 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }}
@@ -42,7 +50,7 @@ function Ubicacion() {
             >
               <div className="modal-header">
                 <h2>Dónde Estamos</h2>
-                <button onClick={() => setIsOpen(false)} className="close-button">×</button>
+                <button onClick={onClose} className="close-button">×</button>
               </div>
               <div className="modal-body">
                 <p>Nuestra base de operaciones se encuentra en Neuquén, Argentina.</p>

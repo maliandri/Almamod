@@ -194,50 +194,32 @@ function SistemaConstructivo({ isOpen, onClose }) {
                       </svg>
                       <span>Ampliamente usado en Estados Unidos, Canadá y Europa</span>
                     </div>
-                  </motion.div>
 
-                  <motion.div
-                    className="hero-visual"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                  >
-                    <div className="panel-stack">
-                      {/* Capa 1 - OSB Exterior */}
-                      <div className="panel-layer layer-1">
-                        <div className="layer-content">
-                          <span className="layer-label">OSB Exterior</span>
-                          <span className="layer-spec">11mm</span>
-                        </div>
-                      </div>
-
-                      {/* Capa 2 - Núcleo EPS */}
-                      <div className="panel-layer layer-2">
-                        <div className="layer-content">
-                          <span className="layer-label">Núcleo EPS</span>
-                          <span className="layer-spec">Variable</span>
-                        </div>
-                      </div>
-
-                      {/* Capa 3 - OSB Interior */}
-                      <div className="panel-layer layer-3">
-                        <div className="layer-content">
-                          <span className="layer-label">OSB Interior</span>
-                          <span className="layer-spec">11mm</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Iconos flotantes de beneficios - CORREGIDOS */}
-                    <div className="floating-benefit benefit-1">
-                      🌡️ Aislación Térmica
-                    </div>
-                    <div className="floating-benefit benefit-2">
-                      ⚡ Eficiencia
-                    </div>
-                    <div className="floating-benefit benefit-3">
-                      🛡️ Resistencia
-                    </div>
+                    <motion.a
+                      href={getCloudinaryUrl('informe_propanel_unco.pdf', IMG_CARD)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hero-pdf-button"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                      </svg>
+                      <span>Descargar Dossier Técnico Completo</span>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                      </svg>
+                    </motion.a>
                   </motion.div>
                 </div>
               </section>

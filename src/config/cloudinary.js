@@ -1,4 +1,4 @@
-// ✅ Configuración Cloudinary (Generada automáticamente)
+/// ✅ Configuración Cloudinary (Generada automáticamente)
 const CLOUD_NAME = 'dlshym1te';
 
 /**

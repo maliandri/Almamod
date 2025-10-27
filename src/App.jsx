@@ -1,20 +1,14 @@
-// src/App.jsx
-import React, { useState, useContext } from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+// src/App.jsx - VERSIÓN LIMPIA SIN AUTHCONTEXT NI PAGELAYOUT
+import React, { useState } from 'react';
+import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
-import { AuthContext } from './context/AuthContext';
 
 // --- Imports ---
 import logoAlmamod from './assets/almamod.webp';
 import ObrasCarousel from './components/ObrasCarousel.jsx';
 import Ubicacion from './components/Ubicacion.jsx';
 import SocialButton from './components/SocialButton.jsx';
-import RegisterForm from './components/RegisterForm.jsx';
-import LoginForm from './components/LoginForm.jsx';
-import PageLayout from './components/PageLayout.jsx';
-import VerifyEmail from './components/VerifyEmail.jsx';
 import ServiciosCarousel from './components/ServiciosCarousel.jsx';
-import ResetPassword from './components/ResetPassword.jsx';
 import TiendaAlma from './components/TiendaAlma.jsx';
 import Certificaciones from './components/Certificaciones.jsx';
 import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
@@ -35,20 +29,27 @@ function HomePage() {
 }
 
 // ====================================================================
-// Componente principal App (controla toda la estructura)
+// Componente principal App
 // ====================================================================
 function App() {
-  const { isAuthenticated, logout, user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Estados para controlar la visibilidad de los modales de login/registro
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
-  const [showSistemaConstructivo, setShowSistemaConstructivo] = useState(false);
+  // ✅ FUNCIONES PARA ABRIR MODALES CON NAVEGACIÓN
+  const openSistemaConstructivo = () => {
+    navigate('/sistema-constructivo');
+  };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/'); // Redirige al inicio al cerrar sesión
+  const openTiendaAlma = () => {
+    navigate('/tiendaalma');
+  };
+
+  const openObras = () => {
+    navigate('/obras');
+  };
+
+  const openUbicacion = () => {
+    navigate('/ubicacion');
   };
 
   return (
@@ -65,82 +66,87 @@ function App() {
             <h1>CONSTRUCCIÓN SIN LÍMITES</h1>
             <p>Estamos en Neuquén, Somos de Neuquén</p>
           </div>
-          <nav className="header-nav">
-            {isAuthenticated ? (
-              <>
-                <span className="nav-user-greeting">Hola, {user?.fullName}</span>
-                <button onClick={handleLogout} className="nav-link-button">
-                  Cerrar Sesión
-                </button>
-              </>
-            ) : (
-              <>
-                {/* 
-                <button onClick={() => setShowRegister(true)} className="nav-link-button">
-                  Registrarse
-                </button>
-                <button onClick={() => setShowLogin(true)} className="nav-link-button">
-                  Iniciar Sesión
-                </button>
-                */}
-              </>
-            )}
-          </nav>
         </div>
       </header>
 
-      {/* MODALES DE LOGIN Y REGISTRO */}
-      {showRegister && (
-        <div className="form-modal-overlay" onClick={() => setShowRegister(false)}>
-          <div onClick={(e) => e.stopPropagation()}>
-            <RegisterForm closeModal={() => setShowRegister(false)} />
-          </div>
-        </div>
-      )}
-      {showLogin && (
-        <div className="form-modal-overlay" onClick={() => setShowLogin(false)}>
-          <div onClick={(e) => e.stopPropagation()}>
-            <LoginForm closeModal={() => setShowLogin(false)} />
-          </div>
-        </div>
-      )}
+      {/* ✅ MODALES CONTROLADOS POR RUTAS */}
+      
+      {/* Sistema Constructivo */}
+      <SistemaConstructivo 
+        isOpen={location.pathname === '/sistema-constructivo'}
+        onClose={() => navigate('/')}
+      />
 
-      {/* MODAL DE SISTEMA CONSTRUCTIVO */}
-      {showSistemaConstructivo && (
-        <SistemaConstructivo 
-          isOpen={showSistemaConstructivo}
-          onClose={() => setShowSistemaConstructivo(false)}
-        />
-      )}
+      {/* TiendaAlma - se maneja solo */}
+      <TiendaAlma />
+
+      {/* ObrasCarousel */}
+      <ObrasCarousel 
+        isOpen={location.pathname === '/obras'}
+        onClose={() => navigate('/')}
+      />
+
+      {/* Ubicacion */}
+      <Ubicacion 
+        isOpen={location.pathname === '/ubicacion'}
+        onClose={() => navigate('/')}
+      />
 
       {/* CONTENIDO PRINCIPAL */}
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route
-            path="/verify-email"
-            element={
-              <PageLayout>
-                <VerifyEmail />
-              </PageLayout>
-            }
-          />
-          <Route
-            path="/reset-password"
-            element={
-              <PageLayout>
-                <ResetPassword />
-              </PageLayout>
-            }
-          />
+          
+          {/* ✅ RUTAS PARA LOS MODALES */}
+          <Route path="/sistema-constructivo" element={<HomePage />} />
+          <Route path="/tiendaalma" element={<HomePage />} />
+          <Route path="/tiendaalma/:slug" element={<HomePage />} />
+          <Route path="/obras" element={<HomePage />} />
+          <Route path="/ubicacion" element={<HomePage />} />
         </Routes>
       </main>
 
       {/* BOTONES FLOTANTES */}
       <div className="floating-buttons-container">
-        <TiendaAlma />
-        <ObrasCarousel />
-        <Ubicacion />
+        {/* Botón TiendaAlma */}
+        <button 
+          className="floating-button tienda-button"
+          onClick={openTiendaAlma}
+          title="Tienda Alma"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span className="button-label">Tienda Alma</span>
+        </button>
+
+        {/* Botón Obras */}
+        <button 
+          className="floating-button"
+          onClick={openObras}
+          title="Nuestras Obras"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <span className="button-label">Nuestras Obras</span>
+        </button>
+
+        {/* Botón Ubicación */}
+        <button 
+          className="floating-button"
+          onClick={openUbicacion}
+          title="Ubicación"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span className="button-label">Ubicación</span>
+        </button>
         
         <hr className="separator" />
         
@@ -165,17 +171,15 @@ function App() {
         {/* Botón Sistema Constructivo */}
         <button 
           className="floating-button sistema-constructivo-button"
-          onClick={() => setShowSistemaConstructivo(true)}
+          onClick={openSistemaConstructivo}
           title="Sistema Constructivo"
         >
           <SistemaConstructivoIcon />
           <span className="button-label">Sistema Constructivo</span>
         </button>
         
-        {/* 🆕 SEPARADOR VISUAL */}
         <div className="separator-line"></div>
         
-        {/* 🆕 BOTONES ALMITA Y THEME EN HORIZONTAL */}
         <div className="mini-buttons-row">
           <AIChatBot/>
         </div>

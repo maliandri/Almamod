@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation, useNavigate } from 'react-router-dom'; // ✅ AGREGADO
 import './TiendaAlma.css';
 
 // ✅ IMPORTAR SEO
@@ -317,6 +318,9 @@ const formatearPrecio = (precio) => {
 };
 
 function TiendaAlma() {
+  const location = useLocation(); // ✅ AGREGADO
+  const navigate = useNavigate(); // ✅ AGREGADO
+  
   const [isOpen, setIsOpen] = useState(false);
   const [selectedModule, setSelectedModule] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -349,18 +353,17 @@ function TiendaAlma() {
     return items;
   };
 
-  // Manejar URLs y navegación
+  // ✅ Manejar URLs y navegación - DETECTA CAMBIOS EN LA RUTA
   useEffect(() => {
-    const path = window.location.pathname;
+    const path = location.pathname; // ✅ USAR location de React Router
     
     // Si estamos en /tiendaalma, abrir la tienda
     if (path === '/tiendaalma') {
       setIsOpen(true);
       setSelectedModule(null);
     }
-    
     // Si estamos en /tiendaalma/[slug], abrir el detalle del módulo
-    if (path.startsWith('/tiendaalma/')) {
+    else if (path.startsWith('/tiendaalma/')) {
       const slug = path.replace('/tiendaalma/', '');
       const modulo = modulosData.find(m => m.slug === slug);
       if (modulo) {
@@ -369,36 +372,28 @@ function TiendaAlma() {
         setCurrentImageIndex(0);
       }
     }
-  }, []);
+    // Si no estamos en ninguna ruta de tienda, cerrar
+    else {
+      setIsOpen(false);
+      setSelectedModule(null);
+    }
+  }, [location.pathname]); // ✅ DEPENDENCIA: detecta cambios en la URL
 
-  // Actualizar URL cuando se abre/cierra la tienda o se selecciona un módulo
-  const updateURL = (path) => {
-    window.history.pushState({}, '', path);
-  };
-
+  // ✅ FUNCIONES DE NAVEGACIÓN CON REACT ROUTER
   const handleOpenStore = () => {
-    setIsOpen(true);
-    updateURL('/tiendaalma');
+    navigate('/tiendaalma');
   };
 
   const handleCloseStore = () => {
-    setIsOpen(false);
-    setSelectedModule(null);
-    updateURL('/');
+    navigate('/');
   };
 
   const openDetails = (modulo) => {
-    setSelectedModule(modulo);
-    setCurrentImageIndex(0);
-    setSearchTerm('');
-    setIsSearchFocused(false);
-    updateURL(`/tiendaalma/${modulo.slug}`);
+    navigate(`/tiendaalma/${modulo.slug}`);
   };
 
   const closeDetails = () => {
-    setSelectedModule(null);
-    setCurrentImageIndex(0);
-    updateURL('/tiendaalma');
+    navigate('/tiendaalma');
   };
 
   // Filtrar módulos según búsqueda
