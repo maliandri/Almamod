@@ -1,70 +1,252 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   
-  <!-- Página Principal -->
+  <!-- ========================================== -->
+  <!-- PÁGINA PRINCIPAL                           -->
+  <!-- ========================================== -->
   <url>
     <loc>https://www.almamod.com.ar/</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/almamod1.png</image:loc>
+      <image:title>AlmaMod - Construcción Modular</image:title>
+    </image:image>
   </url>
   
-  <!-- Tienda Alma -->
+  <!-- ========================================== -->
+  <!-- SISTEMA CONSTRUCTIVO                       -->
+  <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/tiendaalma</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://www.almamod.com.ar/sistema-constructivo</loc>
+    <lastmod>2025-10-27</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
-  <!-- MiCasita -->
+  <!-- ========================================== -->
+  <!-- OBRAS                                      -->
+  <!-- ========================================== -->
+  <url>
+    <loc>https://www.almamod.com.ar/obras</loc>
+    <lastmod>2025-10-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_OBRA_1.webp</image:loc>
+      <image:title>Obra AlmaMod - Neuquén Capital</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_OBRA_2.webp</image:loc>
+      <image:title>Cabaña Patagónica - Villa La Angostura</image:title>
+    </image:image>
+  </url>
+  
+  <!-- ========================================== -->
+  <!-- UBICACIÓN                                  -->
+  <!-- ========================================== -->
+  <url>
+    <loc>https://www.almamod.com.ar/ubicacion</loc>
+    <lastmod>2025-10-27</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- ========================================== -->
+  <!-- TIENDA ALMA - CATÁLOGO                     -->
+  <!-- ========================================== -->
+  <url>
+    <loc>https://www.almamod.com.ar/tiendaalma</loc>
+    <lastmod>2025-10-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  
+  <!-- ========================================== -->
+  <!-- PRODUCTOS - MICASITA                       -->
+  <!-- ========================================== -->
   <url>
     <loc>https://www.almamod.com.ar/tiendaalma/micasita</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_MICASITA_PORTADA.webp</image:loc>
+      <image:title>MiCasita 12m² - Módulo Habitacional Compacto</image:title>
+      <image:caption>Módulo monoambiente de 12m² con baño completo y cocina-dormitorio. Precio: $15.300.000</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_MICASITA_1.webp</image:loc>
+      <image:title>MiCasita - Interior</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_MICASITA_PLANIMETRIA.webp</image:loc>
+      <image:title>MiCasita - Planimetría</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/dlshym1te/video/upload/so_0/VIDEO_MI_CASITA_VERTICAL.jpg</video:thumbnail_loc>
+      <video:title>Video Tour MiCasita 360°</video:title>
+      <video:description>Recorrido virtual completo del módulo MiCasita</video:description>
+      <video:content_loc>https://res.cloudinary.com/dlshym1te/video/upload/VIDEO_MI_CASITA_VERTICAL.mp4</video:content_loc>
+      <video:duration>60</video:duration>
+    </video:video>
   </url>
   
-  <!-- Alma 18 -->
+  <!-- ========================================== -->
+  <!-- PRODUCTOS - ALMA 18                        -->
+  <!-- ========================================== -->
   <url>
     <loc>https://www.almamod.com.ar/tiendaalma/alma-18</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_18_PORTADA.webp</image:loc>
+      <image:title>Alma 18 - 18m² con 1 dormitorio</image:title>
+      <image:caption>Vivienda modular de 18m² con 1 dormitorio. Precio: $32.050.000</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_18_RENDER_EXTERIOR.webp</image:loc>
+      <image:title>Alma 18 - Render Exterior</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_18_PLANIMETRÍA.webp</image:loc>
+      <image:title>Alma 18 - Planimetría</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_18_PLANIMETRÍA_MOD.webp</image:loc>
+      <image:title>Alma 18 - Planimetría Modificada</image:title>
+    </image:image>
   </url>
   
-  <!-- Alma 27 -->
+  <!-- ========================================== -->
+  <!-- PRODUCTOS - ALMA 27                        -->
+  <!-- ========================================== -->
   <url>
     <loc>https://www.almamod.com.ar/tiendaalma/alma-27</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_27_PORTADA.webp</image:loc>
+      <image:title>Alma 27 - 27m² con 1 dormitorio</image:title>
+      <image:caption>Vivienda modular de 27m² con 1 dormitorio. Precio: $42.120.000</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_27_1.webp</image:loc>
+      <image:title>Alma 27 - Vista Interior</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_27_RENDER_EXTERIOR.webp</image:loc>
+      <image:title>Alma 27 - Render Exterior</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_27_PLANIMETRÍA.webp</image:loc>
+      <image:title>Alma 27 - Planimetría</image:title>
+    </image:image>
   </url>
   
-  <!-- Alma Loft 28 -->
+  <!-- ========================================== -->
+  <!-- PRODUCTOS - ALMA LOFT 28                   -->
+  <!-- ========================================== -->
   <url>
     <loc>https://www.almamod.com.ar/tiendaalma/alma-loft-28</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_28_LOFT_PORTADA.webp</image:loc>
+      <image:title>Alma Loft 28 - Diseño Loft con Entrepiso</image:title>
+      <image:caption>Vivienda tipo loft de 28m² con entrepiso. Precio: $38.500.000</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_28_LOFT_RENDER_EXTERIOR.webp</image:loc>
+      <image:title>Alma Loft 28 - Render Exterior</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_28_LOFT_RENDER_INTERIOR.webp</image:loc>
+      <image:title>Alma Loft 28 - Render Interior</image:title>
+    </image:image>
   </url>
   
-  <!-- Alma 36 -->
+  <!-- ========================================== -->
+  <!-- PRODUCTOS - ALMA 36                        -->
+  <!-- ========================================== -->
   <url>
     <loc>https://www.almamod.com.ar/tiendaalma/alma-36</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_PORTADA.webp</image:loc>
+      <image:title>Alma 36 - 36m² con 2 dormitorios</image:title>
+      <image:caption>Vivienda modular de 36m² con 2 dormitorios. Precio: $50.075.000</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_1.webp</image:loc>
+      <image:title>Alma 36 - Vista 1</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_2.webp</image:loc>
+      <image:title>Alma 36 - Vista 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_3.webp</image:loc>
+      <image:title>Alma 36 - Vista 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_RENDER_EXT-INT.webp</image:loc>
+      <image:title>Alma 36 - Render Exterior e Interior</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_PLANIMETRIA.webp</image:loc>
+      <image:title>Alma 36 - Planimetría</image:title>
+    </image:image>
   </url>
   
-  <!-- Alma 36 Refugio -->
+  <!-- ========================================== -->
+  <!-- PRODUCTOS - ALMA 36 REFUGIO                -->
+  <!-- ========================================== -->
   <url>
     <loc>https://www.almamod.com.ar/tiendaalma/alma-36-refugio</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_REFUGIO_PORTADA.webp</image:loc>
+      <image:title>Alma 36 Refugio - Diseño Patagónico</image:title>
+      <image:caption>Vivienda tipo refugio de 36m² con 2 dormitorios. Precio: $54.800.000</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_REFUGIO_PLANIMETRIA_2D.webp</image:loc>
+      <image:title>Alma 36 Refugio - Planimetría 2D</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_REFUGIO_PORTADA_dobleext1.webp</image:loc>
+      <image:title>Alma 36 Refugio - Exterior Vista 1</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_REFUGIO_PORTADA_dobleext2.webp</image:loc>
+      <image:title>Alma 36 Refugio - Exterior Vista 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_REFUGIO_PORTADA_dobleint1.webp</image:loc>
+      <image:title>Alma 36 Refugio - Interior Vista 1</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_36_REFUGIO_PORTADA_dobleint2.webp</image:loc>
+      <image:title>Alma 36 Refugio - Interior Vista 2</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/dlshym1te/video/upload/so_0/VIDEO_CABAÑERO_HORIZONTAL.jpg</video:thumbnail_loc>
+      <video:title>Video Tour Alma 36 Refugio</video:title>
+      <video:description>Recorrido completo del módulo Alma 36 Refugio estilo patagónico</video:description>
+      <video:content_loc>https://res.cloudinary.com/dlshym1te/video/upload/VIDEO_CABAÑERO_HORIZONTAL.mp4</video:content_loc>
+      <video:duration>90</video:duration>
+    </video:video>
   </url>
   
 </urlset>
-
-
