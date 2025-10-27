@@ -51,6 +51,21 @@ function SistemaConstructivo({ isOpen, onClose }) {
     }
   ];
 
+  const technicalData = [
+    { id: 1, icon: '📋', title: 'Composición', value: 'Panel SIP', detail: 'OSB 9.5mm + EPS 15 kg/m³ + OSB 9.5mm', color: '#1e3a8a' },
+    { id: 2, icon: '📏', title: 'Dimensiones', value: '1.22 x 2.44m', detail: 'Espesor: 75-150mm según proyecto', color: '#1e40af' },
+    { id: 3, icon: '⚖️', title: 'Peso Panel', value: '63-66 kg', detail: 'Panel de 100mm de espesor', color: '#1e3a8a' },
+    { id: 4, icon: '🔥', title: 'Resistencia Fuego', value: 'Clase B', detail: 'Autoextinguible IRAM/ASTM', color: '#dc2626' },
+    { id: 5, icon: '💪', title: 'Carga Compresión', value: '87.84 kN', detail: 'Carga característica certificada', color: '#1e40af' },
+    { id: 6, icon: '🎯', title: 'Impacto Blando', value: '360 Joules', detail: 'Sin daño estructural (IRAM 11596)', color: '#16a34a' },
+    { id: 7, icon: '⚡', title: 'Impacto Acero', value: '2 metros', detail: 'Sin perforación (IRAM 11595)', color: '#1e3a8a' },
+    { id: 8, icon: '🌡️', title: 'Transmitancia', value: 'K=0.28', detail: 'W/m²K - Aislación térmica superior', color: '#1e40af' },
+    { id: 9, icon: '🔬', title: 'Laboratorio', value: 'UNCo GEPSyN', detail: 'Ensayos certificados 2016', color: '#1e3a8a' },
+    { id: 10, icon: '✅', title: 'Normativas', value: 'IRAM 11588', detail: 'IRAM 11595/96 - ASTM D4986', color: '#16a34a' },
+    { id: 11, icon: '🏗️', title: 'Resistencia', value: '121-147 kN', detail: 'Carga máxima alcanzada en tests', color: '#1e40af' },
+    { id: 12, icon: '📐', title: 'Deformación', value: '< 3mm', detail: 'Deformación axial bajo carga', color: '#1e3a8a' }
+  ];
+
   const razones = [
     {
       id: 1,
@@ -160,9 +175,9 @@ function SistemaConstructivo({ isOpen, onClose }) {
           <div className="modal-body sistema-constructivo-body">
             {/* Contenido del sistema constructivo */}
             <div className="sistema-constructivo">
-              {/* Hero Section */}
+              {/* Hero Section con Grid Layout */}
               <section className="hero-section">
-                <div className="hero-content">
+                <div className="hero-content-grid">
                   <motion.div
                     className="hero-text"
                     initial={{ opacity: 0, y: 30 }}
@@ -221,6 +236,43 @@ function SistemaConstructivo({ isOpen, onClose }) {
                       </svg>
                     </motion.a>
                   </motion.div>
+
+                  {/* Technical Cards Grid - A la derecha del título */}
+                  <div className="technical-cards-container">
+                    <div className="technical-cards-header">
+                      <h3>Datos Técnicos Certificados</h3>
+                    </div>
+                    <div className="technical-cards-grid">
+                      {technicalData && technicalData.length > 0 ? (
+                        technicalData.map((tech, idx) => (
+                          <motion.div
+                            key={tech.id}
+                            className="technical-card"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4, delay: idx * 0.03 }}
+                            whileHover={{ x: 4 }}
+                            style={{ '--tech-color': tech.color }}
+                          >
+                            <div className="tech-icon" style={{ color: tech.color }}>
+                              {tech.icon}
+                            </div>
+                            <div className="tech-content">
+                              <div className="tech-title">{tech.title}</div>
+                              <div className="tech-value" style={{ color: tech.color }}>
+                                {tech.value}
+                              </div>
+                              <div className="tech-detail">{tech.detail}</div>
+                            </div>
+                          </motion.div>
+                        ))
+                      ) : (
+                        <div style={{ color: '#d4a574', padding: '2rem', textAlign: 'center' }}>
+                          Cargando datos técnicos...
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </section>
 
@@ -231,8 +283,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
                     <motion.div
                       key={idx}
                       className="stat-card"
-                      initial={{ opacity: 100, y: 30 }}
-                      animate={isStatsInView ? { opacity: 100, y: 0 } : {}}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.5, delay: idx * 0.1 }}
                       whileHover={{ y: -8, scale: 1.02 }}
                     >
@@ -258,7 +310,7 @@ function SistemaConstructivo({ isOpen, onClose }) {
               <section className="razones-section">
                 <motion.div
                   className="razones-header"
-                  initial={{ opacity: 100, y: 20 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
@@ -271,8 +323,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
                     <motion.div
                       key={razon.id}
                       className={`razon-card ${expandedCard === razon.id ? 'expanded' : ''}`}
-                      initial={{ opacity: 100, y: 30 }}
-                      whileInView={{ opacity: 100, y: 0 }}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: idx * 0.1 }}
                       whileHover={{ y: -8 }}
@@ -304,7 +356,7 @@ function SistemaConstructivo({ isOpen, onClose }) {
                           {razon.detalles.map((detalle, i) => (
                             <motion.li
                               key={i}
-                              initial={{ opacity: 100, x: -10 }}
+                              initial={{ opacity: 0, x: -10 }}
                               animate={expandedCard === razon.id ? { opacity: 1, x: 0 } : {}}
                               transition={{ delay: i * 0.05 }}
                             >
@@ -335,8 +387,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
               <section className="especificaciones-section">
                 <motion.div
                   className="especificaciones-header"
-                  initial={{ opacity: 100, y: 20 }}
-                  whileInView={{ opacity: 100, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
                   <h2>
@@ -353,8 +405,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
                     <motion.div
                       key={idx}
                       className="spec-item"
-                      initial={{ opacity: 100, x: -20 }}
-                      whileInView={{ opacity: 100, x: 0 }}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.3, delay: idx * 0.05 }}
                       whileHover={{ x: 8 }}
@@ -367,8 +419,8 @@ function SistemaConstructivo({ isOpen, onClose }) {
 
                 <motion.div
                   className="especificaciones-footer"
-                  initial={{ opacity: 100 }}
-                  whileInView={{ opacity: 100 }}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                 >
                   <div className="footer-icon">
