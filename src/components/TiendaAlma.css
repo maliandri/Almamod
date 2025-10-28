@@ -44,6 +44,33 @@
   margin: 0;
 }
 
+/* ===== NUEVO: Banner Introductorio de Tienda ===== */
+.tienda-intro {
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  margin: 0 20px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tienda-intro h3 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.tienda-intro p {
+  margin: 10px 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.tienda-intro strong {
+  font-weight: 700;
+}
+
 /* Búsqueda más compacta */
 .search-container {
   position: relative;
@@ -411,92 +438,279 @@
 
 .spec-item strong {
   color: #d4a574;
+  font-size: 0.8rem;
   font-weight: 600;
-  font-size: 0.82rem;
 }
 
 .spec-item span {
   color: #e2e8f0;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
+  text-align: right;
 }
 
-/* Precio en el detalle del módulo */
 .spec-price {
-  color: #ffffff !important;
+  color: #10b981 !important;
   font-weight: 700 !important;
-  font-size: 0.88rem !important;
+  font-size: 0.95rem !important;
 }
 
-.detail-includes,
-.detail-features {
+.detail-includes {
+  background: rgba(212, 165, 116, 0.05);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 0;
+  border: 1px solid rgba(212, 165, 116, 0.15);
+}
+
+.detail-includes h3 {
+  color: #d4a574;
+  font-size: 0.95rem;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.detail-includes ul {
+  list-style: none;
+  padding: 0;
   margin: 0;
 }
 
-.detail-includes h3,
-.detail-features h3 {
-  color: #d4a574;
-  font-size: 0.92rem;
-  margin: 0 0 5px 0;
-  font-weight: 700;
+.detail-includes li {
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  padding: 3px 0;
+  line-height: 1.4;
 }
 
-.detail-includes ul,
+.detail-features {
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 0;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.detail-features h3 {
+  color: #667eea;
+  font-size: 0.95rem;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
 .detail-features ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.detail-includes li,
 .detail-features li {
-  color: #e2e8f0;
-  padding: 1.5px 0;
+  color: #cbd5e1;
   font-size: 0.82rem;
-  line-height: 1.25;
+  padding: 3px 0;
+  line-height: 1.4;
+}
+
+/* ===== NUEVO: Ventajas Destacadas ===== */
+.detail-advantages {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  border: 2px solid #e2e8f0;
+}
+
+.detail-advantages h3 {
+  margin-top: 0;
+  color: #1e293b;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.detail-advantages ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detail-advantages li {
+  padding: 8px 0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.detail-advantages li:last-child {
+  border-bottom: none;
+}
+
+/* ===== NUEVO: Casos de Uso ===== */
+.detail-use-cases {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 25px;
+  border-radius: 12px;
+  margin-top: 20px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.detail-use-cases h3 {
+  margin-top: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.detail-use-cases > div {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.detail-use-cases > div:last-child {
+  margin-bottom: 0;
+}
+
+.detail-use-cases h4 {
+  margin: 0 0 8px 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: white;
+}
+
+.detail-use-cases p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.95;
+}
+
+/* ===== NUEVO: FAQ del Producto ===== */
+.detail-faq {
+  background: #f8fafc;
+  padding: 25px;
+  border-radius: 12px;
+  margin-top: 20px;
+  border: 2px solid #e2e8f0;
+}
+
+.detail-faq h3 {
+  margin-top: 0;
+  color: #1e293b;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.detail-faq > div {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.detail-faq > div:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.detail-faq h4 {
+  margin: 0 0 8px 0;
+  color: #475569;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.detail-faq p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ===== NUEVO: Botones para Mostrar/Ocultar Secciones ===== */
+.detail-info-section button {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.detail-info-section button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.detail-info-section button:active {
+  transform: translateY(0);
 }
 
 .detail-actions {
-  margin-top: 0;
-  padding-top: 10px;
-  flex-shrink: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(212, 165, 116, 0.2);
 }
 
-.contact-button,
-.specs-button {
-  width: 100%;
+.contact-button {
+  background: #25D366;
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 0.88rem;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
+  gap: 10px;
   justify-content: center;
-  gap: 7px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.contact-button {
-  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  transition: all 0.3s ease;
+  flex: 1;
 }
 
 .contact-button:hover {
+  background: #20bd5a;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
 }
 
 .specs-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f1f5f9;
+  color: #1e293b;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex: 1;
 }
 
 .specs-button:hover {
+  background: #e2e8f0;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 20px rgba(100, 116, 139, 0.2);
 }
 
 /* Estilos para el carrusel de imágenes */
@@ -760,6 +974,20 @@
     -webkit-overflow-scrolling: touch;
   }
 
+  /* ===== NUEVO: Responsive para banner intro ===== */
+  .tienda-intro {
+    padding: 15px;
+    margin: 0 10px 15px;
+  }
+
+  .tienda-intro h3 {
+    font-size: 1.1rem;
+  }
+
+  .tienda-intro p {
+    font-size: 0.85rem;
+  }
+
   .detail-content {
     grid-template-columns: 1fr;
     max-height: none;
@@ -775,6 +1003,74 @@
     max-height: none;
     padding: 10px 14px 20px 14px;
     gap: 8px;
+  }
+
+  /* ===== NUEVO: Responsive para ventajas ===== */
+  .detail-advantages {
+    padding: 15px;
+    margin-top: 15px;
+  }
+
+  .detail-advantages h3 {
+    font-size: 0.95rem;
+  }
+
+  .detail-advantages li {
+    font-size: 0.85rem;
+    padding: 6px 0;
+  }
+
+  /* ===== NUEVO: Responsive para casos de uso ===== */
+  .detail-use-cases {
+    padding: 20px;
+    margin-top: 15px;
+  }
+
+  .detail-use-cases h3 {
+    font-size: 1rem;
+  }
+
+  .detail-use-cases > div {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .detail-use-cases h4 {
+    font-size: 0.95rem;
+  }
+
+  .detail-use-cases p {
+    font-size: 0.85rem;
+  }
+
+  /* ===== NUEVO: Responsive para FAQ ===== */
+  .detail-faq {
+    padding: 20px;
+    margin-top: 15px;
+  }
+
+  .detail-faq h3 {
+    font-size: 1rem;
+  }
+
+  .detail-faq > div {
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+  }
+
+  .detail-faq h4 {
+    font-size: 0.9rem;
+  }
+
+  .detail-faq p {
+    font-size: 0.85rem;
+  }
+
+  /* ===== NUEVO: Responsive para botones de toggle ===== */
+  .detail-info-section button {
+    min-width: 100%;
+    padding: 10px 15px;
+    font-size: 0.85rem;
   }
 
   .detail-actions {
