@@ -1,5 +1,4 @@
 # Netlify Configuration for AlmaMod
-
 [build]
   command = "npm run build"
   publish = "dist"
@@ -22,38 +21,30 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# =========================================================
-# 1. REDIRECCIONES CANÓNICAS A WWW (CORRECCIÓN SEO)
-# Estas deben ir PRIMERO (status 301)
-# =========================================================
-
-# 1. Redirigir la versión SIN-WWW (HTTPS) a la versión CON-WWW (HTTPS)
+# ========== REDIRECTS HTTPS/WWW ==========
+# Forzar con-www a sin-www (canónico)
 [[redirects]]
-  from = "https://almamod.com.ar/*"
-  to = "https://www.almamod.com.ar/:splat"
+  from = "https://www.almamod.com.ar/*"
+  to = "https://almamod.com.ar/:splat"
   status = 301
   force = true
 
-# 2. Redirigir la versión CON-WWW (HTTP) a la versión CON-WWW (HTTPS)
+# HTTP con-www a HTTPS sin-www
 [[redirects]]
   from = "http://www.almamod.com.ar/*"
-  to = "https://www.almamod.com.ar/:splat"
+  to = "https://almamod.com.ar/:splat"
   status = 301
   force = true
 
-# 3. Redirigir la versión SIN-WWW (HTTP) a la versión CON-WWW (HTTPS)
+# HTTP sin-www a HTTPS sin-www
 [[redirects]]
   from = "http://almamod.com.ar/*"
-  to = "https://www.almamod.com.ar/:splat"
+  to = "https://almamod.com.ar/:splat"
   status = 301
   force = true
 
-# =========================================================
-# 2. REDIRECCIÓN DE SPA FALLBACK (CRÍTICA PARA LA CARGA)
-# Esta debe ir ÚLTIMA (status 200)
-# =========================================================
-
-# Para todas las rutas que no coincidan con un archivo físico, servir index.html (SPA routing)
+# ========== SPA FALLBACK ==========
+# Debe ir AL FINAL
 [[redirects]]
   from = "/*"
   to = "/index.html"
