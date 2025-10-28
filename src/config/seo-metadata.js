@@ -137,14 +137,14 @@ export const PAGE_METADATA = {
     title: "AlmaMod - Casas Modulares en Neuquén | Construcción Rápida con Paneles SIP",
     description: "Viviendas modulares certificadas en Neuquén. Entrega en 30 días. Paneles SIP PROPANEL con certificación EDGE Advanced. Desde $15.300.000. Construcción sustentable, sismo-resistente y eficiente.",
     keywords: "casas modulares neuquen, construccion rapida, paneles sip precio, viviendas prefabricadas, construccion modular patagonia, almamod, propanel neuquen",
-    canonical: "https://www.almamod.com.ar/"
+    canonical: "https://almamod.com.ar/"
   },
   
   sistemaConstructivo: {
     title: "Sistema Constructivo con Paneles SIP PROPANEL | Certificación EDGE Advanced",
     description: "Conocé el sistema de Paneles SIP PROPANEL: 10 veces más aislación térmica, certificación EDGE Advanced, sismo-resistente y construcción 5 veces más rápida. Tecnología de vanguardia en construcción modular.",
     keywords: "paneles sip propanel, sistema constructivo modular, edge advanced, aislacion termica, construccion sismo resistente, eficiencia energetica, construccion en seco",
-    canonical: "https://www.almamod.com.ar/sistema-constructivo",
+    canonical: "https://almamod.com.ar/sistema-constructivo",
     h1: "Sistema Constructivo con Paneles SIP PROPANEL",
     h2Suggestions: [
       "¿Qué son los Paneles SIP?",
@@ -160,21 +160,21 @@ export const PAGE_METADATA = {
     title: "Obras y Proyectos AlmaMod | Casas Modulares Construidas en Patagonia",
     description: "Conocé nuestras obras terminadas: viviendas modulares, cabañas patagónicas y proyectos comerciales construidos con Paneles SIP. Casos reales de construcción en Neuquén, Villa La Angostura y Patagonia.",
     keywords: "obras construccion modular, proyectos terminados, casas modulares neuquen, cabañas patagonicas, referencias construccion sip, portfolio almamod",
-    canonical: "https://www.almamod.com.ar/obras"
+    canonical: "https://almamod.com.ar/obras"
   },
   
   ubicacion: {
     title: "Ubicación AlmaMod | Construcción Modular en Neuquén Capital",
     description: "Visitanos en Neuquén Capital. Atendemos toda la región patagónica: Neuquén, Río Negro, Villa La Angostura, Bariloche, Cipolletti y zona andina. Contacto: +54 299 408-7106",
     keywords: "almamod neuquen, construccion modular neuquen capital, empresas construccion patagonia, constructora modular neuquen, contacto almamod",
-    canonical: "https://www.almamod.com.ar/ubicacion"
+    canonical: "https://almamod.com.ar/ubicacion"
   },
   
   tiendaalma: {
     title: "Tienda Alma | Catálogo Completo de Viviendas Modulares y Precios 2025",
     description: "Explorá nuestro catálogo de viviendas modulares desde 12m² hasta 36m². Precios transparentes desde $15.300.000. Modelos MiCasita, Alma 18, Alma 27, Alma 36 y Alma Loft. Diseños flexibles para toda necesidad.",
     keywords: "catalogo casas modulares, precios viviendas modulares 2025, modelos casas prefabricadas, micasita, alma 18, alma 27, alma 36, tienda modulos habitacionales",
-    canonical: "https://www.almamod.com.ar/tiendaalma"
+    canonical: "https://almamod.com.ar/tiendaalma"
   }
 };
 
@@ -204,7 +204,7 @@ export const PRODUCT_METADATA = {
       "Expansión de vivienda existente",
       "Inversión inmobiliaria de bajo costo"
     ],
-    canonical: "https://www.almamod.com.ar/tiendaalma/micasita"
+    canonical: "https://almamod.com.ar/tiendaalma/micasita"
   },
   
   alma18: {
@@ -227,7 +227,7 @@ export const PRODUCT_METADATA = {
       "Casa de fin de semana/campo",
       "Inversión inmobiliaria turística"
     ],
-    canonical: "https://www.almamod.com.ar/tiendaalma/alma-18"
+    canonical: "https://almamod.com.ar/tiendaalma/alma-18"
   },
   
   alma27: {
@@ -248,7 +248,7 @@ export const PRODUCT_METADATA = {
       "Casa de fin de semana amplia",
       "Cabaña familiar turística"
     ],
-    canonical: "https://www.almamod.com.ar/tiendaalma/alma-27"
+    canonical: "https://almamod.com.ar/tiendaalma/alma-27"
   },
   
   almaLoft28: {
@@ -269,7 +269,7 @@ export const PRODUCT_METADATA = {
       "Oficina-vivienda combinada",
       "Espacio para freelancers/creativos"
     ],
-    canonical: "https://www.almamod.com.ar/tiendaalma/alma-loft-28"
+    canonical: "https://almamod.com.ar/tiendaalma/alma-loft-28"
   },
   
   alma36: {
@@ -290,7 +290,7 @@ export const PRODUCT_METADATA = {
       "Vivienda para pareja con hijos",
       "Casa de uso diario completa"
     ],
-    canonical: "https://www.almamod.com.ar/tiendaalma/alma-36"
+    canonical: "https://almamod.com.ar/tiendaalma/alma-36"
   },
   
   alma36Refugio: {
@@ -312,7 +312,7 @@ export const PRODUCT_METADATA = {
       "Casa de fin de semana en naturaleza",
       "Refugio familiar en cordillera"
     ],
-    canonical: "https://www.almamod.com.ar/tiendaalma/alma-36-refugio"
+    canonical: "https://almamod.com.ar/tiendaalma/alma-36-refugio"
   }
 };
 
