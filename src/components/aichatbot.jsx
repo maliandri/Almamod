@@ -7,17 +7,24 @@ function AIChatBot() {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [showQuickReplies, setShowQuickReplies] = useState(true);
+  const [showQuickReplies, setShowQuickReplies] = useState(false);
   const [showConversations, setShowConversations] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [currentConversationId, setCurrentConversationId] = useState(null);
+  
+  // Estados del flujo de conversación
+  const [conversationStep, setConversationStep] = useState('initial'); // initial, name, contact, chat
   const [userName, setUserName] = useState('');
-  const [waitingForName, setWaitingForName] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [typingText, setTypingText] = useState(''); // Para el efecto de escritura
+  const [isWriting, setIsWriting] = useState(false); // Indica si está escribiendo
+  
   const messagesEndRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
   // Base de conocimientos de Almita
   const knowledgeBase = {
-    greetings: "¡Hola! Soy Almita, tu asistente virtual de AlmaMod 🏠. Antes de empezar, ¿cuál es tu nombre?",
     products: {
       'micasita': 'MiCasita es nuestro módulo más compacto de 12m² (4.88m × 2.44m). Perfecto para primera vivienda, oficina o espacio de trabajo. Incluye baño completo y cocina-dormitorio integrado. Precio: $15.300.000. Plazo de entrega: 30 días. ¿Te gustaría saber más detalles?',
       'alma 18': 'Alma 18 tiene 18m² (6m × 3m) con 1 dormitorio independiente. Incluye baño completo, cocina-comedor y un dormitorio. Precio: $32.050.000. Ideal para parejas o personas solas. ¿Quieres conocer las especificaciones técnicas?',
@@ -65,24 +72,34 @@ function AIChatBot() {
       setConversations(JSON.parse(savedConversations));
     }
     
-    // Cargar nombre guardado
+    // Cargar datos guardados
     const savedName = localStorage.getItem('almamod_user_name');
+    const savedEmail = localStorage.getItem('almamod_user_email');
+    const savedPhone = localStorage.getItem('almamod_user_phone');
+    
     if (savedName) {
       setUserName(savedName);
+      setConversationStep('chat');
     }
+    if (savedEmail) setUserEmail(savedEmail);
+    if (savedPhone) setUserPhone(savedPhone);
   }, []);
 
   useEffect(() => {
     if (isOpen && messages.length === 0 && !currentConversationId) {
-      // Mensaje de bienvenida
-      setTimeout(() => {
-        if (userName) {
-          // Si ya tenemos el nombre, saludar personalizadamente
-          addBotMessage(`¡Hola de nuevo, ${userName}! 😊 ¿En qué puedo ayudarte hoy?`);
+      // Mensaje de bienvenida según el paso
+      setTimeout(async () => {
+        if (conversationStep === 'chat' && userName) {
+          // Usuario que regresa
+          await addBotMessage(`¡Hola de nuevo, ${userName}! 😊 ¿En qué puedo ayudarte hoy?`);
+          setShowQuickReplies(true);
         } else {
-          // Si no tenemos el nombre, pedirlo
-          addBotMessage(knowledgeBase.greetings);
-          setWaitingForName(true);
+          // Primera vez - solo pedir nombre
+          await addBotMessage('¡Hola! Soy Almita, tu asistente virtual de AlmaMod 🏠');
+          setTimeout(async () => {
+            await addBotMessage('Antes de empezar, ¿cuál es tu nombre?');
+            setConversationStep('name');
+          }, 1500);
         }
       }, 500);
     }
@@ -92,13 +109,48 @@ function AIChatBot() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const addBotMessage = (text) => {
-    setMessages(prev => [...prev, {
-      id: Date.now(),
-      text,
-      isBot: true,
-      timestamp: new Date()
-    }]);
+  const typeWriterEffect = (text, callback) => {
+    setIsWriting(true);
+    setTypingText('');
+    let index = 0;
+    
+    const typeNextChar = () => {
+      if (index < text.length) {
+        setTypingText(prev => prev + text.charAt(index));
+        index++;
+        typingTimeoutRef.current = setTimeout(typeNextChar, 30); // 30ms por carácter
+      } else {
+        setIsWriting(false);
+        setTypingText('');
+        if (callback) callback();
+      }
+    };
+    
+    typeNextChar();
+  };
+
+  const addBotMessage = (text, useTyping = true) => {
+    if (useTyping) {
+      return new Promise((resolve) => {
+        typeWriterEffect(text, () => {
+          setMessages(prev => [...prev, {
+            id: Date.now(),
+            text,
+            isBot: true,
+            timestamp: new Date()
+          }]);
+          resolve();
+        });
+      });
+    } else {
+      setMessages(prev => [...prev, {
+        id: Date.now(),
+        text,
+        isBot: true,
+        timestamp: new Date()
+      }]);
+      return Promise.resolve();
+    }
   };
 
   const addUserMessage = (text) => {
@@ -120,14 +172,132 @@ function AIChatBot() {
     });
   };
 
+  const handleNameResponse = async (name) => {
+    // Guardar nombre
+    const cleanName = name.trim();
+    setUserName(cleanName);
+    localStorage.setItem('almamod_user_name', cleanName);
+    
+    await simulateTyping(1000);
+    await addBotMessage(`¡Encantada de conocerte, ${cleanName}! 😊`);
+    
+    await simulateTyping(1000);
+    await addBotMessage('¿Te gustaría que un vendedor de AlmaMod te contacte para brindarte más información personalizada?');
+    
+    await simulateTyping(800);
+    await addBotMessage('Si quieres agendar un contacto, solo necesito tu email y número de teléfono. ¿Te gustaría dejarnos tus datos?');
+    
+    setConversationStep('contact');
+  };
+
+  const handleContactResponse = async (response) => {
+    const input = response.toLowerCase();
+    
+    // Verificar si es una respuesta afirmativa
+    if (input.match(/(sí|si|yes|dale|ok|bueno|claro|por supuesto|quiero|me gustaría)/)) {
+      await simulateTyping(1000);
+      await addBotMessage('¡Perfecto! Por favor, compárteme tu email y número de teléfono.');
+      await addBotMessage('Puedes escribirlos juntos, por ejemplo: "juan@email.com, 299-1234567"');
+      setConversationStep('collecting_contact');
+    } else if (input.match(/(no|nope|después|luego|más tarde|ahora no)/)) {
+      await simulateTyping(1000);
+      await addBotMessage(`¡No hay problema, ${userName}! Puedes pedirme que te contacten en cualquier momento.`);
+      await simulateTyping(800);
+      await addBotMessage('Mientras tanto, ¿en qué puedo ayudarte hoy?');
+      setConversationStep('chat');
+      setShowQuickReplies(true);
+    } else {
+      // Si no está claro, asumir que quiere continuar pero volver a preguntar
+      await simulateTyping(800);
+      await addBotMessage('Perdón, no te entendí bien. ¿Quieres que un vendedor te contacte? Responde "sí" o "no" por favor 😊');
+    }
+  };
+
+  const handleCollectingContact = async (contactInfo) => {
+    // Intentar extraer email y teléfono
+    const emailMatch = contactInfo.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    const phoneMatch = contactInfo.match(/[\d\s\-\+\(\)]{8,}/);
+    
+    if (emailMatch || phoneMatch) {
+      const email = emailMatch ? emailMatch[0] : '';
+      const phone = phoneMatch ? phoneMatch[0].trim() : '';
+      
+      if (email) {
+        setUserEmail(email);
+        localStorage.setItem('almamod_user_email', email);
+      }
+      if (phone) {
+        setUserPhone(phone);
+        localStorage.setItem('almamod_user_phone', phone);
+      }
+      
+      await simulateTyping(1000);
+      addBotMessage(`¡Excelente, ${userName}! Hemos registrado tus datos:`);
+      if (email) addBotMessage(`📧 Email: ${email}`);
+      if (phone) addBotMessage(`📱 Teléfono: ${phone}`);
+      
+      // Enviar datos al backend
+      const leadData = {
+        userName: userName,
+        userEmail: email,
+        userPhone: phone,
+        conversationId: currentConversationId
+      };
+      
+      // Intentar enviar al backend
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+      try {
+        const response = await fetch(`${API_URL}/api/leads`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(leadData)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          console.log('✅ Lead enviado al backend exitosamente:', result);
+        } else {
+          console.error('❌ Error al enviar lead:', result.message);
+          // Guardar localmente como backup
+          const localLeads = JSON.parse(localStorage.getItem('almamod_pending_leads') || '[]');
+          localLeads.push({ ...leadData, savedAt: new Date().toISOString(), synced: false });
+          localStorage.setItem('almamod_pending_leads', JSON.stringify(localLeads));
+        }
+      } catch (error) {
+        console.error('❌ Error de conexión con el backend:', error);
+        // Guardar localmente como backup
+        const localLeads = JSON.parse(localStorage.getItem('almamod_pending_leads') || '[]');
+        localLeads.push({ ...leadData, savedAt: new Date().toISOString(), synced: false });
+        localStorage.setItem('almamod_pending_leads', JSON.stringify(localLeads));
+        console.log('💾 Lead guardado localmente como backup');
+      }
+      
+      await simulateTyping(1500);
+      addBotMessage('Un vendedor de AlmaMod se contactará contigo pronto. 🎉');
+      
+      await simulateTyping(1000);
+      addBotMessage('Mientras tanto, ¿te gustaría saber algo sobre nuestros módulos?');
+      
+      setConversationStep('chat');
+      setShowQuickReplies(true);
+    } else {
+      await simulateTyping(800);
+      addBotMessage('No pude detectar un email o teléfono válido. Por favor, intenta de nuevo.');
+      addBotMessage('Ejemplo: "mimail@ejemplo.com, 299-1234567"');
+    }
+  };
+
   const getResponse = (userInput) => {
     const input = userInput.toLowerCase();
     
-    // Saludos (ahora personalizados)
+    // Saludos
     if (input.match(/(hola|hello|hi|buenos días|buenas tardes|buenas noches|hey)/)) {
       return userName 
         ? `¡Hola ${userName}! 😊 ¿En qué más puedo ayudarte?`
-        : knowledgeBase.greetings;
+        : '¡Hola! ¿En qué puedo ayudarte?';
     }
     
     // Productos específicos
@@ -143,156 +313,102 @@ function AIChatBot() {
     if (input.match(/(catálogo|catalogo|módulos|modulos|productos|viviendas|casas)/)) {
       const response = 'Tenemos 6 modelos disponibles:\n\n🏠 MiCasita (12m²) - $15.300.000\n🏠 Alma 18 (18m²) - $32.050.000\n🏠 Alma 27 (27m²) - $42.120.000\n🏠 Alma Loft 28 (28m²) - $38.500.000\n🏠 Alma 36 (36m²) - $50.075.000\n🏠 Alma 36 Refugio (36m²) - $54.800.000\n\nTodos con entrega en 30 días. ¿Cuál te interesa?';
       return userName 
-        ? `${userName}, ${response.charAt(0).toLowerCase() + response.slice(1)}`
+        ? `${userName}, ${response}`
         : response;
     }
     
     // Panel SIP
-    if (input.match(/(panel|sip|estructura|construcción|construccion)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.panelSIP}`
-        : knowledgeBase.panelSIP;
+    if (input.match(/(panel|sip|tecnología|tecnologia|construcción|construccion)/)) {
+      return knowledgeBase.panelSIP;
     }
     
     // PROPANEL
-    if (input.match(/(propanel|sistema|tecnología|tecnologia)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.propanel}`
-        : knowledgeBase.propanel;
+    if (input.match(/(propanel)/)) {
+      return knowledgeBase.propanel;
     }
     
     // Certificaciones
-    if (input.match(/(certificación|certificacion|certificado|cat|cas|edge|cacmi)/)) {
-      if (input.includes('cat')) return userName ? `${userName}, ${knowledgeBase.certificaciones.cat}` : knowledgeBase.certificaciones.cat;
-      if (input.includes('cas')) return userName ? `${userName}, ${knowledgeBase.certificaciones.cas}` : knowledgeBase.certificaciones.cas;
-      if (input.includes('edge')) return userName ? `${userName}, ${knowledgeBase.certificaciones.edge}` : knowledgeBase.certificaciones.edge;
-      if (input.includes('cacmi')) return userName ? `${userName}, ${knowledgeBase.certificaciones.cacmi}` : knowledgeBase.certificaciones.cacmi;
-      const response = 'Contamos con 4 certificaciones oficiales:\n\n✓ CAT - Certificado de Aptitud Técnica\n✓ CAS - Certificado Sismorresistente\n✓ EDGE Advanced - Certificación Internacional\n✓ CACMI - Cámara Argentina Construcción Modular\n\n¿Sobre cuál quieres saber más?';
-      return userName 
-        ? `${userName}, ${response.charAt(0).toLowerCase() + response.slice(1)}`
-        : response;
+    if (input.match(/(certificación|certificacion|certificaciones|certificado)/)) {
+      const certs = Object.values(knowledgeBase.certificaciones).join('\n\n');
+      return `Nuestras certificaciones oficiales:\n\n${certs}`;
     }
     
     // Servicios
-    if (input.match(/(servicio|servicios|qué hacen|que hacen|ofrecen)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.servicios}`
-        : knowledgeBase.servicios;
+    if (input.match(/(servicio|servicios|qué ofrecen|que ofrecen)/)) {
+      return knowledgeBase.servicios;
     }
     
     // Ventajas
-    if (input.match(/(ventaja|ventajas|beneficio|beneficios|por qué|porque|razón|razon)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.ventajas}`
-        : knowledgeBase.ventajas;
+    if (input.match(/(ventaja|ventajas|beneficio|beneficios|por qué|porque)/)) {
+      return knowledgeBase.ventajas;
     }
     
     // Precios
-    if (input.match(/(precio|precios|costo|costos|cuánto|cuanto|valor|valores)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.precios}`
-        : knowledgeBase.precios;
+    if (input.match(/(precio|precios|costo|costos|cuánto|cuanto|valor)/)) {
+      return knowledgeBase.precios;
     }
     
     // Financiación
-    if (input.match(/(financiación|financiacion|cuotas|pago|crédito|credito)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.financiacion}`
-        : knowledgeBase.financiacion;
+    if (input.match(/(financiación|financiacion|cuota|cuotas|pago|pagos|crédito|credito)/)) {
+      return knowledgeBase.financiacion;
     }
     
     // Proceso
-    if (input.match(/(proceso|cómo|como|pasos|etapas|tiempo|plazo)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.proceso}`
-        : knowledgeBase.proceso;
+    if (input.match(/(proceso|cómo funciona|como funciona|paso|pasos|etapa|etapas)/)) {
+      return knowledgeBase.proceso;
     }
     
     // Ubicación
-    if (input.match(/(ubicación|ubicacion|dónde|donde|dirección|direccion|neuquén|neuquen)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.ubicacion}`
-        : knowledgeBase.ubicacion;
+    if (input.match(/(ubicación|ubicacion|dónde|donde|dirección|direccion)/)) {
+      return knowledgeBase.ubicacion;
     }
     
     // Sustentabilidad
     if (input.match(/(sustentable|sustentabilidad|ecológico|ecologico|verde|medio ambiente)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.sustentabilidad}`
-        : knowledgeBase.sustentabilidad;
+      return knowledgeBase.sustentabilidad;
     }
     
     // Contacto
-    if (input.match(/(contacto|teléfono|telefono|email|mail|whatsapp|llamar)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.contacto}`
-        : knowledgeBase.contacto;
+    if (input.match(/(contacto|contactar|teléfono|telefono|email|mail|whatsapp)/)) {
+      return knowledgeBase.contacto;
     }
     
     // Visita
-    if (input.match(/(visita|visitar|ver|conocer|mostrar|taller)/)) {
-      return userName 
-        ? `${userName}, ${knowledgeBase.visita}`
-        : knowledgeBase.visita;
+    if (input.match(/(visita|visitar|ver|conocer|taller|showroom)/)) {
+      return knowledgeBase.visita;
     }
     
-    // Agradecimientos
-    if (input.match(/(gracias|thank you|perfecto|excelente|genial|bárbaro|barbaro)/)) {
-      return userName 
-        ? `¡De nada, ${userName}! Estoy aquí para ayudarte con todo lo que necesites sobre AlmaMod. ¿Hay algo más que quieras saber sobre nuestros módulos?`
-        : '¡De nada! Estoy aquí para ayudarte con todo lo que necesites sobre AlmaMod. ¿Hay algo más que quieras saber sobre nuestros módulos?';
-    }
-    
-    // Despedidas
-    if (input.match(/(adiós|adios|bye|nos vemos|hasta luego|chau|chao)/)) {
-      return userName 
-        ? `¡Hasta luego, ${userName}! Fue un placer ayudarte. Cuando quieras hablar sobre tu próximo proyecto modular, aquí estaré. ¡Que tengas un excelente día! 🏠`
-        : '¡Hasta luego! Fue un placer ayudarte. Cuando quieras hablar sobre tu próximo proyecto modular, aquí estaré. ¡Que tengas un excelente día! 🏠';
-    }
-    
-    // Respuesta por defecto con sugerencias
-    const defaultResponse = `Entiendo que preguntas sobre "${userInput}". Te puedo ayudar con:\n\n🏠 Catálogo de módulos (MiCasita, Alma 18, 27, 36)\n🔧 Sistema PROPANEL® y Paneles SIP\n📜 Certificaciones (CAT, CAS, EDGE, CACMI)\n💰 Precios y financiación\n⚙️ Proceso de construcción\n🌱 Sustentabilidad y eficiencia energética\n📍 Ubicación y visitas\n\n¿Sobre cuál te gustaría saber más?`;
+    // Respuesta por defecto
     return userName 
-      ? `${userName}, ${defaultResponse.charAt(0).toLowerCase() + defaultResponse.slice(1)}`
-      : defaultResponse;
+      ? `${userName}, no estoy segura de entender tu pregunta. ¿Podrías reformularla? También puedes usar las respuestas rápidas para navegar por los temas principales. 😊`
+      : 'No estoy segura de entender tu pregunta. ¿Podrías reformularla? También puedes usar las respuestas rápidas para navegar por los temas principales. 😊';
   };
 
-  const handleSendMessage = async (message = inputValue) => {
-    if (!message.trim()) return;
+  const handleSendMessage = async (customMessage = null) => {
+    const messageText = customMessage || inputValue.trim();
+    if (!messageText) return;
 
-    // Agregar mensaje del usuario
-    addUserMessage(message);
+    addUserMessage(messageText);
     setInputValue('');
     setShowQuickReplies(false);
 
-    // Si estamos esperando el nombre, guardarlo
-    if (waitingForName) {
-      const name = message.trim();
-      setUserName(name);
-      localStorage.setItem('almamod_user_name', name);
-      setWaitingForName(false);
-      
-      // Simular escritura del bot
-      await simulateTyping(1000);
-      
-      // Responder con nombre guardado
-      addBotMessage(`¡Mucho gusto, ${name}! 😊 Es un placer ayudarte. ¿En qué puedo asistirte hoy con respecto a nuestros módulos AlmaMod?`);
-      return;
-    }
-
-    // Simular escritura del bot
     await simulateTyping();
 
-    // Obtener y enviar respuesta
-    const response = getResponse(message);
-    addBotMessage(response);
+    // Manejar según el paso de la conversación
+    if (conversationStep === 'name') {
+      await handleNameResponse(messageText);
+    } else if (conversationStep === 'contact') {
+      await handleContactResponse(messageText);
+    } else if (conversationStep === 'collecting_contact') {
+      await handleCollectingContact(messageText);
+    } else {
+      // Conversación normal
+      const response = getResponse(messageText);
+      addBotMessage(response);
+    }
 
-    // Guardar conversación
-    saveConversation();
-  };
-
-  const handleQuickReply = (reply) => {
-    handleSendMessage(reply.text);
+    // Auto-guardar conversación
+    saveCurrentConversation();
   };
 
   const handleKeyPress = (e) => {
@@ -302,42 +418,39 @@ function AIChatBot() {
     }
   };
 
-  const openWhatsApp = () => {
-    const message = encodeURIComponent('Hola! Vengo del chat de la web de AlmaMod y me gustaría obtener más información sobre los módulos habitacionales.');
-    window.open(`https://wa.me/5492994087106?text=${message}`, '_blank');
+  const handleQuickReply = async (reply) => {
+    addUserMessage(reply.text);
+    setShowQuickReplies(false);
+    
+    await simulateTyping();
+    
+    const response = getResponse(reply.text);
+    addBotMessage(response);
+    
+    saveCurrentConversation();
   };
 
-  const openTiendaAlma = () => {
-    // Disparar evento para abrir Tienda Alma
-    window.location.href = '/tiendaalma';
-  };
+  const saveCurrentConversation = () => {
+    if (messages.length === 0) return;
 
-  const saveConversation = () => {
-    if (messages.length > 0) {
-      const conversationData = {
-        id: currentConversationId || Date.now(),
-        title: messages[1]?.text.substring(0, 50) || 'Nueva conversación',
-        messages: messages,
-        timestamp: new Date(),
-        lastMessage: messages[messages.length - 1]?.text.substring(0, 100)
-      };
+    const conversationData = {
+      id: currentConversationId || Date.now(),
+      title: userName ? `Chat con ${userName}` : messages[1]?.text.substring(0, 30) + '...' || 'Nueva conversación',
+      messages: messages,
+      lastUpdate: new Date(),
+      userName: userName,
+      userEmail: userEmail,
+      userPhone: userPhone
+    };
 
-      const savedConversations = localStorage.getItem('almamod_conversations');
-      let allConversations = savedConversations ? JSON.parse(savedConversations) : [];
-      
-      // Actualizar o agregar conversación
-      const existingIndex = allConversations.findIndex(conv => conv.id === conversationData.id);
-      if (existingIndex !== -1) {
-        allConversations[existingIndex] = conversationData;
-      } else {
-        allConversations.unshift(conversationData);
-      }
+    const updatedConversations = currentConversationId
+      ? conversations.map(conv => conv.id === currentConversationId ? conversationData : conv)
+      : [...conversations, conversationData];
 
-      // Mantener solo las últimas 20 conversaciones
-      allConversations = allConversations.slice(0, 20);
-
-      localStorage.setItem('almamod_conversations', JSON.stringify(allConversations));
-      setConversations(allConversations);
+    setConversations(updatedConversations);
+    localStorage.setItem('almamod_conversations', JSON.stringify(updatedConversations));
+    
+    if (!currentConversationId) {
       setCurrentConversationId(conversationData.id);
     }
   };
@@ -345,6 +458,10 @@ function AIChatBot() {
   const loadConversation = (conversation) => {
     setMessages(conversation.messages);
     setCurrentConversationId(conversation.id);
+    setUserName(conversation.userName || '');
+    setUserEmail(conversation.userEmail || '');
+    setUserPhone(conversation.userPhone || '');
+    setConversationStep('chat');
     setShowConversations(false);
     setShowQuickReplies(false);
   };
@@ -352,363 +469,258 @@ function AIChatBot() {
   const startNewConversation = () => {
     setMessages([]);
     setCurrentConversationId(null);
-    setShowQuickReplies(true);
     setShowConversations(false);
+    setShowQuickReplies(false);
+    setConversationStep('initial');
+    
+    // Iniciar nueva conversación
     setTimeout(() => {
-      if (userName) {
-        addBotMessage(`¡Hola de nuevo, ${userName}! 😊 ¿En qué puedo ayudarte hoy?`);
-      } else {
-        addBotMessage(knowledgeBase.greetings);
-        setWaitingForName(true);
-      }
+      addBotMessage('¡Hola! Soy Almita, tu asistente virtual de AlmaMod 🏠');
+      setTimeout(() => {
+        addBotMessage('Antes de empezar, ¿cuál es tu nombre?');
+        setConversationStep('name');
+      }, 1000);
     }, 300);
   };
 
-  const resetUserName = () => {
-    setUserName('');
-    localStorage.removeItem('almamod_user_name');
-    setWaitingForName(true);
-    setMessages([]);
-    setTimeout(() => {
-      addBotMessage(knowledgeBase.greetings);
-    }, 300);
-  };
-
-  const deleteConversation = (id) => {
-    const updated = conversations.filter(conv => conv.id !== id);
-    localStorage.setItem('almamod_conversations', JSON.stringify(updated));
-    setConversations(updated);
-    if (currentConversationId === id) {
+  const deleteConversation = (conversationId) => {
+    const updatedConversations = conversations.filter(conv => conv.id !== conversationId);
+    setConversations(updatedConversations);
+    localStorage.setItem('almamod_conversations', JSON.stringify(updatedConversations));
+    
+    if (currentConversationId === conversationId) {
       startNewConversation();
     }
   };
 
   const closeChat = () => {
+    saveCurrentConversation();
     setIsOpen(false);
-    saveConversation();
+  };
+
+  const formatTime = (date) => {
+    return new Date(date).toLocaleTimeString('es-AR', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
   };
 
   return (
     <>
-{/* Botón flotante del chat - Reposicionado debajo del logo */}
-<motion.button
-  onClick={() => setIsOpen(!isOpen)}
-  className="almamod-chat-button"
-  whileHover={{ scale: 1.1 }}
-  whileTap={{ scale: 0.9 }}
-  initial={{ opacity: 0, scale: 0 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.5, delay: 2 }}
-  style={{
-    position: 'fixed',
-    top: '15px',        // 🔧 ajustá según la altura de tu header (más grande = más abajo)
-    left: '250px',       // 🔧 movelo a la derecha si querés alinearlo con el logo
-    zIndex: 9999,        // queda sobre todos los elementos
-    width: '56px',
-    height: '56px',
-    borderRadius: '50%',
-    backgroundColor: isOpen ? '#dc2626' : '#d4a574',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-    cursor: 'pointer',
-    border: 'none',
-    transition: 'all 0.3s ease'
-  }}
->
-  <motion.div
-    animate={{ rotate: isOpen ? 180 : 0 }}
-    transition={{ duration: 0.3 }}
-  >
-    {isOpen ? (
-      <svg
-        style={{ width: '24px', height: '24px', color: 'white' }}
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-    ) : (
-      <svg
-        style={{ width: '24px', height: '24px', color: 'white' }}
-        fill="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-      </svg>
-    )}
-  </motion.div>
-
-  {!isOpen && (
-    <motion.div
-      style={{
-        position: 'absolute',
-        top: '-4px',
-        right: '-4px',
-        width: '16px',
-        height: '16px',
-        backgroundColor: '#dc2626',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ delay: 3 }}
-    >
-      <span
+      {/* Botón flotante del chat - Reposicionado debajo del logo */}
+      <motion.button
+        onClick={() => setIsOpen(!isOpen)}
+        className="almamod-chat-button"
         style={{
-          fontSize: '10px',
-          color: 'white',
-          fontWeight: 'bold'
+          position: 'fixed',
+          top: '15px',        // 🔧 ajustá según la altura de tu header (más grande = más abajo)
+          left: '250px',       // 🔧 movelo a la derecha si querés alinearlo con el logo
+          zIndex: 9999,        // queda sobre todos los elementos
+          width: '56px',
+          height: '56px',
+          borderRadius: '50%',
+          backgroundColor: isOpen ? '#dc2626' : '#d4a574',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+          transition: 'all 0.3s ease'
         }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
       >
-        !
-      </span>
-    </motion.div>
-  )}
-</motion.button>
+        <AnimatePresence mode="wait">
+          {isOpen ? (
+            <motion.svg
+              key="close"
+              style={{ width: '24px', height: '24px' }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </motion.svg>
+          ) : (
+            <motion.svg
+              key="chat"
+              style={{ width: '24px', height: '24px' }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </motion.svg>
+          )}
+        </AnimatePresence>
+      </motion.button>
 
-      {/* Chat window */}
+      {/* Ventana del chat */}
       <AnimatePresence>
         {isOpen && (
-         <motion.div
-  className="almamod-chat-window"
-  initial={{ opacity: 0, y: 100, scale: 0.8 }}
-  animate={{ opacity: 1, y: 0, scale: 1 }}
-  exit={{ opacity: 0, y: 100, scale: 0.8 }}
-  transition={{ duration: 0.3 }}
-  drag                     // 👈 permite arrastrar
-  dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }} // 👈 limita al viewport
-  dragElastic={0.2}        // 👈 da un poco de “rebote” al mover
-  style={{
-    position: 'fixed',
-    top: '0px',   // posición inicial
-    left: '310px',
-    zIndex: 9999,
-    width: '384px',
-    height: '500px',
-    backgroundColor: '#1a1a2e',
-    borderRadius: '16px',
-    boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-    border: '1px solid rgba(212, 165, 116, 0.2)',
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
-    cursor: 'move' // 👈 cambia el cursor al arrastrar
-  }}
->
-
+          <motion.div
+            className="almamod-chat-window"
+            initial={{ opacity: 0, y: 100, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 100, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            drag                     // 👈 permite arrastrar
+            dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }} // 👈 limita al viewport
+            dragElastic={0.2}        // 👈 da un poco de "rebote" al mover
+            style={{
+              position: 'fixed',
+              top: '0px',   // posición inicial
+              left: '310px',
+              zIndex: 9999,
+              width: '384px',
+              height: '500px',
+              backgroundColor: '#1a1a2e',
+              borderRadius: '16px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+              border: '1px solid rgba(212, 165, 116, 0.2)',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              cursor: 'move' // 👈 cambia el cursor al arrastrar
+            }}
+          >
             {/* Header */}
             <div style={{
-              background: 'linear-gradient(135deg, #d4a574 0%, #b88a5f 100%)',
-              color: 'white',
               padding: '16px',
+              background: 'linear-gradient(135deg, #d4a574 0%, #b88a5f 100%)',
+              color: '#1a1a2e',
               display: 'flex',
-              alignItems: 'center',
-              gap: '12px'
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <svg style={{ width: '24px', height: '24px' }} fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-              </div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ fontWeight: 600, fontSize: '16px', margin: 0 }}>
-                  Almita {userName && `• ${userName}`}
-                </h3>
-                <p style={{ fontSize: '12px', margin: 0, opacity: 0.9 }}>
-                  {isTyping ? 'Escribiendo...' : 'En línea • Tu asistente AlmaMod'}
-                </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 'bold',
+                  fontSize: '18px'
+                }}>
+                  A
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>Almita</h3>
+                  <p style={{ margin: 0, fontSize: '12px', opacity: 0.9 }}>Asistente Virtual AlmaMod</p>
+                </div>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <motion.button
                   onClick={() => setShowConversations(!showConversations)}
                   style={{
-                    padding: '8px',
                     backgroundColor: 'rgba(255,255,255,0.2)',
-                    borderRadius: '8px',
                     border: 'none',
+                    borderRadius: '8px',
+                    padding: '8px',
                     cursor: 'pointer',
+                    color: '#1a1a2e',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}
                   whileHover={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
                   whileTap={{ scale: 0.95 }}
-                  title="Conversaciones anteriores"
                 >
-                  <svg style={{ width: '16px', height: '16px', color: 'white' }} fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                  <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </motion.button>
                 <motion.button
-                  onClick={openWhatsApp}
+                  onClick={startNewConversation}
                   style={{
-                    padding: '8px',
                     backgroundColor: 'rgba(255,255,255,0.2)',
-                    borderRadius: '8px',
                     border: 'none',
+                    borderRadius: '8px',
+                    padding: '8px',
                     cursor: 'pointer',
+                    color: '#1a1a2e',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}
                   whileHover={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
                   whileTap={{ scale: 0.95 }}
-                  title="WhatsApp"
                 >
-                  <svg style={{ width: '16px', height: '16px', color: 'white' }} fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.106"/>
-                  </svg>
-                </motion.button>
-                <motion.button
-                  onClick={closeChat}
-                  style={{
-                    padding: '8px',
-                    backgroundColor: 'rgba(255,255,255,0.2)',
-                    borderRadius: '8px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                  whileHover={{ backgroundColor: 'rgba(220, 38, 38, 0.8)' }}
-                  whileTap={{ scale: 0.95 }}
-                  title="Cerrar chat"
-                >
-                  <svg style={{ width: '16px', height: '16px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                 </motion.button>
               </div>
             </div>
 
             {/* Panel de conversaciones */}
-            {showConversations && (
-              <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 100 }}
-                style={{
-                  position: 'absolute',
-                  top: '72px',
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: '#1a1a2e',
-                  zIndex: 10,
-                  overflowY: 'auto',
-                  padding: '16px'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <h4 style={{ color: '#d4a574', margin: 0 }}>Conversaciones</h4>
-                  <motion.button
-                    onClick={startNewConversation}
-                    style={{
-                      padding: '8px 12px',
-                      backgroundColor: '#d4a574',
-                      color: '#1a1a2e',
-                      borderRadius: '8px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '12px',
-                      fontWeight: 600
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    + Nueva
-                  </motion.button>
-                </div>
-
-                {userName && (
-                  <div style={{ 
-                    marginBottom: '16px', 
-                    padding: '12px', 
-                    backgroundColor: 'rgba(212, 165, 116, 0.1)',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(212, 165, 116, 0.3)',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                    <div>
-                      <p style={{ margin: 0, color: '#d4a574', fontSize: '12px', fontWeight: 600 }}>
-                        Usuario actual
-                      </p>
-                      <p style={{ margin: 0, color: '#e5e7eb', fontSize: '14px' }}>
-                        {userName}
-                      </p>
-                    </div>
-                    <motion.button
-                      onClick={resetUserName}
-                      style={{
-                        padding: '6px 10px',
-                        backgroundColor: 'transparent',
-                        color: '#d4a574',
-                        border: '1px solid #d4a574',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '11px'
-                      }}
-                      whileHover={{ backgroundColor: 'rgba(212, 165, 116, 0.1)' }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Cambiar
-                    </motion.button>
-                  </div>
-                )}
-
-                {conversations.length === 0 ? (
-                  <p style={{ color: '#6b7280', textAlign: 'center', marginTop: '32px' }}>
-                    No hay conversaciones guardadas
-                  </p>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {conversations.map(conv => (
-                      <motion.div
-                        key={conv.id}
-                        style={{
-                          padding: '12px',
-                          backgroundColor: currentConversationId === conv.id ? 'rgba(212, 165, 116, 0.1)' : 'rgba(255,255,255,0.05)',
-                          borderRadius: '8px',
-                          cursor: 'pointer',
-                          border: '1px solid rgba(212, 165, 116, 0.2)',
-                          position: 'relative'
-                        }}
-                        whileHover={{ backgroundColor: 'rgba(212, 165, 116, 0.15)' }}
-                        onClick={() => loadConversation(conv)}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+            <AnimatePresence>
+              {showConversations && (
+                <motion.div
+                  style={{
+                    position: 'absolute',
+                    top: '72px',
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: '#16213e',
+                    zIndex: 10,
+                    padding: '16px',
+                    overflowY: 'auto'
+                  }}
+                  initial={{ x: -400 }}
+                  animate={{ x: 0 }}
+                  exit={{ x: -400 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                >
+                  <h3 style={{ color: '#e5e7eb', marginBottom: '16px', fontSize: '16px' }}>
+                    Conversaciones guardadas
+                  </h3>
+                  {conversations.length === 0 ? (
+                    <p style={{ color: '#9ca3af', fontSize: '14px' }}>
+                      No hay conversaciones guardadas
+                    </p>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {conversations.map(conv => (
+                        <motion.div
+                          key={conv.id}
+                          style={{
+                            backgroundColor: currentConversationId === conv.id ? 'rgba(212, 165, 116, 0.2)' : 'rgba(255,255,255,0.05)',
+                            padding: '12px',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            border: currentConversationId === conv.id ? '1px solid #d4a574' : '1px solid transparent',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                          }}
+                          whileHover={{ backgroundColor: 'rgba(212, 165, 116, 0.15)' }}
+                          onClick={() => loadConversation(conv)}
+                        >
                           <div style={{ flex: 1 }}>
-                            <h5 style={{ color: '#d4a574', margin: '0 0 4px 0', fontSize: '14px' }}>
+                            <p style={{ color: '#e5e7eb', fontSize: '14px', margin: 0, fontWeight: 500 }}>
                               {conv.title}
-                            </h5>
-                            <p style={{ color: '#9ca3af', margin: 0, fontSize: '12px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                              {conv.lastMessage}
                             </p>
-                            <span style={{ color: '#6b7280', fontSize: '10px' }}>
-                              {new Date(conv.timestamp).toLocaleDateString('es-AR')}
-                            </span>
+                            <p style={{ color: '#9ca3af', fontSize: '12px', margin: '4px 0 0 0' }}>
+                              {new Date(conv.lastUpdate).toLocaleDateString('es-AR')}
+                            </p>
                           </div>
                           <motion.button
                             onClick={(e) => {
@@ -716,28 +728,28 @@ function AIChatBot() {
                               deleteConversation(conv.id);
                             }}
                             style={{
-                              padding: '4px',
                               backgroundColor: 'transparent',
                               border: 'none',
+                              color: '#dc2626',
                               cursor: 'pointer',
-                              color: '#dc2626'
+                              padding: '4px'
                             }}
-                            whileHover={{ scale: 1.1 }}
+                            whileHover={{ scale: 1.2 }}
                             whileTap={{ scale: 0.9 }}
                           >
                             <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                           </motion.button>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
-            )}
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            {/* Messages */}
+            {/* Mensajes */}
             <div style={{
               flex: 1,
               overflowY: 'auto',
@@ -751,37 +763,55 @@ function AIChatBot() {
                   key={message.id}
                   style={{
                     display: 'flex',
-                    justifyContent: message.isBot ? 'flex-start' : 'flex-end'
+                    justifyContent: message.isBot ? 'flex-start' : 'flex-end',
+                    alignItems: 'flex-end',
+                    gap: '8px'
                   }}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div style={{
-                    maxWidth: '80%',
-                    padding: '12px',
-                    borderRadius: '16px',
-                    backgroundColor: message.isBot ? 'rgba(212, 165, 116, 0.1)' : '#d4a574',
-                    border: message.isBot ? '1px solid rgba(212, 165, 116, 0.3)' : 'none'
-                  }}>
-                    <p style={{
+                  {message.isBot && (
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      backgroundColor: '#d4a574',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 'bold',
                       fontSize: '14px',
-                      margin: 0,
-                      whiteSpace: 'pre-line',
-                      color: message.isBot ? '#e5e7eb' : '#1a1a2e'
+                      color: '#1a1a2e',
+                      flexShrink: 0
+                    }}>
+                      A
+                    </div>
+                  )}
+                  <div style={{
+                    maxWidth: '70%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}>
+                    <div style={{
+                      padding: '12px 16px',
+                      borderRadius: message.isBot ? '16px 16px 16px 4px' : '16px 16px 4px 16px',
+                      backgroundColor: message.isBot ? 'rgba(212, 165, 116, 0.15)' : '#d4a574',
+                      color: message.isBot ? '#e5e7eb' : '#1a1a2e',
+                      fontSize: '14px',
+                      lineHeight: '1.5',
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word'
                     }}>
                       {message.text}
-                    </p>
+                    </div>
                     <span style={{
                       fontSize: '10px',
-                      marginTop: '4px',
-                      display: 'block',
-                      color: message.isBot ? '#9ca3af' : 'rgba(26, 26, 46, 0.7)'
+                      color: '#6b7280',
+                      alignSelf: message.isBot ? 'flex-start' : 'flex-end'
                     }}>
-                      {message.timestamp.toLocaleTimeString('es-ES', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                      })}
+                      {formatTime(message.timestamp)}
                     </span>
                   </div>
                 </motion.div>
@@ -790,28 +820,45 @@ function AIChatBot() {
               {/* Typing indicator */}
               {isTyping && (
                 <motion.div
-                  style={{ display: 'flex', justifyContent: 'flex-start' }}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-end',
+                    gap: '8px'
+                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
                 >
                   <div style={{
-                    backgroundColor: 'rgba(212, 165, 116, 0.1)',
-                    padding: '12px',
-                    borderRadius: '16px',
-                    border: '1px solid rgba(212, 165, 116, 0.3)'
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: '#d4a574',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    color: '#1a1a2e'
                   }}>
-                    <div style={{ display: 'flex', gap: '4px' }}>
-                      <div style={{ width: '8px', height: '8px', backgroundColor: '#d4a574', borderRadius: '50%', animation: 'bounce 1.4s infinite' }}></div>
-                      <div style={{ width: '8px', height: '8px', backgroundColor: '#d4a574', borderRadius: '50%', animation: 'bounce 1.4s infinite 0.2s' }}></div>
-                      <div style={{ width: '8px', height: '8px', backgroundColor: '#d4a574', borderRadius: '50%', animation: 'bounce 1.4s infinite 0.4s' }}></div>
-                    </div>
+                    A
+                  </div>
+                  <div style={{
+                    padding: '12px 16px',
+                    borderRadius: '16px 16px 16px 4px',
+                    backgroundColor: 'rgba(212, 165, 116, 0.15)',
+                    display: 'flex',
+                    gap: '4px'
+                  }}>
+                    <div style={{ width: '8px', height: '8px', backgroundColor: '#d4a574', borderRadius: '50%', animation: 'bounce 1.4s infinite' }}></div>
+                    <div style={{ width: '8px', height: '8px', backgroundColor: '#d4a574', borderRadius: '50%', animation: 'bounce 1.4s infinite 0.2s' }}></div>
+                    <div style={{ width: '8px', height: '8px', backgroundColor: '#d4a574', borderRadius: '50%', animation: 'bounce 1.4s infinite 0.4s' }}></div>
                   </div>
                 </motion.div>
               )}
 
               {/* Quick replies */}
-              {showQuickReplies && messages.length <= 1 && (
+              {showQuickReplies && (
                 <motion.div
                   style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
                   initial={{ opacity: 0 }}
