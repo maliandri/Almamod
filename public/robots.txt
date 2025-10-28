@@ -8,7 +8,7 @@ Disallow: /admin/
 Disallow: /api/
 
 # Sitemap
-Sitemap: https://www.almamod.com.ar/sitemap.xml
+Sitemap: https://almamod.com.ar/sitemap.xml
 
 # Motores de búsqueda principales
 User-agent: Googlebot

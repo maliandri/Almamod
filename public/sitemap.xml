@@ -7,7 +7,7 @@
   <!-- PÁGINA PRINCIPAL                           -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/</loc>
+    <loc>https://almamod.com.ar/</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -21,7 +21,7 @@
   <!-- SISTEMA CONSTRUCTIVO                       -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/sistema-constructivo</loc>
+    <loc>https://almamod.com.ar/sistema-constructivo</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -31,7 +31,7 @@
   <!-- OBRAS                                      -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/obras</loc>
+    <loc>https://almamod.com.ar/obras</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -49,7 +49,7 @@
   <!-- UBICACIÓN                                  -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/ubicacion</loc>
+    <loc>https://almamod.com.ar/ubicacion</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
@@ -59,7 +59,7 @@
   <!-- TIENDA ALMA - CATÁLOGO                     -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/tiendaalma</loc>
+    <loc>https://almamod.com.ar/tiendaalma</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
@@ -69,7 +69,7 @@
   <!-- PRODUCTOS - MICASITA                       -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/tiendaalma/micasita</loc>
+    <loc>https://almamod.com.ar/tiendaalma/micasita</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -99,7 +99,7 @@
   <!-- PRODUCTOS - ALMA 18                        -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/tiendaalma/alma-18</loc>
+    <loc>https://almamod.com.ar/tiendaalma/alma-18</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -126,7 +126,7 @@
   <!-- PRODUCTOS - ALMA 27                        -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/tiendaalma/alma-27</loc>
+    <loc>https://almamod.com.ar/tiendaalma/alma-27</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -153,7 +153,7 @@
   <!-- PRODUCTOS - ALMA LOFT 28                   -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/tiendaalma/alma-loft-28</loc>
+    <loc>https://almamod.com.ar/tiendaalma/alma-loft-28</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -176,7 +176,7 @@
   <!-- PRODUCTOS - ALMA 36                        -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/tiendaalma/alma-36</loc>
+    <loc>https://almamod.com.ar/tiendaalma/alma-36</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -211,7 +211,7 @@
   <!-- PRODUCTOS - ALMA 36 REFUGIO                -->
   <!-- ========================================== -->
   <url>
-    <loc>https://www.almamod.com.ar/tiendaalma/alma-36-refugio</loc>
+    <loc>https://almamod.com.ar/tiendaalma/alma-36-refugio</loc>
     <lastmod>2025-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
