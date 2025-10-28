@@ -23,8 +23,8 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 # =========================================================
-# 1. REDIRECCIONES CANÓNICAS A WWW (CORRECCIÓN CRÍTICA SEO)
-# ESTAS VAN PRIMERO (status 301)
+# 1. REDIRECCIONES CANÓNICAS A WWW (CORRECCIÓN SEO)
+# Estas deben ir PRIMERO (status 301)
 # =========================================================
 
 # 1. Redirigir la versión SIN-WWW (HTTPS) a la versión CON-WWW (HTTPS)
@@ -49,8 +49,8 @@
   force = true
 
 # =========================================================
-# 2. REDIRECCIÓN DE SPA FALLBACK (NECESARIA PARA REACT)
-# ESTA VA ÚLTIMA (status 200)
+# 2. REDIRECCIÓN DE SPA FALLBACK (CRÍTICA PARA LA CARGA)
+# Esta debe ir ÚLTIMA (status 200)
 # =========================================================
 
 # Para todas las rutas que no coincidan con un archivo físico, servir index.html (SPA routing)
