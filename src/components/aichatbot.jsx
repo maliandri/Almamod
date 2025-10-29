@@ -499,7 +499,7 @@ function AIChatBot() {
       {/* Botón flotante del chat - Reposicionado debajo del logo */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="almamod-chat-button"
+        className={`almamod-chat-button almamod-chat-button-icon ${isOpen ? 'open' : ''}`}
         style={{
           position: 'fixed',
           top: '15px',        // 🔧 ajustá según la altura de tu header (más grande = más abajo)
@@ -508,15 +508,13 @@ function AIChatBot() {
           width: '56px',
           height: '56px',
           borderRadius: '50%',
-          backgroundColor: isOpen ? '#dc2626' : '#d4a574',
           color: '#fff',
           border: 'none',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-          transition: 'all 0.3s ease'
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
