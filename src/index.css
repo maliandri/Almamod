@@ -11,16 +11,16 @@
    ================================================================== */
 
 :root {
-  /* Colores Tema Claro (default) */
-  --bg-primary: #5c41f8;
-  --bg-secondary: #0b75df;
-  --bg-tertiary: #3a60ab;
-  --text-primary: #f9f9f9;
-  --text-secondary: #4b5563;
-  --text-tertiary: #6b7280;
-  --border-color: #0254f8;
-  --shadow: rgba(41, 0, 246, 0.1);
-  --shadow-lg: rgba(0, 0, 0, 0.15);
+  /* Colores Tema Claro (default) - Paleta Celeste */
+  --bg-primary: #E3F2FD;
+  --bg-secondary: #BBDEFB;
+  --bg-tertiary: #90CAF9;
+  --text-primary: #0D47A1;
+  --text-secondary: #1565C0;
+  --text-tertiary: #1976D2;
+  --border-color: rgba(33, 150, 243, 0.3);
+  --shadow: rgba(33, 150, 243, 0.15);
+  --shadow-lg: rgba(33, 150, 243, 0.25);
   
   /* Colores de marca (igual en ambos temas) */
   --color-brand-gold: #d4a574;

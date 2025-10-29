@@ -10,33 +10,51 @@
   position: relative;
   overflow: hidden;
   transition: background-color 0.3s ease;
+  /* Modo oscuro: fondo base violeta */
+  background: linear-gradient(135deg, #8B4FCF 0%, #5F2C8A 100%);
 }
 
-/* ✅ CORREGIDO: Fondo celeste fuerte en modo claro - MÁXIMA ESPECIFICIDAD */
+/* ===================================================================
+   HEADER - MODO CLARO: Azul celeste sólido
+   =================================================================== */
 html:not(.dark) .hero-section,
 :root:not(.dark) .App .hero-section,
 :root:not(.dark) header.hero-section {
-  background-color: #2196F3 !important; /* Celeste fuerte y vibrante */
+  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%) !important;
 }
 
-/* Capa de animación - violeta La Libertad Avanza en modo oscuro por defecto */
+/* ===================================================================
+   HEADER - MODO OSCURO: Violeta con barrido (sin rotación)
+   =================================================================== */
+
+/* Capa de barrido - SIN rotación, solo barrido de color */
 .hero-section::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
+  top: 0;
+  left: -100%;
   width: 200%;
-  height: 200%;
-  background: linear-gradient(135deg, #07010f 0%, #0e0c10 30%, #111011 60%, #A567E0 100%);
-  animation: rotateBackground 20s linear infinite;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(165, 103, 224, 0.3) 25%,
+    rgba(139, 79, 207, 0.5) 50%,
+    rgba(165, 103, 224, 0.3) 75%,
+    transparent 100%);
+  animation: sweepBackground 8s ease-in-out infinite;
   opacity: 1;
-  transition: background 0.3s ease, opacity 0.3s ease;
+  transition: opacity 0.3s ease;
   z-index: 0;
 }
 
-/* Animación azul Francia en modo claro */
+/* Barrido en modo claro - azul celeste */
 :root:not(.dark) .hero-section::before {
-  background: linear-gradient(135deg, #0055A4 0%, #003d82 30%, #0055A4 60%, #003d82 100%);
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 25%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 100%);
 }
 
 /* Asegurar que el contenido esté por encima */
@@ -60,12 +78,16 @@ html:not(.dark) .hero-section p,
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
-@keyframes rotateBackground {
+/* Animación de barrido horizontal (reemplaza la rotación) */
+@keyframes sweepBackground {
   0% {
-    transform: rotate(0deg);
+    left: -100%;
+  }
+  50% {
+    left: 100%;
   }
   100% {
-    transform: rotate(360deg);
+    left: -100%;
   }
 }
 
@@ -488,7 +510,7 @@ html:not(.dark) .header-nav .nav-link-button:hover {
 }
 
 .tienda-button:hover {
-  box-shadow: 
+  box-shadow:
     0 6px 12px rgba(0, 0, 0, 0.15),
     0 8px 24px rgba(212, 165, 116, 0.4),
     0 0 40px rgba(212, 165, 116, 0.3);
@@ -496,13 +518,35 @@ html:not(.dark) .header-nav .nav-link-button:hover {
 
 /* Botón especial Sistema Constructivo */
 .sistema-constructivo-button {
-  background: linear-gradient(135deg, #16a34a, #15803d);
+  background: linear-gradient(135deg, #8B7355, #6B5A45);
 }
 
 .sistema-constructivo-button:hover {
-  box-shadow: 
+  box-shadow:
     0 6px 12px rgba(0, 0, 0, 0.15),
-    0 8px 24px rgba(22, 163, 74, 0.4);
+    0 8px 24px rgba(139, 115, 85, 0.4);
+}
+
+/* ===================================================================
+   MODO CLARO: TODOS los botones en azul celeste
+   =================================================================== */
+
+/* Todos los botones flotantes en modo claro */
+:root:not(.dark) .floating-button,
+:root:not(.dark) .tienda-button,
+:root:not(.dark) .sistema-constructivo-button {
+  background: linear-gradient(135deg, #2196F3, #1976D2) !important;
+  color: white !important;
+}
+
+:root:not(.dark) .floating-button:hover,
+:root:not(.dark) .tienda-button:hover,
+:root:not(.dark) .sistema-constructivo-button:hover {
+  background: linear-gradient(135deg, #1976D2, #2196F3) !important;
+  box-shadow:
+    0 6px 12px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(33, 150, 243, 0.4),
+    0 0 40px rgba(33, 150, 243, 0.3) !important;
 }
 
 /* Separadores */
@@ -834,6 +878,44 @@ html:not(.dark) .header-nav .nav-link-button:hover {
 
 .social-button.facebook:hover {
   background: linear-gradient(135deg, #0e5fc8, #1877F2);
+}
+
+/* Eliminar decoración de links en botones sociales */
+.social-link {
+  text-decoration: none !important;
+  outline: none;
+}
+
+.social-link:hover,
+.social-link:focus,
+.social-link:active {
+  text-decoration: none !important;
+  outline: none;
+}
+
+/* Eliminar subrayado del texto dentro del botón */
+.social-button span {
+  text-decoration: none !important;
+}
+
+/* ===================================================================
+   MODO CLARO: Botones de redes sociales también en azul celeste
+   =================================================================== */
+
+:root:not(.dark) .social-button.whatsapp,
+:root:not(.dark) .social-button.instagram,
+:root:not(.dark) .social-button.facebook {
+  background: linear-gradient(135deg, #2196F3, #1976D2) !important;
+  color: white !important;
+}
+
+:root:not(.dark) .social-button.whatsapp:hover,
+:root:not(.dark) .social-button.instagram:hover,
+:root:not(.dark) .social-button.facebook:hover {
+  background: linear-gradient(135deg, #1976D2, #2196F3) !important;
+  box-shadow:
+    0 6px 12px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(33, 150, 243, 0.4) !important;
 }
 
 /* ================================================================== */
