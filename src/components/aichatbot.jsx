@@ -94,12 +94,9 @@ function AIChatBot() {
           await addBotMessage(`¡Hola de nuevo, ${userName}! 😊 ¿En qué puedo ayudarte hoy?`);
           setShowQuickReplies(true);
         } else {
-          // Primera vez - solo pedir nombre
-          await addBotMessage('¡Hola! Soy Almita, tu asistente virtual de AlmaMod 🏠');
-          setTimeout(async () => {
-            await addBotMessage('Antes de empezar, ¿cuál es tu nombre?');
-            setConversationStep('name');
-          }, 1500);
+          // Primera vez - mensaje unificado más natural
+          await addBotMessage('¡Hola! Soy Almita, tu asistente virtual de AlmaMod 🏠\n\nAntes de empezar, me encantaría saber tu nombre para poder atenderte mejor. ¿Cómo te llamas?');
+          setConversationStep('name');
         }
       }, 500);
     }
@@ -177,39 +174,30 @@ function AIChatBot() {
     const cleanName = name.trim();
     setUserName(cleanName);
     localStorage.setItem('almamod_user_name', cleanName);
-    
-    await simulateTyping(1000);
-    await addBotMessage(`¡Encantada de conocerte, ${cleanName}! 😊`);
-    
-    await simulateTyping(1000);
-    await addBotMessage('¿Te gustaría que un vendedor de AlmaMod te contacte para brindarte más información personalizada?');
-    
-    await simulateTyping(800);
-    await addBotMessage('Si quieres agendar un contacto, solo necesito tu email y número de teléfono. ¿Te gustaría dejarnos tus datos?');
-    
+
+    await simulateTyping(1200);
+    await addBotMessage(`¡Encantada de conocerte, ${cleanName}! 😊\n\n¿Te gustaría que un vendedor de AlmaMod te contacte para brindarte asesoramiento personalizado? Si te interesa, solo necesito tu email y número de teléfono para que puedan comunicarse contigo.\n\n¿Querés dejarnos tus datos?`);
+
     setConversationStep('contact');
   };
 
   const handleContactResponse = async (response) => {
     const input = response.toLowerCase();
-    
+
     // Verificar si es una respuesta afirmativa
     if (input.match(/(sí|si|yes|dale|ok|bueno|claro|por supuesto|quiero|me gustaría)/)) {
       await simulateTyping(1000);
-      await addBotMessage('¡Perfecto! Por favor, compárteme tu email y número de teléfono.');
-      await addBotMessage('Puedes escribirlos juntos, por ejemplo: "juan@email.com, 299-1234567"');
+      await addBotMessage('¡Perfecto! 🎉\n\nPor favor, compartíme tu email y número de teléfono. Podés escribirlos juntos, por ejemplo:\n"juan@email.com, 299-1234567"');
       setConversationStep('collecting_contact');
     } else if (input.match(/(no|nope|después|luego|más tarde|ahora no)/)) {
       await simulateTyping(1000);
-      await addBotMessage(`¡No hay problema, ${userName}! Puedes pedirme que te contacten en cualquier momento.`);
-      await simulateTyping(800);
-      await addBotMessage('Mientras tanto, ¿en qué puedo ayudarte hoy?');
+      await addBotMessage(`¡No hay problema, ${userName}! Podés pedirme que te contacten cuando quieras. Mientras tanto, ¿en qué puedo ayudarte hoy?`);
       setConversationStep('chat');
       setShowQuickReplies(true);
     } else {
       // Si no está claro, asumir que quiere continuar pero volver a preguntar
       await simulateTyping(800);
-      await addBotMessage('Perdón, no te entendí bien. ¿Quieres que un vendedor te contacte? Responde "sí" o "no" por favor 😊');
+      await addBotMessage('Perdón, no te entendí bien 😅\n\n¿Querés que un vendedor te contacte? Respondeme "sí" o "no" por favor.');
     }
   };
 
@@ -232,9 +220,11 @@ function AIChatBot() {
       }
       
       await simulateTyping(1000);
-      addBotMessage(`¡Excelente, ${userName}! Hemos registrado tus datos:`);
-      if (email) addBotMessage(`📧 Email: ${email}`);
-      if (phone) addBotMessage(`📱 Teléfono: ${phone}`);
+      const datosRegistrados = [];
+      if (email) datosRegistrados.push(`📧 Email: ${email}`);
+      if (phone) datosRegistrados.push(`📱 Teléfono: ${phone}`);
+
+      addBotMessage(`¡Excelente, ${userName}! Ya registré tus datos:\n\n${datosRegistrados.join('\n')}`);
       
       // Enviar datos al backend
       const leadData = {
@@ -275,112 +265,105 @@ function AIChatBot() {
       }
       
       await simulateTyping(1500);
-      addBotMessage('Un vendedor de AlmaMod se contactará contigo pronto. 🎉');
-      
-      await simulateTyping(1000);
-      addBotMessage('Mientras tanto, ¿te gustaría saber algo sobre nuestros módulos?');
+      addBotMessage('¡Listo! 🎉 Un vendedor de AlmaMod se va a contactar con vos muy pronto.\n\nMientras tanto, ¿querés que te cuente algo sobre nuestros módulos?');
       
       setConversationStep('chat');
       setShowQuickReplies(true);
     } else {
       await simulateTyping(800);
-      addBotMessage('No pude detectar un email o teléfono válido. Por favor, intenta de nuevo.');
-      addBotMessage('Ejemplo: "mimail@ejemplo.com, 299-1234567"');
+      addBotMessage('Mmm, no pude detectar un email o teléfono válido 😅\n\nPor favor, intentá de nuevo siguiendo este formato:\n"mimail@ejemplo.com, 299-1234567"');
     }
   };
 
   const getResponse = (userInput) => {
     const input = userInput.toLowerCase();
-    
+
     // Saludos
     if (input.match(/(hola|hello|hi|buenos días|buenas tardes|buenas noches|hey)/)) {
-      return userName 
-        ? `¡Hola ${userName}! 😊 ¿En qué más puedo ayudarte?`
-        : '¡Hola! ¿En qué puedo ayudarte?';
+      return userName
+        ? `¡Hola ${userName}! 😊 ¿En qué más te puedo ayudar?`
+        : '¡Hola! ¿En qué te puedo ayudar?';
     }
     
     // Productos específicos
     for (const [key, response] of Object.entries(knowledgeBase.products)) {
       if (input.includes(key) || input.includes(key.replace(' ', ''))) {
-        return userName 
-          ? `${userName}, ${response}`
+        return userName
+          ? `Mirá ${userName}, ${response.toLowerCase().replace(/^./, response[0])}`
           : response;
       }
     }
-    
+
     // Catálogo
     if (input.match(/(catálogo|catalogo|módulos|modulos|productos|viviendas|casas)/)) {
-      const response = 'Tenemos 6 modelos disponibles:\n\n🏠 MiCasita (12m²) - $15.300.000\n🏠 Alma 18 (18m²) - $32.050.000\n🏠 Alma 27 (27m²) - $42.120.000\n🏠 Alma Loft 28 (28m²) - $38.500.000\n🏠 Alma 36 (36m²) - $50.075.000\n🏠 Alma 36 Refugio (36m²) - $54.800.000\n\nTodos con entrega en 30 días. ¿Cuál te interesa?';
-      return userName 
-        ? `${userName}, ${response}`
-        : response;
+      const intro = userName ? `Perfecto ${userName}, ` : '¡Dale! ';
+      return `${intro}te muestro nuestros 6 modelos:\n\n🏠 MiCasita (12m²) - $15.300.000\n🏠 Alma 18 (18m²) - $32.050.000\n🏠 Alma 27 (27m²) - $42.120.000\n🏠 Alma Loft 28 (28m²) - $38.500.000\n🏠 Alma 36 (36m²) - $50.075.000\n🏠 Alma 36 Refugio (36m²) - $54.800.000\n\nTodos se entregan en 30 días. ¿Te interesa alguno en particular?`;
     }
     
     // Panel SIP
     if (input.match(/(panel|sip|tecnología|tecnologia|construcción|construccion)/)) {
-      return knowledgeBase.panelSIP;
+      const intro = userName ? `${userName}, te cuento que ` : '¡Te cuento! ';
+      return `${intro}los Paneles SIP (Structural Insulated Panel) son el corazón de nuestra tecnología. Son paneles estructurales térmicos con núcleo aislante de poliestireno expandido y revestimiento OSB.\n\nLas ventajas son increíbles:\n• 50% de ahorro energético\n• 70% menos tiempo de construcción\n• 90% menos residuos\n• Vida útil de 50+ años\n\n¿Querés saber más sobre PROPANEL®?`;
     }
-    
+
     // PROPANEL
     if (input.match(/(propanel)/)) {
-      return knowledgeBase.propanel;
+      return `PROPANEL® es nuestro sistema constructivo certificado. Es lo mejor que vas a encontrar en Argentina:\n\n✓ Espesor 9cm\n✓ Transmitancia térmica K=0.28 W/m²K\n✓ Resistencia al fuego Clase B\n✓ Certificación CAT (Ministerio de Desarrollo Territorial)\n✓ Certificación CAS sismorresistente (INPRES)\n\nEs el sistema más avanzado del país. ¿Te interesa conocer más sobre las certificaciones?`;
     }
-    
+
     // Certificaciones
     if (input.match(/(certificación|certificacion|certificaciones|certificado)/)) {
-      const certs = Object.values(knowledgeBase.certificaciones).join('\n\n');
-      return `Nuestras certificaciones oficiales:\n\n${certs}`;
+      return `Tenemos todas las certificaciones oficiales que importan:\n\n🏆 CAT: Certificado de Aptitud Técnica del Ministerio de Desarrollo Territorial. Garantiza calidad estructural y térmica.\n\n🏆 CAS: Certificado Sismorresistente del INPRES. Resistimos movimientos sísmicos de zona 2-4 (fundamental para la Patagonia).\n\n🏆 EDGE Advanced: Certificación internacional del Banco Mundial. Garantizamos más del 40% de reducción energética.\n\n🏆 CACMI: Cámara Argentina de Construcción Modular. Certificación de excelencia en procesos y ética profesional.\n\n¿Querés profundizar en alguna?`;
     }
-    
+
     // Servicios
     if (input.match(/(servicio|servicios|qué ofrecen|que ofrecen)/)) {
-      return knowledgeBase.servicios;
+      return `En AlmaMod te ofrecemos soluciones integrales:\n\n1️⃣ Estructura con Paneles SIP PROPANEL®\n2️⃣ Diseño y revestimiento exterior (chapa, siding, EIFS)\n3️⃣ Construcción modular inteligente\n4️⃣ Fabricación en Neuquén adaptada al clima patagónico\n5️⃣ Interiores a medida y llave en mano\n6️⃣ Fundaciones y obras civiles\n\n¿Cuál te interesa conocer más?`;
     }
-    
+
     // Ventajas
     if (input.match(/(ventaja|ventajas|beneficio|beneficios|por qué|porque)/)) {
-      return knowledgeBase.ventajas;
+      return `Las principales ventajas de construir con AlmaMod son:\n\n⚡ Eficiencia energética superior (50% ahorro en climatización)\n⏱️ Construcción rápida (70% más rápida que tradicional)\n🌱 Sustentabilidad (90% menos residuos)\n💪 Durabilidad (50+ años de vida útil)\n📜 Certificaciones oficiales\n🏔️ Resistencia climática patagónica\n🌬️ Calidad de aire interior superior\n\n¿Querés que te cuente más sobre alguna?`;
     }
-    
+
     // Precios
     if (input.match(/(precio|precios|costo|costos|cuánto|cuanto|valor)/)) {
-      return knowledgeBase.precios;
+      return `Nuestros módulos van desde $15.300.000 (MiCasita 12m²) hasta $54.800.000 (Alma 36 Refugio).\n\nTodos incluyen:\n✓ Estructura completa\n✓ Paneles SIP PROPANEL®\n✓ Aberturas con DVH\n✓ Instalaciones completas\n✓ Baño equipado\n✓ Cocina amoblada\n✓ Pisos vinílicos\n\nEntrega en 30 días. ¿Te interesa algún modelo específico?`;
     }
-    
+
     // Financiación
     if (input.match(/(financiación|financiacion|cuota|cuotas|pago|pagos|crédito|credito)/)) {
-      return knowledgeBase.financiacion;
+      return `Trabajamos con diferentes opciones de financiación y también aceptamos permuta por terrenos o vehículos.\n\n¿Querés que te contactemos para analizar tu caso particular y ver qué opciones tenés disponibles?`;
     }
-    
+
     // Proceso
     if (input.match(/(proceso|cómo funciona|como funciona|paso|pasos|etapa|etapas)/)) {
-      return knowledgeBase.proceso;
+      return `Nuestro proceso es súper simple:\n\n1️⃣ Consulta inicial gratuita\n2️⃣ Diseño personalizado según tus necesidades\n3️⃣ Presupuesto detallado\n4️⃣ Fabricación en nuestro taller en Neuquén (30 días)\n5️⃣ Transporte e instalación\n6️⃣ Entrega llave en mano\n\nTodo con seguimiento constante. ¿En qué etapa te gustaría empezar?`;
     }
-    
+
     // Ubicación
     if (input.match(/(ubicación|ubicacion|dónde|donde|dirección|direccion)/)) {
-      return knowledgeBase.ubicacion;
+      return `Estamos en Neuquén, Argentina. Fabricamos localmente para adaptarnos al clima patagónico.\n\nEntregamos en toda la Patagonia: Neuquén, Río Negro, Chubut, Santa Cruz y Tierra del Fuego. También vendemos a otras provincias.\n\n¿En qué zona estás vos?`;
     }
-    
+
     // Sustentabilidad
     if (input.match(/(sustentable|sustentabilidad|ecológico|ecologico|verde|medio ambiente)/)) {
-      return knowledgeBase.sustentabilidad;
+      return `La sustentabilidad es nuestro ADN 💚\n\n🌍 Certificación EDGE Advanced (Banco Mundial)\n♻️ Reducción 90% residuos de obra\n⚡ Ahorro 50% energía climatización\n🌱 Materiales reciclables\n👣 Menor huella de carbono\n💧 Construcción en seco (ahorro de agua)\n\nSomos construcción verde certificada. ¿Te importa el medio ambiente?`;
     }
-    
+
     // Contacto
     if (input.match(/(contacto|contactar|teléfono|telefono|email|mail|whatsapp)/)) {
-      return knowledgeBase.contacto;
+      return `Podés contactarnos por:\n\n📱 WhatsApp: +54 9 299 408 7106\n📧 Email: info@almamod.com.ar\n📍 Ubicación: Neuquén, Argentina\n🌐 Web: www.almamod.com.ar\n\nO directamente desde este chat. ¿Cómo preferís que te contactemos?`;
     }
-    
+
     // Visita
     if (input.match(/(visita|visitar|ver|conocer|taller|showroom)/)) {
-      return knowledgeBase.visita;
+      return `¡Nos encantaría que vengas! Podés agendar una visita a nuestro taller en Neuquén para ver los módulos en vivo y conocer todo el proceso de fabricación.\n\nTambién hacemos videollamadas para mostrarte todo virtualmente si preferís. ¿Qué te resulta mejor, presencial o virtual?`;
     }
-    
+
     // Respuesta por defecto
-    return userName 
-      ? `${userName}, no estoy segura de entender tu pregunta. ¿Podrías reformularla? También puedes usar las respuestas rápidas para navegar por los temas principales. 😊`
-      : 'No estoy segura de entender tu pregunta. ¿Podrías reformularla? También puedes usar las respuestas rápidas para navegar por los temas principales. 😊';
+    const intro = userName ? `${userName}, ` : '';
+    return `${intro}perdón, no estoy segura de haber entendido tu pregunta 😅\n\n¿Podrías reformularla? También podés usar las respuestas rápidas de abajo para navegar por los temas principales.`;
   };
 
   const handleSendMessage = async (customMessage = null) => {
@@ -403,7 +386,12 @@ function AIChatBot() {
     } else {
       // Conversación normal
       const response = getResponse(messageText);
-      addBotMessage(response);
+      await addBotMessage(response);
+
+      // Mostrar respuestas rápidas después de responder
+      setTimeout(() => {
+        setShowQuickReplies(true);
+      }, 500);
     }
 
     // Auto-guardar conversación
@@ -420,12 +408,17 @@ function AIChatBot() {
   const handleQuickReply = async (reply) => {
     addUserMessage(reply.text);
     setShowQuickReplies(false);
-    
+
     await simulateTyping();
-    
+
     const response = getResponse(reply.text);
-    addBotMessage(response);
-    
+    await addBotMessage(response);
+
+    // Mostrar respuestas rápidas después de responder
+    setTimeout(() => {
+      setShowQuickReplies(true);
+    }, 500);
+
     saveCurrentConversation();
   };
 
@@ -474,11 +467,8 @@ function AIChatBot() {
     
     // Iniciar nueva conversación
     setTimeout(() => {
-      addBotMessage('¡Hola! Soy Almita, tu asistente virtual de AlmaMod 🏠');
-      setTimeout(() => {
-        addBotMessage('Antes de empezar, ¿cuál es tu nombre?');
-        setConversationStep('name');
-      }, 1000);
+      addBotMessage('¡Hola! Soy Almita, tu asistente virtual de AlmaMod 🏠\n\nAntes de empezar, me encantaría saber tu nombre para poder atenderte mejor. ¿Cómo te llamas?');
+      setConversationStep('name');
     }, 300);
   };
 
@@ -571,7 +561,7 @@ function AIChatBot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="almamod-chat-window"
+            className="almamod-chat-window almamod-chat-window-bg"
             initial={{ opacity: 0, y: 100, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.8 }}
@@ -586,10 +576,7 @@ function AIChatBot() {
               zIndex: 9999,
               width: '384px',
               height: '500px',
-              backgroundColor: '#1a1a2e',
               borderRadius: '16px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-              border: '1px solid rgba(212, 165, 116, 0.2)',
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
@@ -597,20 +584,17 @@ function AIChatBot() {
             }}
           >
             {/* Header */}
-            <div style={{
+            <div className="almamod-chat-header" style={{
               padding: '16px',
-              background: 'linear-gradient(135deg, #d4a574 0%, #b88a5f 100%)',
-              color: '#1a1a2e',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{
+                <div className="almamod-avatar-bot" style={{
                   width: '40px',
                   height: '40px',
                   borderRadius: '50%',
-                  backgroundColor: '#fff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -771,17 +755,15 @@ function AIChatBot() {
                   transition={{ duration: 0.3 }}
                 >
                   {message.isBot && (
-                    <div style={{
+                    <div className="almamod-avatar-bot" style={{
                       width: '32px',
                       height: '32px',
                       borderRadius: '50%',
-                      backgroundColor: '#d4a574',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontWeight: 'bold',
                       fontSize: '14px',
-                      color: '#1a1a2e',
                       flexShrink: 0
                     }}>
                       A
@@ -793,11 +775,9 @@ function AIChatBot() {
                     flexDirection: 'column',
                     gap: '4px'
                   }}>
-                    <div style={{
+                    <div className={message.isBot ? 'almamod-message-bot' : 'almamod-message-user'} style={{
                       padding: '12px 16px',
                       borderRadius: message.isBot ? '16px 16px 16px 4px' : '16px 16px 4px 16px',
-                      backgroundColor: message.isBot ? 'rgba(212, 165, 116, 0.15)' : '#d4a574',
-                      color: message.isBot ? '#e5e7eb' : '#1a1a2e',
                       fontSize: '14px',
                       lineHeight: '1.5',
                       whiteSpace: 'pre-wrap',
@@ -805,9 +785,8 @@ function AIChatBot() {
                     }}>
                       {message.text}
                     </div>
-                    <span style={{
+                    <span className="almamod-message-timestamp" style={{
                       fontSize: '10px',
-                      color: '#6b7280',
                       alignSelf: message.isBot ? 'flex-start' : 'flex-end'
                     }}>
                       {formatTime(message.timestamp)}
@@ -828,30 +807,27 @@ function AIChatBot() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 >
-                  <div style={{
+                  <div className="almamod-avatar-bot" style={{
                     width: '32px',
                     height: '32px',
                     borderRadius: '50%',
-                    backgroundColor: '#d4a574',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 'bold',
-                    fontSize: '14px',
-                    color: '#1a1a2e'
+                    fontSize: '14px'
                   }}>
                     A
                   </div>
-                  <div style={{
+                  <div className="almamod-typing-indicator" style={{
                     padding: '12px 16px',
                     borderRadius: '16px 16px 16px 4px',
-                    backgroundColor: 'rgba(212, 165, 116, 0.15)',
                     display: 'flex',
                     gap: '4px'
                   }}>
-                    <div style={{ width: '8px', height: '8px', backgroundColor: '#d4a574', borderRadius: '50%', animation: 'bounce 1.4s infinite' }}></div>
-                    <div style={{ width: '8px', height: '8px', backgroundColor: '#d4a574', borderRadius: '50%', animation: 'bounce 1.4s infinite 0.2s' }}></div>
-                    <div style={{ width: '8px', height: '8px', backgroundColor: '#d4a574', borderRadius: '50%', animation: 'bounce 1.4s infinite 0.4s' }}></div>
+                    <div className="almamod-typing-dot" style={{ width: '8px', height: '8px', borderRadius: '50%', animation: 'bounce 1.4s infinite' }}></div>
+                    <div className="almamod-typing-dot" style={{ width: '8px', height: '8px', borderRadius: '50%', animation: 'bounce 1.4s infinite 0.2s' }}></div>
+                    <div className="almamod-typing-dot" style={{ width: '8px', height: '8px', borderRadius: '50%', animation: 'bounce 1.4s infinite 0.4s' }}></div>
                   </div>
                 </motion.div>
               )}
@@ -881,19 +857,16 @@ function AIChatBot() {
                       <motion.button
                         key={reply.key}
                         onClick={() => handleQuickReply(reply)}
+                        className="almamod-quick-reply-btn"
                         style={{
                           padding: '8px',
                           fontSize: '12px',
-                          backgroundColor: 'rgba(212, 165, 116, 0.1)',
-                          color: '#d4a574',
                           borderRadius: '8px',
-                          border: '1px solid rgba(212, 165, 116, 0.3)',
                           cursor: 'pointer'
                         }}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.2 + index * 0.1 }}
-                        whileHover={{ backgroundColor: 'rgba(212, 165, 116, 0.2)' }}
                         whileTap={{ scale: 0.98 }}
                       >
                         {reply.text}
@@ -919,13 +892,11 @@ function AIChatBot() {
                   onKeyPress={handleKeyPress}
                   placeholder="Escribe tu mensaje..."
                   disabled={isTyping}
+                  className="almamod-chat-input"
                   style={{
                     flex: 1,
                     padding: '12px',
-                    border: '1px solid rgba(212, 165, 116, 0.3)',
                     borderRadius: '8px',
-                    backgroundColor: 'rgba(255,255,255,0.05)',
-                    color: '#e5e7eb',
                     fontSize: '14px',
                     outline: 'none'
                   }}
@@ -933,10 +904,9 @@ function AIChatBot() {
                 <motion.button
                   onClick={() => handleSendMessage()}
                   disabled={!inputValue.trim() || isTyping}
+                  className="almamod-chat-send-btn"
                   style={{
                     padding: '12px 16px',
-                    backgroundColor: '#d4a574',
-                    color: '#1a1a2e',
                     borderRadius: '8px',
                     border: 'none',
                     cursor: inputValue.trim() && !isTyping ? 'pointer' : 'not-allowed',

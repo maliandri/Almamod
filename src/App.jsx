@@ -1,7 +1,8 @@
-// src/App.jsx - VERSIÓN LIMPIA SIN AUTHCONTEXT NI PAGELAYOUT
-import React, { useState } from 'react';
+// src/App.jsx - VERSIÓN FINAL CORREGIDA
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
+import './index.css';
 
 // --- Imports ---
 import logoAlmamod from './assets/almamod.webp';
@@ -13,6 +14,7 @@ import TiendaAlma from './components/TiendaAlma.jsx';
 import Certificaciones from './components/Certificaciones.jsx';
 import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
 import AIChatBot from './components/aichatbot';
+import ThemeToggle from './components/ThemeToggle.jsx';
 
 // ====================================================================
 // Componente para la página de inicio
@@ -35,6 +37,18 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // ✅ INICIALIZAR TEMA AL CARGAR LA APLICACIÓN
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
   // ✅ FUNCIONES PARA ABRIR MODALES CON NAVEGACIÓN
   const openSistemaConstructivo = () => {
     navigate('/sistema-constructivo');
@@ -52,22 +66,28 @@ function App() {
     navigate('/ubicacion');
   };
 
+  // ✅ Verificar si estamos en una ruta de TiendaAlma
+  const isTiendaAlmaRoute = location.pathname.startsWith('/tiendaalma');
+
   return (
     <div className="App">
+      {/* ✅ TOGGLE DE TEMA - Posición fija superior derecha */}
+      <ThemeToggle />
+
       {/* HEADER */}
       <header className="hero-section">
-        <div className="hero-content-wrapper">
-          <div className="hero-branding">
-            <Link to="/">
-              <img src={logoAlmamod} alt="Logo de Almamod" className="hero-logo" />
-            </Link>
-          </div>
-          <div className="hero-text-container">
-            <h1>CONSTRUCCIÓN SIN LÍMITES</h1>
-            <p>Estamos en Neuquén, Somos de Neuquén</p>
-          </div>
-        </div>
-      </header>
+  <div className="hero-content-wrapper">
+    <div className="hero-branding">
+      <Link to="/">
+        <img src={logoAlmamod} alt="Logo de Almamod" className="hero-logo" />
+      </Link>
+    </div>
+    <div className="hero-text-container">
+      <h1>CONSTRUCCIÓN SIN LÍMITES</h1>
+      <p>Estamos en Neuquén, Somos de Neuquén</p>
+    </div>
+  </div>
+</header>
 
       {/* ✅ MODALES CONTROLADOS POR RUTAS */}
       
@@ -77,8 +97,8 @@ function App() {
         onClose={() => navigate('/')}
       />
 
-      {/* TiendaAlma - se maneja solo */}
-      <TiendaAlma />
+      {/* ✅ TiendaAlma - SOLO se renderiza si estamos en su ruta */}
+      {isTiendaAlmaRoute && <TiendaAlma />}
 
       {/* ObrasCarousel */}
       <ObrasCarousel 
@@ -93,14 +113,14 @@ function App() {
       />
 
       {/* CONTENIDO PRINCIPAL */}
-      <main>
+      <main style={{ backgroundColor: 'var(--bg-primary)' }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           
           {/* ✅ RUTAS PARA LOS MODALES */}
           <Route path="/sistema-constructivo" element={<HomePage />} />
-          <Route path="/tiendaalma" element={<HomePage />} />
-          <Route path="/tiendaalma/:slug" element={<HomePage />} />
+          <Route path="/tiendaalma" element={null} />
+          <Route path="/tiendaalma/:slug" element={null} />
           <Route path="/obras" element={<HomePage />} />
           <Route path="/ubicacion" element={<HomePage />} />
         </Routes>
@@ -186,9 +206,20 @@ function App() {
       </div>
 
       {/* FOOTER */}
-      <footer className="main-footer">
-        <p>&copy; 2025 Almamod. Todos los derechos reservados.</p>
-        <p>Neuquén, Argentina</p>
+      <footer 
+        className="main-footer"
+        style={{
+          backgroundColor: 'var(--bg-secondary)',
+          color: 'var(--text-secondary)',
+          borderTop: '1px solid var(--border-color)',
+        }}
+      >
+        <p style={{ color: 'var(--text-secondary)' }}>
+          &copy; 2025 Almamod. Todos los derechos reservados.
+        </p>
+        <p style={{ color: 'var(--text-tertiary)' }}>
+          Neuquén, Argentina
+        </p>
       </footer>
     </div>
   );

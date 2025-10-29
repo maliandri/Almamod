@@ -1,4 +1,40 @@
-/* AIChatBot.css */
+/* AIChatBot.css - VERSIÓN CORREGIDA */
+
+/* ===================================================================== */
+/* VARIABLES DE COLOR PARA MODO CLARO Y OSCURO                          */
+/* ===================================================================== */
+
+:root {
+  /* Modo oscuro por defecto */
+  --chat-bg-primary: #1a1a2e;
+  --chat-bg-secondary: #16213e;
+  --chat-text-primary: #e5e7eb;
+  --chat-text-secondary: #9ca3af;
+  --chat-accent: #d4a574;
+  --chat-accent-dark: #b88a5f;
+  --chat-message-bot-bg: rgba(212, 165, 116, 0.15);
+  --chat-message-user-bg: #d4a574;
+  --chat-message-user-text: #1a1a2e;
+  --chat-input-bg: rgba(255, 255, 255, 0.05);
+  --chat-input-border: rgba(212, 165, 116, 0.3);
+  --chat-border: rgba(212, 165, 116, 0.2);
+}
+
+/* Modo claro - Paleta celeste */
+:root:not(.dark) {
+  --chat-bg-primary: #E3F2FD;
+  --chat-bg-secondary: #BBDEFB;
+  --chat-text-primary: #0D47A1;
+  --chat-text-secondary: #1565C0;
+  --chat-accent: #2196F3;
+  --chat-accent-dark: #1976D2;
+  --chat-message-bot-bg: rgba(255, 255, 255, 0.7);
+  --chat-message-user-bg: #2196F3;
+  --chat-message-user-text: #FFFFFF;
+  --chat-input-bg: rgba(255, 255, 255, 0.8);
+  --chat-input-border: rgba(33, 150, 243, 0.4);
+  --chat-border: rgba(33, 150, 243, 0.3);
+}
 
 /* Animación de bounce para el typing indicator */
 @keyframes bounce {
@@ -10,22 +46,136 @@
   }
 }
 
-/* Estilos base para el botón del chat */
+/* ===================================================================== */
+/* ESTILOS PARA VENTANA DEL CHAT CON MODO CLARO/OSCURO                 */
+/* ===================================================================== */
+
+.almamod-chat-window-bg {
+  background-color: var(--chat-bg-primary) !important;
+  border: 1px solid var(--chat-border) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+:root:not(.dark) .almamod-chat-window-bg {
+  box-shadow: 0 20px 60px rgba(33, 150, 243, 0.25);
+}
+
+.almamod-chat-header {
+  background: linear-gradient(135deg, var(--chat-accent) 0%, var(--chat-accent-dark) 100%) !important;
+  color: var(--chat-message-user-text) !important;
+}
+
+.almamod-chat-messages-bg {
+  background-color: transparent;
+}
+
+.almamod-message-bot {
+  background-color: var(--chat-message-bot-bg) !important;
+  color: var(--chat-text-primary) !important;
+}
+
+:root:not(.dark) .almamod-message-bot {
+  border: 1px solid rgba(33, 150, 243, 0.2);
+}
+
+.almamod-message-user {
+  background-color: var(--chat-message-user-bg) !important;
+  color: var(--chat-message-user-text) !important;
+}
+
+.almamod-message-timestamp {
+  color: var(--chat-text-secondary) !important;
+  opacity: 0.7;
+}
+
+.almamod-chat-input {
+  background-color: var(--chat-input-bg) !important;
+  border: 1px solid var(--chat-input-border) !important;
+  color: var(--chat-text-primary) !important;
+}
+
+.almamod-chat-input::placeholder {
+  color: var(--chat-text-secondary) !important;
+  opacity: 0.6;
+}
+
+.almamod-chat-send-btn {
+  background-color: var(--chat-accent) !important;
+  color: var(--chat-message-user-text) !important;
+}
+
+.almamod-typing-indicator {
+  background-color: var(--chat-message-bot-bg) !important;
+}
+
+.almamod-typing-dot {
+  background-color: var(--chat-accent) !important;
+}
+
+.almamod-quick-reply-btn {
+  background-color: rgba(var(--chat-accent), 0.1) !important;
+  color: var(--chat-accent) !important;
+  border: 1px solid var(--chat-input-border) !important;
+}
+
+:root:not(.dark) .almamod-quick-reply-btn {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  color: var(--chat-text-primary) !important;
+}
+
+.almamod-quick-reply-btn:hover {
+  background-color: var(--chat-message-bot-bg) !important;
+}
+
+.almamod-conversations-panel {
+  background-color: var(--chat-bg-secondary) !important;
+}
+
+.almamod-conversation-item {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+}
+
+:root:not(.dark) .almamod-conversation-item {
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(33, 150, 243, 0.2);
+}
+
+.almamod-conversation-item.active {
+  background-color: rgba(var(--chat-accent), 0.2);
+  border: 1px solid var(--chat-accent);
+}
+
+.almamod-avatar-bot {
+  background-color: var(--chat-accent) !important;
+  color: var(--chat-message-user-text) !important;
+}
+
+/* ===================================================================== */
+/* CORRECCIÓN CRÍTICA: Z-INDEX Y POSICIONAMIENTO MÓVIL                  */
+/* ===================================================================== */
+
+/* Botón del chat - Z-index ultra alto para estar siempre visible */
 .almamod-chat-button {
   transition: all 0.3s ease;
+  z-index: 99999 !important; /* Máxima prioridad */
+  position: fixed !important;
 }
 
 .almamod-chat-button:hover {
   box-shadow: 0 6px 20px rgba(1, 38, 249, 0.4);
 }
 
-/* Estilos para la ventana del chat */
+/* Ventana del chat - Z-index ultra alto */
 .almamod-chat-window {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  z-index: 99998 !important; /* Justo debajo del botón */
+  position: fixed !important;
 }
 
 /* Scrollbar personalizado para el chat */
@@ -79,16 +229,95 @@
   }
 }
 
-/* Media queries para responsividad */
-@media (max-width: 640px) {
-  .almamod-chat-window {
-    width: calc(100vw - 32px) !important;
-    right: 16px !important;
-    bottom: 120px !important;
+/* ===================================================================== */
+/* MEDIA QUERIES PARA RESPONSIVIDAD - CORRECCIÓN DE SOLAPAMIENTO       */
+/* ===================================================================== */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 1024px) {
+  .almamod-chat-button {
+    right: 20px !important;
+    bottom: 20px !important;
   }
 
+  .almamod-chat-window {
+    right: 20px !important;
+    bottom: 90px !important; /* Espacio para el botón */
+  }
+}
+
+/* Móviles grandes */
+@media (max-width: 768px) {
   .almamod-chat-button {
     right: 16px !important;
+    bottom: 16px !important;
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .almamod-chat-window {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    right: 16px !important;
+    bottom: 84px !important; /* 56px botón + 28px margen */
+    max-height: calc(100vh - 100px) !important;
+  }
+}
+
+/* Móviles estándar */
+@media (max-width: 640px) {
+  .almamod-chat-button {
+    right: 16px !important;
+    bottom: 16px !important;
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .almamod-chat-window {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    right: 16px !important;
+    bottom: 84px !important; /* 56px botón + 28px margen */
+    left: 16px !important;
+    max-height: calc(100vh - 100px) !important;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .almamod-chat-button {
+    right: 12px !important;
+    bottom: 12px !important;
+    width: 52px !important;
+    height: 52px !important;
+  }
+
+  .almamod-chat-window {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    right: 12px !important;
+    left: 12px !important;
+    bottom: 76px !important; /* 52px botón + 24px margen */
+    max-height: calc(100vh - 92px) !important;
+  }
+}
+
+/* Móviles muy pequeños */
+@media (max-width: 360px) {
+  .almamod-chat-button {
+    right: 10px !important;
+    bottom: 10px !important;
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .almamod-chat-window {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    right: 10px !important;
+    left: 10px !important;
+    bottom: 70px !important; /* 48px botón + 22px margen */
+    max-height: calc(100vh - 85px) !important;
   }
 }
 
@@ -272,8 +501,23 @@
 .almamod-chat-window input:focus {
   will-change: transform, box-shadow;
 }
-/* --- Prioridad visual máxima del chatbot --- */
+
+/* ===================================================================== */
+/* CORRECCIÓN FINAL: Asegurar que el chatbot SIEMPRE esté visible      */
+/* ===================================================================== */
+
 .almamod-chat-button,
 .almamod-chat-window {
-  z-index: 9999 !important;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+/* Prevenir que otros elementos tapen el chatbot */
+body > * {
+  position: relative;
+}
+
+.almamod-chat-button,
+.almamod-chat-window {
+  position: fixed !important;
 }

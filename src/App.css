@@ -1,6 +1,73 @@
 /* ================================================================== */
-/* APP.CSS - ALMAMOD - VERSIÓN PROFESIONAL MEJORADA                  */
+/* APP.CSS - ALMAMOD - VERSIÓN CON SISTEMA DE TEMAS                  */
 /* ================================================================== */
+
+/* ================================================================== */
+/* ANIMACIÓN AZUL FRANCIA PARA MODO CLARO (HERO SECTION)            */
+/* ================================================================== */
+
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+/* ✅ CORREGIDO: Fondo celeste fuerte en modo claro - MÁXIMA ESPECIFICIDAD */
+html:not(.dark) .hero-section,
+:root:not(.dark) .App .hero-section,
+:root:not(.dark) header.hero-section {
+  background-color: #2196F3 !important; /* Celeste fuerte y vibrante */
+}
+
+/* Capa de animación - violeta La Libertad Avanza en modo oscuro por defecto */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(135deg, #07010f 0%, #0e0c10 30%, #111011 60%, #A567E0 100%);
+  animation: rotateBackground 20s linear infinite;
+  opacity: 1;
+  transition: background 0.3s ease, opacity 0.3s ease;
+  z-index: 0;
+}
+
+/* Animación azul Francia en modo claro */
+:root:not(.dark) .hero-section::before {
+  background: linear-gradient(135deg, #0055A4 0%, #003d82 30%, #0055A4 60%, #003d82 100%);
+}
+
+/* Asegurar que el contenido esté por encima */
+.hero-content-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* ✅ CORREGIDO: Texto BLANCO en modo claro - MÁXIMA ESPECIFICIDAD */
+html:not(.dark) .hero-section h1,
+:root:not(.dark) .App .hero-section h1,
+:root:not(.dark) header.hero-section h1 {
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+html:not(.dark) .hero-section p,
+:root:not(.dark) .App .hero-section p,
+:root:not(.dark) header.hero-section p {
+  color: #F5F5F5 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+@keyframes rotateBackground {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 /* ================================================================== */
 /* 1. VARIABLES Y TOKENS DE DISEÑO                                   */
@@ -12,15 +79,10 @@
   --header-spacing: 30px;
   --content-padding-top: calc(var(--header-height) + var(--header-spacing));
   
-  /* Colores Principales */
-  --color-bg-primary: #000000;
-  --color-bg-secondary: #1a1a2e;
-  --color-bg-tertiary: #16213e;
-  --color-text-primary: #f8f9fa;
-  --color-text-secondary: #adb5bd;
-  --color-text-muted: #6b7280;
+  /* ⚠️ ELIMINADAS: Variables de color (ahora vienen de index.css) */
+  /* Las variables --bg-primary, --bg-secondary, etc. están en index.css */
   
-  /* Colores de Acento */
+  /* Colores de Acento (no cambian con tema) */
   --color-accent-primary: #4c01f9;
   --color-accent-secondary: #8e2de2;
   --color-accent-gold: #d4a574;
@@ -84,10 +146,12 @@ body {
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  /* ✅ CAMBIADO: Usa variables de index.css */
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   overflow-x: hidden;
   line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Selección de texto personalizada */
@@ -111,15 +175,16 @@ body {
   left: 0;
   width: 100%;
   z-index: var(--z-sticky);
-  background: linear-gradient(135deg, #000 0%, #1a1a2e 50%, #000 100%);
+  /* ✅ CAMBIADO: Gradiente adaptativo con variables */
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
   background-size: 200% 200%;
-  color: white;
+  color: var(--text-primary);
   padding: 15px 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: var(--header-height);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px var(--shadow-color, rgba(0, 0, 0, 0.3));
   overflow: hidden;
   transition: all var(--transition-base);
   animation: gradientShift 15s ease infinite;
@@ -139,8 +204,8 @@ body {
   backdrop-filter: blur(10px);
 }
 
-/* Efecto de barrido (brillo animado) */
-.hero-section::before {
+/* Efecto de barrido (brillo animado) - CORREGIDO */
+.hero-section::after {
   content: "";
   position: absolute;
   top: 0;
@@ -155,7 +220,7 @@ body {
   );
   animation: sweep 4s linear infinite;
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
 }
 
 @keyframes sweep {
@@ -166,7 +231,7 @@ body {
 /* Contenedor interno del header */
 .hero-content-wrapper {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: 100%;
   max-width: 1200px;
   display: grid;
@@ -202,7 +267,8 @@ body {
 .hero-text-container h1 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  /* ✅ CAMBIADO: Usa variable de texto */
+  color: var(--text-primary);
   margin: 0;
   white-space: nowrap;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -211,7 +277,8 @@ body {
 
 .hero-text-container p {
   font-size: 1rem;
-  color: var(--color-text-secondary);
+  /* ✅ CAMBIADO: Usa variable de texto secundario */
+  color: var(--text-secondary);
   margin: 0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -227,7 +294,8 @@ body {
 
 .header-nav .nav-link,
 .header-nav .nav-link-button {
-  color: var(--color-text-primary);
+  /* ✅ CAMBIADO: Usa variable de texto */
+  color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
@@ -235,6 +303,18 @@ body {
   position: relative;
   overflow: hidden;
   transition: color var(--transition-base);
+}
+
+/* ✅ CORREGIDO: Links blancos en modo claro con celeste fuerte */
+html:not(.dark) .header-nav .nav-link,
+html:not(.dark) .header-nav .nav-link-button {
+  color: #FFFFFF !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+html:not(.dark) .header-nav .nav-link:hover,
+html:not(.dark) .header-nav .nav-link-button:hover {
+  color: #FFF176 !important; /* Amarillo claro al hover */
 }
 
 /* Efecto de subrayado animado */
@@ -251,18 +331,14 @@ body {
   transition: width var(--transition-base);
 }
 
-.nav-link:hover,
-.nav-link-button:hover {
-  color: var(--color-accent-primary);
-}
-
 .nav-link:hover::after,
 .nav-link-button:hover::after {
   width: 80%;
 }
 
 .nav-user-greeting {
-  color: var(--color-text-secondary);
+  /* ✅ CAMBIADO: Usa variable de texto secundario */
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -289,10 +365,12 @@ body {
 .animation-section {
   min-height: 100vh;
   padding: 20px 20px 20px 300px;
-  background: var(--color-bg-primary);
+  /* ✅ CAMBIADO: Usa variable de fondo */
+  background: var(--bg-primary);
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+  transition: background-color 0.3s ease;
 }
 
 .animation-content-wrapper {
@@ -317,16 +395,28 @@ body {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  /* ✅ CAMBIADO: Fondo adaptativo con opacidad */
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(15px) saturate(180%);
   -webkit-backdrop-filter: blur(15px) saturate(180%);
   padding: 20px 15px;
   border-radius: var(--radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.4),
     0 4px 16px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Modo claro: fondo celeste suave con glassmorphism */
+:root:not(.dark) .floating-buttons-container {
+  background: linear-gradient(135deg, rgba(227, 242, 253, 0.95) 0%, rgba(187, 222, 251, 0.95) 100%);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  box-shadow:
+    0 8px 32px rgba(33, 150, 243, 0.2),
+    0 4px 16px rgba(33, 150, 243, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .floating-button {
@@ -348,89 +438,119 @@ body {
   transition: all var(--transition-base);
   box-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.1),
-    0 4px 8px rgba(76, 1, 249, 0.15),
-    0 8px 16px rgba(76, 1, 249, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 4px 8px rgba(76, 1, 249, 0.2);
 }
 
-/* Efecto de brillo al hover */
 .floating-button::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left var(--transition-slow);
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
 }
 
 .floating-button:hover::before {
-  left: 100%;
-}
-
-/* Glow effect */
-.floating-button::after {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
-  border-radius: 52px;
-  opacity: 0;
-  z-index: -1;
-  transition: opacity var(--transition-base);
-  filter: blur(12px);
+  width: 300px;
+  height: 300px;
 }
 
 .floating-button:hover {
-  transform: translateY(-3px) scale(1.02);
+  transform: translateX(8px) scale(1.03);
   box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.15),
-    0 8px 16px rgba(76, 1, 249, 0.25),
-    0 16px 32px rgba(76, 1, 249, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.floating-button:hover::after {
-  opacity: 0.5;
+    0 6px 12px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(76, 1, 249, 0.3),
+    0 0 40px rgba(76, 1, 249, 0.2);
 }
 
 .floating-button:active {
-  transform: translateY(-1px) scale(0.98);
+  transform: translateX(4px) scale(0.98);
 }
 
-.floating-button:focus-visible {
-  outline: 2px solid var(--color-accent-primary);
-  outline-offset: 3px;
+.floating-button svg {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.button-label {
+  position: relative;
+  z-index: 1;
+}
+
+/* Botón especial TiendaAlma */
+.tienda-button {
+  background: linear-gradient(135deg, var(--color-accent-gold), #b88a5f);
+}
+
+.tienda-button:hover {
   box-shadow: 
-    0 0 0 4px rgba(76, 1, 249, 0.1),
-    0 4px 8px rgba(0, 0, 0, 0.15);
+    0 6px 12px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(212, 165, 116, 0.4),
+    0 0 40px rgba(212, 165, 116, 0.3);
 }
 
-/* Separador */
+/* Botón especial Sistema Constructivo */
+.sistema-constructivo-button {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.sistema-constructivo-button:hover {
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(22, 163, 74, 0.4);
+}
+
+/* Separadores */
 .separator {
+  width: 100%;
+  height: 1px;
+  /* ✅ CAMBIADO: Usa variable de borde */
+  background: var(--border-color);
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  margin: 5px 0;
+  opacity: 0.3;
+}
+
+.separator-line {
+  width: 100%;
+  height: 1px;
+  /* ✅ CAMBIADO: Usa variable de borde */
+  background: var(--border-color);
+  margin: 10px 0;
+  opacity: 0.3;
+}
+
+/* Mini botones en fila */
+.mini-buttons-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* ================================================================== */
-/* 6. MODALES CON GLASSMORPHISM                                      */
+/* 6. MODALES MEJORADOS                                              */
 /* ================================================================== */
 
-.modal-overlay,
-.form-modal-overlay {
+.modal-overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: var(--z-modal-backdrop);
+  animation: fadeIn var(--transition-fast);
   padding: 20px;
-  animation: fadeIn var(--transition-base);
 }
 
 @keyframes fadeIn {
@@ -439,30 +559,24 @@ body {
 }
 
 .modal-content {
-  background: rgba(240, 242, 245, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 0;
+  /* ✅ CAMBIADO: Usa variable de fondo */
+  background: var(--bg-secondary);
   border-radius: var(--radius-lg);
+  max-width: 600px;
   width: 100%;
-  max-width: 800px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.15),
-    0 4px 16px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  display: flex;
-  flex-direction: column;
   max-height: 90vh;
-  overflow: hidden;
-  animation: slideUp 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  overflow-y: auto;
+  box-shadow: var(--shadow-2xl);
+  animation: slideUp var(--transition-base);
+  position: relative;
+  /* ✅ CAMBIADO: Usa variable de borde */
+  border: 1px solid var(--border-color);
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.95);
+    transform: translateY(50px) scale(0.9);
   }
   to {
     opacity: 1;
@@ -470,133 +584,118 @@ body {
   }
 }
 
-.modal-lg {
-  max-width: 800px;
-}
-
 .modal-header {
-  padding: 20px 25px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 25px 30px;
+  /* ✅ CAMBIADO: Usa variable de borde */
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
 }
 
-.modal-header h2 {
-  margin: 0;
+.modal-title {
   font-size: 1.5rem;
-  color: #111827;
   font-weight: 700;
+  /* ✅ CAMBIADO: Usa variable de texto */
+  color: var(--text-primary);
+  margin: 0;
 }
 
+.modal-close,
 .close-button {
-  background: rgba(0, 0, 0, 0.05);
+  background: transparent;
   border: none;
-  font-size: 2rem;
+  font-size: 1.8rem;
+  /* ✅ CAMBIADO: Usa variable de texto */
+  color: var(--text-secondary);
   cursor: pointer;
-  color: #6b7280;
   padding: 0;
-  line-height: 1;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-base);
+  border-radius: 50%;
+  transition: all var(--transition-fast);
 }
 
+.modal-close:hover,
 .close-button:hover {
-  background: rgba(0, 0, 0, 0.1);
+  /* ✅ CAMBIADO: Usa variable de fondo terciario */
+  background: var(--bg-tertiary);
+  /* ✅ CAMBIADO: Usa variable de texto primario */
+  color: var(--text-primary);
   transform: rotate(90deg);
-  color: #111827;
-}
-
-.close-button:active {
-  transform: rotate(90deg) scale(0.9);
 }
 
 .modal-body {
-  padding: 25px;
-  overflow-y: auto;
-  flex: 1;
-}
-
-/* Scrollbar personalizada */
-.modal-body::-webkit-scrollbar {
-  width: 8px;
-}
-
-.modal-body::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-}
-
-.modal-body::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-}
-
-.modal-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  /* ✅ CAMBIADO: Usa variable de texto secundario */
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 /* ================================================================== */
-/* 7. CALCULADORA Y FORMULARIOS                                      */
+/* 7. FORMULARIOS MEJORADOS                                          */
 /* ================================================================== */
 
-.calculator-step {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.register-form,
+.login-form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-.calculator-step label,
-.checkbox-label {
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #374151;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: color var(--transition-fast);
+  /* ✅ CAMBIADO: Usa variable de texto */
+  color: var(--text-primary);
 }
 
-.calculator-step label:hover,
-.checkbox-label:hover {
-  color: #111827;
-}
-
-.calculator-step select,
-.calculator-step input {
+.form-input,
+.form-select {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  /* ✅ CAMBIADO: Usa variables de fondo y borde */
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-size: 1rem;
-  background-color: white;
   transition: all var(--transition-base);
-  outline: none;
 }
 
-.calculator-step select:focus,
-.calculator-step input:focus {
+.form-input:focus,
+.form-select:focus {
+  outline: none;
   border-color: var(--color-accent-primary);
   box-shadow: 0 0 0 3px rgba(76, 1, 249, 0.1);
 }
 
-.calculator-step select:hover,
-.calculator-step input:hover {
-  border-color: #9ca3af;
+.form-input::placeholder {
+  /* ✅ CAMBIADO: Usa variable de texto terciario */
+  color: var(--text-tertiary);
 }
 
-/* Botones de acción */
-.main-action-button,
-.secondary-action-button {
-  padding: 12px 20px;
-  border-radius: var(--radius-sm);
+.form-error {
+  color: var(--color-error);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.form-button {
+  width: 100%;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+  color: white;
   border: none;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -605,242 +704,112 @@ body {
   overflow: hidden;
 }
 
-.main-action-button {
-  background: linear-gradient(135deg, #111827, #1f2937);
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.main-action-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1f2937, #374151);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.form-button:hover {
   transform: translateY(-2px);
+  box-shadow: 
+    0 8px 20px rgba(76, 1, 249, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.main-action-button:active:not(:disabled) {
+.form-button:active {
   transform: translateY(0);
 }
 
-.main-action-button:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
+.form-button:disabled {
   opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
-.secondary-action-button {
-  background-color: #e5e7eb;
-  color: #1f2937;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+/* ================================================================== */
+/* 8. EFECTOS DE CARGA                                               */
+/* ================================================================== */
+
+.spinner {
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  width: 40px;
+  height: 40px;
+  animation: spin 0.8s linear infinite;
 }
 
-.secondary-action-button:hover {
-  background-color: #d1d5db;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-/* Resultados */
-.results {
-  text-align: center;
-}
-
-.final-price {
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: #111827;
-  margin: 10px 0;
-  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.step-navigation {
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* ✅ CAMBIADO: Usa variable de fondo con opacidad */
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-  gap: 10px;
-}
-
-.results-summary {
-  text-align: left;
-  background-color: #ffffff;
-  padding: 15px;
-  border-radius: var(--radius-sm);
-  border: 1px solid #e5e7eb;
-  margin: 15px 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.results-summary h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 5px;
-  color: #111827;
-}
-
-.results-summary ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.results-summary ul li {
-  padding: 4px 0;
-  color: #374151;
-}
-
-.disclaimer {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  margin-top: 10px;
-  font-style: italic;
-}
-
-.results-actions {
-  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--z-modal);
 }
 
 /* ================================================================== */
-/* 8. FORMULARIOS DE REGISTRO Y LOGIN                                */
+/* 9. CARDS Y ELEMENTOS DE CONTENIDO                                 */
 /* ================================================================== */
 
-.register-form,
-.login-form {
-  margin: 0 auto;
-  padding: 2rem 40px;
-  max-width: 600px;
-  background: linear-gradient(135deg, #ffffff, #f9fafb);
-  border-radius: var(--radius-md);
-  box-shadow: 
-    0 4px 15px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.register-form h2,
-.register-form h3,
-.login-form h2 {
-  text-align: center;
-  color: #111827;
-  margin-bottom: 1.5rem;
-}
-
-.register-form input,
-.register-form select,
-.login-form input {
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: var(--radius-sm);
-  font-size: 1rem;
-  width: 100%;
-  margin-bottom: 15px;
+.card {
+  /* ✅ CAMBIADO: Usa variable de fondo secundario */
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  /* ✅ CAMBIADO: Usa variable de borde */
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
   transition: all var(--transition-base);
-  background-color: white;
 }
 
-.register-form input:focus,
-.register-form select:focus,
-.login-form input:focus {
-  outline: none;
-  border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px rgba(76, 1, 249, 0.1);
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
 }
 
-.register-form .doc-type-group {
-  display: flex;
-  gap: 10px;
-}
-
-.register-form .doc-type-group select {
-  flex-basis: 30%;
-}
-
-.register-form .doc-type-group input {
-  flex-basis: 70%;
-}
-
-.register-form button,
-.login-form button {
-  padding: 12px;
-  border-radius: var(--radius-sm);
-  border: none;
-  font-size: 1rem;
+.card-title {
+  font-size: 1.25rem;
   font-weight: 600;
-  cursor: pointer;
-  background: linear-gradient(135deg, #111827, #1f2937);
-  color: white;
-  transition: all var(--transition-base);
-  width: 100%;
-  margin-top: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* ✅ CAMBIADO: Usa variable de texto */
+  color: var(--text-primary);
+  margin-bottom: 12px;
 }
 
-.register-form button:hover:not(:disabled),
-.login-form button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1f2937, #374151);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
-}
-
-.register-form button:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.register-form button[type="button"] {
-  background: linear-gradient(135deg, var(--color-info), #60a5fa);
-}
-
-/* ================================================================== */
-/* 9. MAPA Y CARRUSEL                                                */
-/* ================================================================== */
-
-.map-container {
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  margin-top: 1rem;
-  height: 300px;
-  width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.image-carousel .legend {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-  opacity: 1 !important;
-  color: white;
-  font-size: 1rem;
-  padding: 20px !important;
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-}
-
-.carousel-image-container {
-  height: 450px;
-  background-color: #000;
-  overflow: hidden;
-  border-radius: var(--radius-sm);
-}
-
-.carousel-image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-
-.carousel-image-container:hover img {
-  transform: scale(1.05);
+.card-description {
+  /* ✅ CAMBIADO: Usa variable de texto secundario */
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 /* ================================================================== */
 /* 10. BOTONES SOCIALES                                              */
 /* ================================================================== */
 
-.social-link {
-  text-decoration: none;
+.social-button {
+  width: 230px;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  transition: all var(--transition-base);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.social-button:hover {
+  transform: translateX(8px) scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .social-button.whatsapp {
@@ -852,7 +821,7 @@ body {
 }
 
 .social-button.instagram {
-  background: linear-gradient(135deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888);
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
 }
 
 .social-button.instagram:hover {
@@ -920,89 +889,12 @@ body {
   }
 }
 
-.animate-on-scroll {
-  animation: fadeInUp 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-/* Pulse animation */
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-}
-
-/* Efecto de elevación en hover para cards */
-.card-hover {
-  transform-style: preserve-3d;
-  transition: all var(--transition-base);
-}
-
-.card-hover:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.2),
-    0 6px 20px rgba(0, 0, 0, 0.15),
-    0 2px 8px rgba(0, 0, 0, 0.1);
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
 }
 
 /* ================================================================== */
-/* 12. FOOTER                                                        */
-/* ================================================================== */
-
-.main-footer {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  color: var(--color-text-primary);
-  padding: 30px 40px;
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.main-footer p {
-  margin: 5px 0;
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
-}
-
-/* ================================================================== */
-/* 13. ESTADOS DE ACCESIBILIDAD Y FOCUS                              */
-/* ================================================================== */
-
-/* Focus states mejorados */
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-.floating-button:focus-visible {
-  outline: 2px solid var(--color-accent-primary);
-  outline-offset: 3px;
-  box-shadow: 0 0 0 4px rgba(76, 1, 249, 0.1);
-}
-
-/* Reducir movimiento para usuarios con preferencias de accesibilidad */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  
-  .hero-section {
-    animation: none;
-  }
-}
-
-/* ================================================================== */
-/* 14. RESPONSIVE DESIGN                                             */
+/* 12. RESPONSIVE DESIGN - CORREGIDO PARA MÓVILES                    */
 /* ================================================================== */
 
 @media (max-width: 992px) {
@@ -1012,196 +904,203 @@ select:focus-visible,
   
   .hero-content-wrapper {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    text-align: center;
-    gap: 15px;
+    gap: 20px;
   }
   
-  .hero-section {
-    min-height: auto;
-    padding: 20px;
-  }
-  
-  .hero-branding {
-    justify-content: center;
-    order: 1;
-  }
-  
-  .hero-text-container {
-    order: 2;
+  .hero-text-container h1 {
+    font-size: 1.25rem;
   }
   
   .header-nav {
     justify-content: center;
-    justify-self: center;
-    order: 3;
-  }
-  
-  .animation-section {
-    margin-left: 0;
-    padding: 200px 20px 20px 20px;
-  }
-  
-  .animation-content-wrapper {
-    justify-content: center;
-    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 15px;
   }
   
   .floating-buttons-container {
-    top: 200px;
     left: 10px;
-    padding: 15px 10px;
+    right: 10px;
+    width: auto;
   }
   
-  /* Reducir efectos en tablets */
-  .card-hover:hover {
-    transform: translateY(-4px) scale(1.01);
+  .animation-section {
+    padding-left: 20px;
+  }
+  
+  .animation-content-wrapper {
+    max-width: 100%;
   }
 }
 
 @media (max-width: 768px) {
-  .hero-text-container h1 {
-    font-size: 1.3rem;
+  .hero-section {
+    padding: 15px 20px;
   }
-  
-  .modal-content {
-    max-width: 95%;
-    margin: 10px;
-  }
-  
-  .floating-button {
-    padding: 10px 16px;
-    font-size: 0.9rem;
-  }
-  
-  .register-form,
-  .login-form {
-    padding: 1.5rem 20px;
-  }
-}
 
-@media (max-width: 480px) {
   .hero-text-container h1 {
     font-size: 1.2rem;
     white-space: normal;
   }
   
   .animation-section {
-    padding: 220px 10px 90px 10px;
+    padding: 140px 15px 15px 15px;
   }
   
   .floating-buttons-container {
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    transform: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 5px;
-    border-radius: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    max-height: 80px;
-    overflow-x: auto;
-    overflow-y: auto;
-    gap: 6px;
-    background: rgba(0, 0, 0, 0.95);
-  }
-  
-  .floating-button {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    min-height: 38px;
-    padding: 0;
-    justify-content: center;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  
-  .floating-button span,
-  .floating-button .button-label {
-    display: none;
-  }
-  
-  .floating-button svg {
-    margin: 0;
-    width: 18px;
-    height: 18px;
-  }
-  
-  .separator {
-    display: none;
-  }
-  
-  /* Remover efectos complejos en móvil */
-  .hero-section {
-    animation: none;
-    background: linear-gradient(135deg, #000 0%, #1a1a2e 100%);
-  }
-  
-  .floating-button::before {
-    display: none;
-  }
-  
-  .floating-button::after {
-    display: none;
-  }
-  
-  .floating-button:hover {
-    transform: none;
-  }
-  
-  .card-hover:hover {
-    transform: none;
-  }
-  
-  .modal-body {
-    padding: 15px;
+    top: 140px;
+    padding: 15px 10px;
   }
 }
 
 /* ================================================================== */
-/* 15. UTILIDADES                                                    */
+/* CORRECCIÓN CRÍTICA: Botones flotantes en móvil                    */
 /* ================================================================== */
 
-/* Text utilities */
+@media (max-width: 480px) {
+  .hero-section {
+    min-height: auto;
+    padding: 12px 15px;
+  }
+
+  .hero-text-container h1 {
+    font-size: 1.1rem;
+    white-space: normal;
+  }
+
+  .hero-content-wrapper {
+    gap: 12px;
+  }
+  
+  .animation-section {
+    padding: 160px 10px 100px 10px !important;
+    min-height: calc(100vh - 100px);
+  }
+  
+  .animation-content-wrapper {
+    width: 100%;
+  }
+  
+  /* ✅ CORRECCIÓN: Botones flotantes en barra inferior */
+  .floating-buttons-container {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 10px 5px !important;
+    border-radius: 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    max-height: 90px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: 8px !important;
+    background: rgba(0, 0, 0, 0.95) !important;
+    z-index: 998 !important;
+    backdrop-filter: blur(20px) !important;
+  }
+
+  :root:not(.dark) .floating-buttons-container {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* ✅ Botones como íconos circulares */
+  .floating-button {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Ocultar texto en móvil */
+  .floating-button span,
+  .floating-button .button-label {
+    display: none !important;
+  }
+  
+  /* Ajustar íconos */
+  .floating-button svg {
+    margin: 0 !important;
+    width: 20px !important;
+    height: 20px !important;
+  }
+  
+  /* Ocultar separadores */
+  .separator,
+  .separator-line {
+    display: none !important;
+  }
+
+  /* Desactivar efectos de hover en móvil */
+  .floating-button:hover {
+    transform: scale(1.05) !important;
+  }
+
+  .floating-button::before {
+    display: none !important;
+  }
+
+  /* Modal ajustado para móvil */
+  .modal-content {
+    max-width: 95% !important;
+    margin: 10px !important;
+    max-height: 85vh !important;
+  }
+
+  .modal-body {
+    padding: 15px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .floating-button {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+  }
+
+  .floating-button svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .floating-buttons-container {
+    padding: 8px 4px !important;
+    gap: 6px !important;
+  }
+}
+
+/* ================================================================== */
+/* 13. UTILIDADES                                                    */
+/* ================================================================== */
+
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }
 
-/* Display utilities */
 .d-none { display: none !important; }
 .d-block { display: block !important; }
 .d-flex { display: flex !important; }
 
-/* Spacing utilities */
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
 .mt-3 { margin-top: 1.5rem; }
 .mb-1 { margin-bottom: 0.5rem; }
 .mb-2 { margin-bottom: 1rem; }
 .mb-3 { margin-bottom: 1.5rem; }
-
-/* Color utilities */
-.text-primary { color: var(--color-accent-primary); }
-.text-secondary { color: var(--color-text-secondary); }
-.text-muted { color: var(--color-text-muted); }
-.text-success { color: var(--color-success); }
-.text-error { color: var(--color-error); }
-
-/* Performance optimizations */
-.will-change-transform {
-  will-change: transform;
-}
-
-.will-change-opacity {
-  will-change: opacity;
-}
 
 /* ================================================================== */
 /* FIN DEL ARCHIVO                                                   */

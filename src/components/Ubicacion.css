@@ -1,0 +1,210 @@
+/* Ubicacion.css - Estilos adaptativos para modo claro/oscuro */
+
+/* ===================================================================== */
+/* VARIABLES DE COLOR PARA MODO CLARO Y OSCURO                          */
+/* ===================================================================== */
+
+:root {
+  /* Modo oscuro por defecto */
+  --ubicacion-info-bg: rgba(212, 165, 116, 0.1);
+  --ubicacion-info-title: #d4a574;
+  --ubicacion-info-text: #e5e7eb;
+  --ubicacion-btn-bg: #d4a574;
+  --ubicacion-btn-text: #1a1a2e;
+  --ubicacion-btn-hover-bg: #b88a5f;
+}
+
+/* Modo claro - Paleta celeste */
+:root:not(.dark) {
+  --ubicacion-info-bg: linear-gradient(135deg, rgba(227, 242, 253, 0.8) 0%, rgba(187, 222, 251, 0.8) 100%);
+  --ubicacion-info-title: #1565C0;
+  --ubicacion-info-text: #0D47A1;
+  --ubicacion-btn-bg: #2196F3;
+  --ubicacion-btn-text: #FFFFFF;
+  --ubicacion-btn-hover-bg: #1976D2;
+}
+
+/* ===================================================================== */
+/* CONTENEDOR DE INFORMACIÓN DE CONTACTO                                */
+/* ===================================================================== */
+
+.ubicacion-info-container {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: var(--ubicacion-info-bg);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+:root:not(.dark) .ubicacion-info-container {
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+}
+
+.ubicacion-info-title {
+  font-size: 1.1rem;
+  color: var(--ubicacion-info-title);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.ubicacion-info-item {
+  margin: 0.5rem 0;
+  color: var(--ubicacion-info-text);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+:root:not(.dark) .ubicacion-info-item {
+  font-weight: 500;
+}
+
+/* ===================================================================== */
+/* BOTÓN DE GOOGLE MAPS                                                 */
+/* ===================================================================== */
+
+.ubicacion-maps-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--ubicacion-btn-bg);
+  color: var(--ubicacion-btn-text);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ubicacion-maps-button:hover {
+  background: var(--ubicacion-btn-hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+:root:not(.dark) .ubicacion-maps-button {
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+:root:not(.dark) .ubicacion-maps-button:hover {
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+.ubicacion-maps-button:active {
+  transform: translateY(0);
+}
+
+/* ===================================================================== */
+/* MAPA CONTAINER                                                        */
+/* ===================================================================== */
+
+.ubicacion-map-container {
+  height: 450px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+:root:not(.dark) .ubicacion-map-container {
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.2);
+  border: 1px solid rgba(33, 150, 243, 0.2);
+}
+
+.ubicacion-map-container iframe {
+  border: 0;
+}
+
+/* ===================================================================== */
+/* TÍTULO Y DESCRIPCIÓN                                                  */
+/* ===================================================================== */
+
+.ubicacion-modal-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.ubicacion-description {
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  transition: color 0.3s ease;
+}
+
+:root:not(.dark) .ubicacion-description {
+  color: var(--ubicacion-info-text);
+  font-weight: 500;
+}
+
+/* ===================================================================== */
+/* RESPONSIVE DESIGN                                                     */
+/* ===================================================================== */
+
+@media (max-width: 768px) {
+  .ubicacion-map-container {
+    height: 350px;
+  }
+
+  .ubicacion-info-container {
+    padding: 1rem;
+  }
+
+  .ubicacion-info-title {
+    font-size: 1rem;
+  }
+
+  .ubicacion-info-item {
+    font-size: 0.9rem;
+  }
+
+  .ubicacion-maps-button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.875rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ubicacion-map-container {
+    height: 280px;
+  }
+
+  .ubicacion-modal-title {
+    font-size: 1.5rem;
+  }
+
+  .ubicacion-description {
+    font-size: 0.9rem;
+  }
+}
+
+/* ===================================================================== */
+/* ANIMACIONES                                                           */
+/* ===================================================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ubicacion-info-container {
+  animation: fadeInUp 0.5s ease-out;
+}

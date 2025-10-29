@@ -16,6 +16,14 @@
   border: 2px solid rgba(212, 165, 116, 0.3);
   position: relative;
   overflow: hidden;
+  transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Modo claro */
+:root:not(.dark) .certificaciones-barra {
+  background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border-color: rgba(212, 165, 116, 0.4);
 }
 
 .certificaciones-barra::before {
@@ -42,6 +50,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  transition: color 0.3s ease;
+}
+
+/* Modo claro - color más oscuro para mejor contraste */
+:root:not(.dark) .certificaciones-titulo h3 {
+  color: #b8875a;
 }
 
 .certificaciones-titulo h3 svg {
@@ -70,6 +84,13 @@
   overflow: hidden;
 }
 
+/* Modo claro */
+:root:not(.dark) .cert-boton {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #1f2937;
+}
+
 .cert-boton::before {
   content: '';
   position: absolute;
@@ -89,6 +110,11 @@
   transform: translateY(-4px);
 }
 
+/* Hover en modo claro */
+:root:not(.dark) .cert-boton:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
 .cert-boton-imagen {
   width: 80px;
   height: 80px;
@@ -103,9 +129,19 @@
   transition: all 0.3s ease;
 }
 
+/* Modo claro */
+:root:not(.dark) .cert-boton-imagen {
+  background: rgba(0, 0, 0, 0.05);
+}
+
 .cert-boton:hover .cert-boton-imagen {
   background: rgba(255, 255, 255, 0.15);
   transform: scale(1.1);
+}
+
+/* Hover en modo claro */
+:root:not(.dark) .cert-boton:hover .cert-boton-imagen {
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .cert-boton-imagen img {

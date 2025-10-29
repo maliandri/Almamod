@@ -142,9 +142,9 @@ function ServiciosCarousel() {
             }}
             className="slide-wrapper"
           >
-            <div 
+            <div
               className="service-slide"
-              style={{ background: currentService.gradient }}
+              data-index={currentIndex}
             >
               <div className="slide-header">
                 {isImageIcon(currentService.icon) ? (

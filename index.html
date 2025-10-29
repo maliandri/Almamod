@@ -4,6 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
+  <!-- ============================================
+       SCRIPT PARA PREVENIR FLASH DE TEMA
+       Este script se ejecuta ANTES de cargar React
+       para aplicar el tema inmediatamente
+       ============================================ -->
+  <script>
+    (function() {
+      // Obtener tema guardado o preferencia del sistema
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      // Aplicar tema inmediatamente (antes de que React cargue)
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+  
   <!-- ========== GOOGLE TAG MANAGER ========== -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -145,4 +165,3 @@
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
-
