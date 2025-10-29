@@ -1,0 +1,9 @@
+{
+  "name": "almamod-netlify-functions",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "resend": "^4.0.0",
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}

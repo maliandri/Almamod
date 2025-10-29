@@ -244,10 +244,9 @@ function AIChatBot() {
         conversationId: currentConversationId
       };
       
-      // Intentar enviar al backend
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+      // Intentar enviar a Netlify Function
       try {
-        const response = await fetch(`${API_URL}/api/leads`, {
+        const response = await fetch('/.netlify/functions/saveLead', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
