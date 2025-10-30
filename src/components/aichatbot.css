@@ -161,6 +161,10 @@
   transition: all 0.3s ease;
   z-index: 99999 !important; /* Máxima prioridad */
   position: fixed !important;
+  top: 15px;
+  left: 250px;
+  width: 56px;
+  height: 56px;
 }
 
 .almamod-chat-button:hover {
@@ -195,6 +199,10 @@
   -moz-osx-font-smoothing: grayscale;
   z-index: 99998 !important; /* Justo debajo del botón */
   position: fixed !important;
+  top: 0px;
+  left: 310px;
+  width: 384px;
+  height: 500px;
 }
 
 /* Scrollbar personalizado para el chat */
@@ -265,11 +273,13 @@
   }
 }
 
-/* Móviles grandes */
+/* Móviles grandes y tablets - La barra de botones está ARRIBA a la izquierda */
 @media (max-width: 768px) {
   .almamod-chat-button {
     right: 16px !important;
     bottom: 16px !important;
+    left: auto !important;
+    top: auto !important;
     width: 56px !important;
     height: 56px !important;
   }
@@ -277,17 +287,20 @@
   .almamod-chat-window {
     width: calc(100vw - 32px) !important;
     max-width: calc(100vw - 32px) !important;
+    left: 16px !important;
     right: 16px !important;
-    bottom: 84px !important; /* 56px botón + 28px margen */
-    max-height: calc(100vh - 100px) !important;
+    bottom: 84px !important; /* Arriba del botón */
+    max-height: 60vh !important;
   }
 }
 
-/* Móviles estándar */
+/* Móviles estándar - La barra de botones está ARRIBA a la izquierda */
 @media (max-width: 640px) {
   .almamod-chat-button {
     right: 16px !important;
     bottom: 16px !important;
+    left: auto !important;
+    top: auto !important;
     width: 56px !important;
     height: 56px !important;
   }
@@ -295,18 +308,20 @@
   .almamod-chat-window {
     width: calc(100vw - 32px) !important;
     max-width: calc(100vw - 32px) !important;
-    right: 16px !important;
-    bottom: 84px !important; /* 56px botón + 28px margen */
     left: 16px !important;
-    max-height: calc(100vh - 100px) !important;
+    right: 16px !important;
+    bottom: 84px !important;
+    max-height: 60vh !important;
   }
 }
 
-/* Móviles pequeños */
+/* Móviles pequeños - BARRA EN EL FONDO */
 @media (max-width: 480px) {
   .almamod-chat-button {
-    right: 12px !important;
-    bottom: 12px !important;
+    left: 12px !important;
+    right: auto !important;
+    bottom: 78px !important; /* Arriba de la barra de botones (62px altura + 16px gap) */
+    top: auto !important;
     width: 52px !important;
     height: 52px !important;
   }
@@ -314,18 +329,21 @@
   .almamod-chat-window {
     width: calc(100vw - 24px) !important;
     max-width: calc(100vw - 24px) !important;
-    right: 12px !important;
     left: 12px !important;
-    bottom: 76px !important; /* 52px botón + 24px margen */
-    max-height: calc(100vh - 92px) !important;
+    right: 12px !important;
+    bottom: 142px !important; /* 78px + 52px botón + 12px gap */
+    top: auto !important;
+    max-height: calc(100vh - 220px) !important;
   }
 }
 
-/* Móviles muy pequeños */
+/* Móviles muy pequeños - BARRA EN EL FONDO */
 @media (max-width: 360px) {
   .almamod-chat-button {
-    right: 10px !important;
-    bottom: 10px !important;
+    left: 10px !important;
+    right: auto !important;
+    bottom: 70px !important; /* Arriba de la barra de botones (54px altura + 16px gap) */
+    top: auto !important;
     width: 48px !important;
     height: 48px !important;
   }
@@ -333,10 +351,11 @@
   .almamod-chat-window {
     width: calc(100vw - 20px) !important;
     max-width: calc(100vw - 20px) !important;
-    right: 10px !important;
     left: 10px !important;
-    bottom: 70px !important; /* 48px botón + 22px margen */
-    max-height: calc(100vh - 85px) !important;
+    right: 10px !important;
+    bottom: 130px !important; /* 70px + 48px botón + 12px gap */
+    top: auto !important;
+    max-height: calc(100vh - 210px) !important;
   }
 }
 

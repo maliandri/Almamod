@@ -501,12 +501,7 @@ function AIChatBot() {
         onClick={() => setIsOpen(!isOpen)}
         className={`almamod-chat-button almamod-chat-button-icon ${isOpen ? 'open' : ''}`}
         style={{
-          position: 'fixed',
-          top: '15px',        // 🔧 ajustá según la altura de tu header (más grande = más abajo)
-          left: '250px',       // 🔧 movelo a la derecha si querés alinearlo con el logo
-          zIndex: 9999,        // queda sobre todos los elementos
-          width: '56px',
-          height: '56px',
+          // Posicionamiento controlado por CSS (aichatbot.css)
           borderRadius: '50%',
           color: '#fff',
           border: 'none',
@@ -568,12 +563,7 @@ function AIChatBot() {
             dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }} // 👈 limita al viewport
             dragElastic={0.2}        // 👈 da un poco de "rebote" al mover
             style={{
-              position: 'fixed',
-              top: '0px',   // posición inicial
-              left: '310px',
-              zIndex: 9999,
-              width: '384px',
-              height: '500px',
+              // Posicionamiento controlado por CSS (aichatbot.css)
               borderRadius: '16px',
               display: 'flex',
               flexDirection: 'column',
