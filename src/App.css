@@ -1166,7 +1166,32 @@ html:not(.dark) .header-nav .nav-link-button:hover {
 }
 
 /* ================================================================== */
-/* 13. UTILIDADES                                                    */
+/* 13. FOOTER                                                        */
+/* ================================================================== */
+
+.main-footer {
+  padding: 2rem 1rem;
+  text-align: center;
+  margin-top: 4rem;
+}
+
+/* En desktop, agregar margen izquierdo para evitar superposición con botones flotantes */
+@media (min-width: 769px) {
+  .main-footer {
+    margin-left: 270px; /* Ancho de la barra de botones flotantes (230px) + espacio (40px) */
+    padding: 2.5rem 2rem;
+  }
+}
+
+/* En móvil, agregar padding inferior para evitar que la barra de botones tape el footer */
+@media (max-width: 480px) {
+  .main-footer {
+    padding-bottom: 100px; /* Espacio para la barra de botones en el fondo */
+  }
+}
+
+/* ================================================================== */
+/* 14. UTILIDADES                                                    */
 /* ================================================================== */
 
 .text-center { text-align: center; }

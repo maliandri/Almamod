@@ -206,7 +206,7 @@ function App() {
       </div>
 
       {/* FOOTER */}
-      <footer 
+      <footer
         className="main-footer"
         style={{
           backgroundColor: 'var(--bg-secondary)',
@@ -214,11 +214,14 @@ function App() {
           borderTop: '1px solid var(--border-color)',
         }}
       >
-        <p style={{ color: 'var(--text-secondary)' }}>
-          &copy; 2025 Almamod. Todos los derechos reservados.
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+          info@almamod.com.ar
         </p>
-        <p style={{ color: 'var(--text-tertiary)' }}>
-          Neuquén, Argentina
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+          C. la Caña de Azúcar 18, Q8300, Neuquén, Argentina
+        </p>
+        <p style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem' }}>
+          &copy; 2025 Almamod. Todos los derechos reservados.
         </p>
       </footer>
     </div>
