@@ -60,13 +60,14 @@ function Ubicacion({ isOpen: isOpenProp, onClose: onCloseProp }) {
 
                 <div className="ubicacion-map-container">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3299.5348467891234!2d-68.14046788476562!3d-38.89956677957234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x960a35be6bd19e6d%3A0xdf42edf7c7d390a1!2sConacsas!5e0!3m2!1ses!2sar!4v1234567890123!5m2!1ses!2sar"
+                    src="https://maps.google.com/maps?q=-38.899597,-68.1382433&hl=es&z=15&output=embed"
                     width="100%"
                     height="100%"
                     allowFullScreen=""
-                    loading="lazy"
+                    loading="eager"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title="Mapa de Ubicación de Almamod"
+                    title="Mapa de Ubicación de ALMAMOD"
+                    style={{ border: 0 }}
                   ></iframe>
                 </div>
 
@@ -74,7 +75,7 @@ function Ubicacion({ isOpen: isOpenProp, onClose: onCloseProp }) {
                   <h3 className="ubicacion-info-title">📍 Información de Contacto</h3>
                   <p className="ubicacion-info-item">
                     <span>📌</span>
-                    <span>Neuquén, Patagonia Argentina</span>
+                    <span>ALMAMOD - Neuquén, Patagonia Argentina</span>
                   </p>
                   <p className="ubicacion-info-item">
                     <span>📱</span>
@@ -85,7 +86,7 @@ function Ubicacion({ isOpen: isOpenProp, onClose: onCloseProp }) {
                     <span>Email: info@almamod.com.ar</span>
                   </p>
                   <a
-                    href="https://www.google.com/maps/place/Conacsas/@-38.8995667,-68.1382786,17z/data=!3m1!4b1!4m6!3m5!1s0x960a35be6bd19e6d:0xdf42edf7c7d390a1!8m2!3d-38.8995667!4d-68.1382786!16s%2Fg%2F11qp2jkf47?entry=ttu"
+                    href="https://www.google.com/maps/place/ALMAMOD/@-38.899597,-68.1382433,17z/data=!4m6!3m5!1s0x960a3584b666147d:0x56a482a9b12d0577!8m2!3d-38.899597!4d-68.1382433!16s%2Fg%2F11mkygfl6b?entry=ttu&g_ep=EgoyMDI1MTAyOS4yIKXMDSoASAFQAw%3D%3D"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="ubicacion-maps-button"
