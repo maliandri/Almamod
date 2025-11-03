@@ -1,7 +1,22 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import './Ubicacion.css';
+
+// Fix para el icono del marcador de Leaflet
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+});
 
 const LocationIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -59,16 +74,23 @@ function Ubicacion({ isOpen: isOpenProp, onClose: onCloseProp }) {
                 </p>
 
                 <div className="ubicacion-map-container">
-                  <iframe
-                    src="https://maps.google.com/maps?q=-38.899597,-68.1382433&hl=es&z=15&output=embed"
-                    width="100%"
-                    height="100%"
-                    allowFullScreen=""
-                    loading="eager"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Mapa de Ubicación de ALMAMOD"
-                    style={{ border: 0 }}
-                  ></iframe>
+                  <MapContainer
+                    center={[-38.899597, -68.1382433]}
+                    zoom={15}
+                    scrollWheelZoom={false}
+                    style={{ height: '100%', width: '100%', borderRadius: '12px' }}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker position={[-38.899597, -68.1382433]}>
+                      <Popup>
+                        <strong>ALMAMOD</strong><br />
+                        Neuquén, Patagonia Argentina
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
                 </div>
 
                 <div className="ubicacion-info-container">

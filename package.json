@@ -14,10 +14,12 @@
     "@supabase/supabase-js": "^2.76.1",
     "axios": "^1.12.2",
     "express-validator": "^7.2.1",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.548.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-helmet-async": "^2.0.5",
+    "react-leaflet": "^5.0.0",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^7.9.2",
     "resend": "^6.3.0"

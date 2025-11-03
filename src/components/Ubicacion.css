@@ -208,3 +208,55 @@
 .ubicacion-info-container {
   animation: fadeInUp 0.5s ease-out;
 }
+
+/* ===================================================================== */
+/* ESTILOS PARA LEAFLET MAP                                             */
+/* ===================================================================== */
+
+/* Asegurar que el contenedor de Leaflet tenga altura correcta */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Ajustar controles de Leaflet para modo claro/oscuro */
+:root:not(.dark) .leaflet-control-attribution {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #0D47A1 !important;
+}
+
+:root:not(.dark) .leaflet-control-zoom a {
+  background-color: #2196F3 !important;
+  color: white !important;
+  border-color: #1976D2 !important;
+}
+
+:root:not(.dark) .leaflet-control-zoom a:hover {
+  background-color: #1976D2 !important;
+}
+
+/* Popup personalizado */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+:root:not(.dark) .leaflet-popup-content-wrapper {
+  background-color: white;
+  color: #0D47A1;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+  font-family: inherit;
+}
+
+.leaflet-popup-tip {
+  background-color: white;
+}
+
+:root:not(.dark) .leaflet-popup-tip {
+  background-color: white;
+}
