@@ -1,5 +1,5 @@
 // src/App.jsx - VERSIÓN FINAL CORREGIDA
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import './index.css';
@@ -15,18 +15,28 @@ import Certificaciones from './components/Certificaciones.jsx';
 import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
 import AIChatBot from './components/aichatbot';
 import ThemeToggle from './components/ThemeToggle.jsx';
+import SEO from './components/SEO.jsx';
 
 // ====================================================================
 // Componente para la página de inicio
 // ====================================================================
 function HomePage() {
   return (
-    <section className="animation-section">
-      <div className="animation-content-wrapper">
-        <ServiciosCarousel />
-        <Certificaciones />
-      </div>
-    </section>
+    <>
+      <SEO
+        title="AlmaMod - Casas Modulares en Neuquén | Construcción Rápida con Paneles SIP"
+        description="Viviendas modulares certificadas en Neuquén. Entrega en 30 días. Paneles SIP PROPANEL con certificación EDGE Advanced. Desde $15.300.000. Construcción sustentable, sismo-resistente y eficiente."
+        keywords="casas modulares neuquen, construccion rapida, paneles sip precio, viviendas prefabricadas, construccion modular patagonia, almamod, propanel neuquen"
+        canonical="/"
+        image="/assets/almamod.webp"
+      />
+      <section className="animation-section">
+        <div className="animation-content-wrapper">
+          <ServiciosCarousel />
+          <Certificaciones />
+        </div>
+      </section>
+    </>
   );
 }
 
@@ -212,15 +222,29 @@ function App() {
           backgroundColor: 'var(--bg-secondary)',
           color: 'var(--text-secondary)',
           borderTop: '1px solid var(--border-color)',
+          padding: '2rem 1rem',
         }}
       >
+        {/* Enlaces de navegación del footer */}
+        <nav style={{ marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', fontSize: '0.95rem' }}>
+          <Link to="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Inicio</Link>
+          <span style={{ color: 'var(--text-tertiary)' }}>|</span>
+          <Link to="/sistema-constructivo" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Sistema Constructivo</Link>
+          <span style={{ color: 'var(--text-tertiary)' }}>|</span>
+          <Link to="/tiendaalma" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Tienda Alma</Link>
+          <span style={{ color: 'var(--text-tertiary)' }}>|</span>
+          <Link to="/obras" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Nuestras Obras</Link>
+          <span style={{ color: 'var(--text-tertiary)' }}>|</span>
+          <Link to="/ubicacion" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Ubicación</Link>
+        </nav>
+
         <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-          info@almamod.com.ar
+          📧 info@almamod.com.ar
         </p>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-          C. la Caña de Azúcar 18, Q8300, Neuquén, Argentina
+          📍 C. la Caña de Azúcar 18, Q8300, Neuquén, Argentina
         </p>
-        <p style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem' }}>
+        <p style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem', marginTop: '1rem' }}>
           &copy; 2025 Almamod. Todos los derechos reservados.
         </p>
       </footer>

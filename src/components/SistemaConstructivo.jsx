@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { getCloudinaryUrl, IMG_CARD } from '../config/cloudinary';
 import './SistemaConstructivo.css';
+import SEO from './SEO';
 
 // Ícono del botón con imagen de PROPANEL - EXPORTADO
 export const SistemaConstructivoIcon = () => (
