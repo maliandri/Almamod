@@ -84,17 +84,17 @@ function App() {
       {/* ✅ TOGGLE DE TEMA - Posición fija superior derecha */}
       <ThemeToggle />
 
-      {/* HEADER */}
+      {/* HEADER - SEO Optimizado */}
       <header className="hero-section">
   <div className="hero-content-wrapper">
     <div className="hero-branding">
-      <Link to="/">
-        <img src={logoAlmamod} alt="Logo de Almamod" className="hero-logo" />
+      <Link to="/" aria-label="Ir a inicio de AlmaMod">
+        <img src={logoAlmamod} alt="AlmaMod - Construcción Modular en Neuquén" className="hero-logo" />
       </Link>
     </div>
     <div className="hero-text-container">
-      <h1>CONSTRUCCIÓN SIN LÍMITES</h1>
-      <p>Estamos en Neuquén, Somos de Neuquén</p>
+      <h1>Construcción Modular en Neuquén | Paneles SIP</h1>
+      <p>Viviendas sustentables certificadas • Entrega en 30 días • Neuquén, Patagonia Argentina</p>
     </div>
   </div>
 </header>
@@ -215,7 +215,7 @@ function App() {
         </div>
       </div>
 
-      {/* FOOTER */}
+      {/* FOOTER - SEO Optimizado */}
       <footer
         className="main-footer"
         style={{
@@ -226,26 +226,32 @@ function App() {
         }}
       >
         {/* Enlaces de navegación del footer */}
-        <nav style={{ marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', fontSize: '0.95rem' }}>
+        <nav aria-label="Navegación principal del sitio" style={{ marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', fontSize: '0.95rem' }}>
           <Link to="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Inicio</Link>
-          <span style={{ color: 'var(--text-tertiary)' }}>|</span>
+          <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
           <Link to="/sistema-constructivo" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Sistema Constructivo</Link>
-          <span style={{ color: 'var(--text-tertiary)' }}>|</span>
+          <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
           <Link to="/tiendaalma" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Tienda Alma</Link>
-          <span style={{ color: 'var(--text-tertiary)' }}>|</span>
+          <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
           <Link to="/obras" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Nuestras Obras</Link>
-          <span style={{ color: 'var(--text-tertiary)' }}>|</span>
+          <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
           <Link to="/ubicacion" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Ubicación</Link>
         </nav>
 
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-          📧 info@almamod.com.ar
-        </p>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-          📍 C. la Caña de Azúcar 18, Q8300, Neuquén, Argentina
-        </p>
+        <address style={{ fontStyle: 'normal' }}>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+            📧 <a href="mailto:info@almamod.com.ar" style={{ color: 'inherit', textDecoration: 'none' }}>info@almamod.com.ar</a>
+          </p>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+            📍 C. la Caña de Azúcar 18, Q8300, Neuquén, Argentina
+          </p>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+            📞 <a href="tel:+542994087106" style={{ color: 'inherit', textDecoration: 'none' }}>+54 299 408-7106</a>
+          </p>
+        </address>
+
         <p style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem', marginTop: '1rem' }}>
-          &copy; 2025 Almamod. Todos los derechos reservados.
+          &copy; 2025 AlmaMod - Construcción Modular. Todos los derechos reservados.
         </p>
       </footer>
     </div>
