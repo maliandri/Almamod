@@ -1,561 +1,156 @@
-/* AIChatBot.css - VERSIÓN CORREGIDA */
+/* =====================================================================
+   AICHATBOT.CSS - VERSIÓN FINAL CORREGIDA (CON INPUT VISIBLE)
+   ===================================================================== */
 
-/* ===================================================================== */
-/* VARIABLES DE COLOR PARA MODO CLARO Y OSCURO                          */
-/* ===================================================================== */
-
+/* --- 1. VARIABLES DE COLOR (SÓLIDAS) --- */
 :root {
-  /* Modo oscuro por defecto */
-  --chat-bg-primary: #1a1a2e;
+  --chat-bg-main: #1a1a2e;
   --chat-bg-secondary: #16213e;
-  --chat-text-primary: #e5e7eb;
-  --chat-text-secondary: #9ca3af;
-  --chat-accent: #d4a574;
-  --chat-accent-dark: #b88a5f;
-  --chat-message-bot-bg: rgba(212, 165, 116, 0.15);
-  --chat-message-user-bg: #d4a574;
-  --chat-message-user-text: #1a1a2e;
-  --chat-input-bg: rgba(255, 255, 255, 0.05);
-  --chat-input-border: rgba(212, 165, 116, 0.3);
-  --chat-border: rgba(212, 165, 116, 0.2);
+  --chat-header-bg: #d4a574;
+  --chat-header-gradient: linear-gradient(135deg, #d4a574 0%, #b88a5f 100%);
+  --chat-text-primary: #ffffff;
+  --chat-text-secondary: #a0a0a0;
+  --bot-msg-bg: #252540;
+  --bot-msg-text: #e0e0e0;
+  --user-msg-bg: #d4a574;
+  --user-msg-text: #1a1a2e;
+  --input-bg: #232345;
+  --border-color: rgba(212, 165, 116, 0.2);
 }
 
-/* Modo claro - Paleta celeste */
-:root:not(.dark) {
-  --chat-bg-primary: #E3F2FD;
-  --chat-bg-secondary: #BBDEFB;
-  --chat-text-primary: #0D47A1;
-  --chat-text-secondary: #1565C0;
-  --chat-accent: #2196F3;
-  --chat-accent-dark: #1976D2;
-  --chat-message-bot-bg: rgba(255, 255, 255, 0.7);
-  --chat-message-user-bg: #2196F3;
-  --chat-message-user-text: #FFFFFF;
-  --chat-input-bg: rgba(255, 255, 255, 0.8);
-  --chat-input-border: rgba(33, 150, 243, 0.4);
-  --chat-border: rgba(33, 150, 243, 0.3);
-}
-
-/* Animación de bounce para el typing indicator */
-@keyframes bounce {
-  0%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-8px);
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) {
+    --chat-bg-main: #ffffff;
+    --chat-bg-secondary: #f8f9fa;
+    --chat-header-bg: #2196F3;
+    --chat-header-gradient: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    --chat-text-primary: #333333;
+    --chat-text-secondary: #666666;
+    --bot-msg-bg: #f1f3f4;
+    --bot-msg-text: #333333;
+    --user-msg-bg: #2196F3;
+    --user-msg-text: #ffffff;
+    --input-bg: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.1);
   }
 }
 
-/* ===================================================================== */
-/* ESTILOS PARA VENTANA DEL CHAT CON MODO CLARO/OSCURO                 */
-/* ===================================================================== */
-
-.almamod-chat-window-bg {
-  background-color: var(--chat-bg-primary) !important;
-  border: 1px solid var(--chat-border) !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+/* --- 2. VENTANA PRINCIPAL (CORRECCIÓN CRÍTICA AQUÍ) --- */
+.almamod-chat-window-bg,
+.almamod-chat-window {
+  /* ESTRUCTURA FLEX OBLIGATORIA PARA QUE SE VEA EL INPUT */
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  
+  /* ESTILOS VISUALES */
+  background-color: var(--chat-bg-main) !important;
+  opacity: 1 !important; /* Cero transparencias */
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 16px !important;
+  
+  /* POSICIONAMIENTO */
+  z-index: 999999 !important;
+  position: fixed !important;
+  overflow: hidden !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-:root:not(.dark) .almamod-chat-window-bg {
-  box-shadow: 0 20px 60px rgba(33, 150, 243, 0.25);
-}
-
+/* HEADER */
 .almamod-chat-header {
-  background: linear-gradient(135deg, var(--chat-accent) 0%, var(--chat-accent-dark) 100%) !important;
-  color: var(--chat-message-user-text) !important;
+  flex-shrink: 0 !important; /* Que no se achique nunca */
+  background: var(--chat-header-gradient) !important;
+  color: var(--user-msg-text) !important;
 }
 
-.almamod-chat-messages-bg {
-  background-color: transparent;
-}
-
+/* --- 3. MENSAJES --- */
 .almamod-message-bot {
-  background-color: var(--chat-message-bot-bg) !important;
-  color: var(--chat-text-primary) !important;
-}
-
-:root:not(.dark) .almamod-message-bot {
-  border: 1px solid rgba(33, 150, 243, 0.2);
+  background-color: var(--bot-msg-bg) !important;
+  color: var(--bot-msg-text) !important;
+  border: 1px solid var(--border-color);
 }
 
 .almamod-message-user {
-  background-color: var(--chat-message-user-bg) !important;
-  color: var(--chat-message-user-text) !important;
+  background-color: var(--user-msg-bg) !important;
+  color: var(--user-msg-text) !important;
+  font-weight: 500;
 }
 
-.almamod-message-timestamp {
-  color: var(--chat-text-secondary) !important;
-  opacity: 0.7;
-}
-
+/* --- 4. ÁREA DE INPUT (ASEGURAR QUE NO DESAPAREZCA) --- */
+/* Nota: El contenedor del input en el JSX necesita flex-shrink: 0, 
+   pero como está inline, aseguramos aquí que los elementos internos se comporten bien */
 .almamod-chat-input {
-  background-color: var(--chat-input-bg) !important;
-  border: 1px solid var(--chat-input-border) !important;
+  background-color: var(--input-bg) !important;
   color: var(--chat-text-primary) !important;
+  border: 1px solid var(--border-color) !important;
 }
 
-.almamod-chat-input::placeholder {
-  color: var(--chat-text-secondary) !important;
-  opacity: 0.6;
-}
-
-.almamod-chat-send-btn {
-  background-color: var(--chat-accent) !important;
-  color: var(--chat-message-user-text) !important;
-}
-
-.almamod-typing-indicator {
-  background-color: var(--chat-message-bot-bg) !important;
-}
-
-.almamod-typing-dot {
-  background-color: var(--chat-accent) !important;
+.almamod-chat-input:focus {
+  border-color: var(--chat-header-bg) !important;
+  box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2) !important;
 }
 
 .almamod-quick-reply-btn {
-  background-color: rgba(var(--chat-accent), 0.1) !important;
-  color: var(--chat-accent) !important;
-  border: 1px solid var(--chat-input-border) !important;
-}
-
-:root:not(.dark) .almamod-quick-reply-btn {
-  background-color: rgba(255, 255, 255, 0.7) !important;
+  background-color: var(--input-bg) !important;
   color: var(--chat-text-primary) !important;
+  border: 1px solid var(--chat-header-bg) !important;
 }
 
 .almamod-quick-reply-btn:hover {
-  background-color: var(--chat-message-bot-bg) !important;
+  background-color: var(--chat-header-bg) !important;
+  color: var(--user-msg-text) !important;
 }
 
-.almamod-conversations-panel {
-  background-color: var(--chat-bg-secondary) !important;
-}
-
-.almamod-conversation-item {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid transparent;
-}
-
-:root:not(.dark) .almamod-conversation-item {
-  background-color: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(33, 150, 243, 0.2);
-}
-
-.almamod-conversation-item.active {
-  background-color: rgba(var(--chat-accent), 0.2);
-  border: 1px solid var(--chat-accent);
-}
-
-.almamod-avatar-bot {
-  background-color: var(--chat-accent) !important;
-  color: var(--chat-message-user-text) !important;
-}
-
-/* ===================================================================== */
-/* CORRECCIÓN CRÍTICA: Z-INDEX Y POSICIONAMIENTO MÓVIL                  */
-/* ===================================================================== */
-
-/* Botón del chat - Z-index ultra alto para estar siempre visible */
+/* --- 5. BOTÓN FLOTANTE --- */
 .almamod-chat-button {
-  transition: all 0.3s ease;
-  z-index: 99999 !important; /* Máxima prioridad */
+  z-index: 9999999 !important;
   position: fixed !important;
-  top: 15px;
-  left: 250px;
-  width: 56px;
-  height: 56px;
 }
 
-.almamod-chat-button:hover {
-  box-shadow: 0 6px 20px rgba(1, 38, 249, 0.4);
-}
-
-/* Color del botón del chat según el tema */
 .almamod-chat-button-icon {
-  background-color: var(--chat-accent);
-  transition: background-color 0.3s ease;
+  background: var(--chat-header-gradient) !important;
+  color: var(--user-msg-text) !important;
 }
 
 .almamod-chat-button-icon.open {
-  background-color: #dc2626 !important; /* Rojo cuando está abierto */
+  background: #ff5f5f !important;
+  color: white !important;
 }
 
-/* Modo claro: botón azul celeste */
-:root:not(.dark) .almamod-chat-button-icon {
-  background-color: #2196F3 !important;
-}
-
-:root:not(.dark) .almamod-chat-button-icon:hover {
-  background-color: #1976D2 !important;
-}
-
-/* Ventana del chat - Z-index ultra alto */
-.almamod-chat-window {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  z-index: 99998 !important; /* Justo debajo del botón */
-  position: fixed !important;
-  top: 0px;
-  left: 310px;
-  width: 384px;
-  height: 500px;
-}
-
-/* Scrollbar personalizado para el chat */
-.almamod-chat-window > div:nth-child(2) {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(1, 38, 249, 0.4) transparent;
-}
-
-.almamod-chat-window > div:nth-child(2)::-webkit-scrollbar {
-  width: 6px;
-}
-
-.almamod-chat-window > div:nth-child(2)::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.almamod-chat-window > div:nth-child(2)::-webkit-scrollbar-thumb {
-  background-color: rgba(1, 38, 249, 0.4);
-  border-radius: 3px;
-}
-
-.almamod-chat-window > div:nth-child(2)::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(1, 38, 249, 0.4);
-}
-
-/* Estilos para inputs */
-.almamod-chat-window input:focus {
-  border-color: #d4a574;
-  box-shadow: 0 0 0 2px rgba(212, 116, 116, 0.2);
-}
-
-/* Estilos para los botones de respuesta rápida */
-.almamod-chat-window button[style*="rgba(212, 165, 116, 0.1)"] {
-  transition: all 0.2s ease;
-}
-
-.almamod-chat-window button[style*="rgba(212, 165, 116, 0.1)"]:hover {
-  transform: scale(1.02);
-  box-shadow: 0 2px 8px rgba(212, 165, 116, 0.3);
-}
-
-/* Animación de entrada para mensajes */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+/* --- 6. RESPONSIVE (POSICIONES) --- */
+/* PC */
+@media (min-width: 1025px) {
+  .almamod-chat-button {
+    bottom: 30px !important;
+    right: 30px !important;
+    left: auto !important; top: auto !important;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .almamod-chat-window {
+    bottom: 100px !important;
+    right: 30px !important;
+    left: auto !important; top: auto !important;
+    width: 380px !important;
+    height: 600px !important;      /* Altura fija para PC */
+    max-height: 80vh !important;
   }
 }
 
-/* ===================================================================== */
-/* MEDIA QUERIES PARA RESPONSIVIDAD - CORRECCIÓN DE SOLAPAMIENTO       */
-/* ===================================================================== */
-
-/* Tablets y pantallas medianas */
+/* MÓVIL/TABLET */
 @media (max-width: 1024px) {
   .almamod-chat-button {
-    right: 20px !important;
     bottom: 20px !important;
-  }
-
-  .almamod-chat-window {
     right: 20px !important;
-    bottom: 90px !important; /* Espacio para el botón */
+    width: 60px !important;
+    height: 60px !important;
   }
-}
-
-/* Móviles grandes y tablets - La barra de botones está ARRIBA a la izquierda */
-@media (max-width: 768px) {
-  .almamod-chat-button {
-    right: 16px !important;
-    bottom: 16px !important;
-    left: auto !important;
-    top: auto !important;
-    width: 56px !important;
-    height: 56px !important;
-  }
-
   .almamod-chat-window {
-    width: calc(100vw - 32px) !important;
-    max-width: calc(100vw - 32px) !important;
-    left: 16px !important;
-    right: 16px !important;
-    bottom: 84px !important; /* Arriba del botón */
-    max-height: 60vh !important;
+    position: fixed !important;
+    bottom: 90px !important;
+    right: 20px !important;
+    left: 20px !important;
+    width: auto !important;
+    height: 60vh !important;       /* Altura relativa para móvil */
+    max-height: 600px !important;
   }
-}
-
-/* Móviles estándar - La barra de botones está ARRIBA a la izquierda */
-@media (max-width: 640px) {
-  .almamod-chat-button {
-    right: 16px !important;
-    bottom: 16px !important;
-    left: auto !important;
-    top: auto !important;
-    width: 56px !important;
-    height: 56px !important;
-  }
-
-  .almamod-chat-window {
-    width: calc(100vw - 32px) !important;
-    max-width: calc(100vw - 32px) !important;
-    left: 16px !important;
-    right: 16px !important;
-    bottom: 84px !important;
-    max-height: 60vh !important;
-  }
-}
-
-/* Móviles pequeños - BARRA EN EL FONDO */
-@media (max-width: 480px) {
-  .almamod-chat-button {
-    left: 12px !important;
-    right: auto !important;
-    bottom: 78px !important; /* Arriba de la barra de botones (62px altura + 16px gap) */
-    top: auto !important;
-    width: 52px !important;
-    height: 52px !important;
-  }
-
-  .almamod-chat-window {
-    width: calc(100vw - 24px) !important;
-    max-width: calc(100vw - 24px) !important;
-    left: 12px !important;
-    right: 12px !important;
-    bottom: 142px !important; /* 78px + 52px botón + 12px gap */
-    top: auto !important;
-    max-height: calc(100vh - 220px) !important;
-  }
-}
-
-/* Móviles muy pequeños - BARRA EN EL FONDO */
-@media (max-width: 360px) {
-  .almamod-chat-button {
-    left: 10px !important;
-    right: auto !important;
-    bottom: 70px !important; /* Arriba de la barra de botones (54px altura + 16px gap) */
-    top: auto !important;
-    width: 48px !important;
-    height: 48px !important;
-  }
-
-  .almamod-chat-window {
-    width: calc(100vw - 20px) !important;
-    max-width: calc(100vw - 20px) !important;
-    left: 10px !important;
-    right: 10px !important;
-    bottom: 130px !important; /* 70px + 48px botón + 12px gap */
-    top: auto !important;
-    max-height: calc(100vh - 210px) !important;
-  }
-}
-
-/* Animación para el indicador de "nueva conversación" */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-/* Efecto hover para las conversaciones guardadas */
-.conversation-item {
-  transition: all 0.2s ease;
-}
-
-.conversation-item:hover {
-  transform: translateX(4px);
-}
-
-/* Estilo para cuando el chat está minimizado */
-.almamod-chat-button.minimized {
-  animation: pulse 2s ease-in-out infinite;
-}
-
-/* Transiciones suaves para todos los elementos interactivos */
-.almamod-chat-window button,
-.almamod-chat-window input,
-.almamod-chat-window a {
-  transition: all 0.2s ease;
-}
-
-/* Efecto de foco para accesibilidad */
-.almamod-chat-window button:focus,
-.almamod-chat-window input:focus {
-  outline: 2px solid #d4a574;
-  outline-offset: 2px;
-}
-
-/* Estilo para links dentro de mensajes */
-.almamod-chat-window a {
-  color: #d4a574;
-  text-decoration: underline;
-}
-
-.almamod-chat-window a:hover {
-  color: #b88a5f;
-}
-
-/* Loading spinner opcional */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loading-spinner {
-  animation: spin 1s linear infinite;
-}
-
-/* Efectos de entrada y salida suaves */
-.almamod-chat-window {
-  transform-origin: bottom right;
-}
-
-/* Sombra más pronunciada en hover del botón principal */
-.almamod-chat-button:active {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Mejora visual para mensajes del bot */
-.bot-message {
-  position: relative;
-}
-
-.bot-message::before {
-  content: '';
-  position: absolute;
-  left: -8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 60%;
-  background: linear-gradient(to bottom, #d4a574, #b88a5f);
-  border-radius: 2px;
-}
-
-/* Estilo para el panel de conversaciones */
-.conversations-panel {
-  backdrop-filter: blur(10px);
-}
-
-/* Animación para nuevos mensajes */
-@keyframes newMessage {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.new-message {
-  animation: newMessage 0.3s ease-out;
-}
-
-/* Estilos para modo oscuro (ya implementado en inline styles pero como backup) */
-@media (prefers-color-scheme: dark) {
-  .almamod-chat-window {
-    background-color: #1a1a2e;
-    color: #e5e7eb;
-  }
-}
-
-/* Mejora de contraste para accesibilidad */
-.high-contrast .almamod-chat-window {
-  border: 2px solid #d4a574;
-}
-
-/* Transición suave al abrir/cerrar el panel de conversaciones */
-.conversations-panel {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-/* Estilo para el badge de notificación */
-.notification-badge {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Mejora visual para botones deshabilitados */
-.almamod-chat-window button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-  filter: grayscale(0.5);
-}
-
-/* Efecto ripple para botones (opcional) */
-@keyframes ripple {
-  to {
-    transform: scale(4);
-    opacity: 0;
-  }
-}
-
-/* Estilos para impresión (ocultar chat al imprimir) */
-@media print {
-  .almamod-chat-button,
-  .almamod-chat-window {
-    display: none !important;
-  }
-}
-
-/* Animación de escritura del bot */
-.typing-indicator {
-  display: flex;
-  gap: 4px;
-}
-
-.typing-indicator > div {
-  animation: bounce 1.4s infinite;
-}
-
-.typing-indicator > div:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-indicator > div:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-/* Mejora de performance para animaciones */
-.almamod-chat-window * {
-  will-change: auto;
-}
-
-.almamod-chat-window button:hover,
-.almamod-chat-window input:focus {
-  will-change: transform, box-shadow;
-}
-
-/* ===================================================================== */
-/* CORRECCIÓN FINAL: Asegurar que el chatbot SIEMPRE esté visible      */
-/* ===================================================================== */
-
-.almamod-chat-button,
-.almamod-chat-window {
-  z-index: 99999 !important;
-  pointer-events: auto !important;
-}
-
-/* Prevenir que otros elementos tapen el chatbot */
-body > * {
-  position: relative;
-}
-
-.almamod-chat-button,
-.almamod-chat-window {
-  position: fixed !important;
 }
