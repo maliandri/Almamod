@@ -65,7 +65,7 @@ function ServiciosCarousel() {
       setCurrentIndex((prevIndex) =>
         prevIndex === servicios.length - 1 ? 0 : prevIndex + 1
       );
-    }, 8000);
+    }, 12000);
     return () => clearInterval(interval);
   }, [isAutoPlaying, servicios.length]);
 
@@ -123,8 +123,8 @@ function ServiciosCarousel() {
   return (
     <div className="servicios-carousel-container">
       <div className="servicios-header">
-        <h2>Nuestras Soluciones Modulares</h2>
-        <p>Tecnología y diseño para tu próximo espacio</p>
+        <h2>Construccion Sin Limites</h2>
+        <p>MODulos con ALMA, MODular MODerno</p>
       </div>
       
       <div className="carousel-main">
