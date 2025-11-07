@@ -53,9 +53,10 @@
   transition: color 0.3s ease;
 }
 
-/* Modo claro - color más oscuro para mejor contraste */
+/* Modo claro - negro para mejor contraste */
 :root:not(.dark) .certificaciones-titulo h3 {
-  color: #b8875a;
+  color: #1a1a1a;
+  text-shadow: none;
 }
 
 .certificaciones-titulo h3 svg {
