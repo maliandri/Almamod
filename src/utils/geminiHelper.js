@@ -82,12 +82,13 @@ Ejemplo de cómo SÍ responder:
 
 // Configuración del modelo
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  // *** CORRECCIÓN CRÍTICA: Se cambió 'gemini-1.5-flash' por 'gemini-2.5-flash' para compatibilidad con el endpoint y estabilidad. ***
+  model: "gemini-2.5-flash", 
   generationConfig: {
-    temperature: 0.9, // Más creatividad y naturalidad (era 0.7)
+    temperature: 0.9, 
     topK: 40,
     topP: 0.95,
-    maxOutputTokens: 600, // Más espacio para respuestas naturales (era 500)
+    maxOutputTokens: 600, 
   },
 });
 
