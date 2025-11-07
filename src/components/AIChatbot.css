@@ -1,7 +1,8 @@
 /* =====================================================================
-   AICHATBOT.CSS - VERSIÓN FINAL SINCRONIZADA
+   AICHATBOT.CSS - VERSIÓN CON SISTEMA DE TEMAS SINCRONIZADO
    ===================================================================== */
 
+/* VARIABLES PARA TEMA OSCURO (por defecto) */
 :root {
   --alm-bg-main: #1a1a2e;
   --alm-bg-sec: #16213e;
@@ -15,21 +16,18 @@
   --alm-border: rgba(212, 165, 116, 0.3);
 }
 
-/* MODO CLARO AUTOMÁTICO */
-@media (prefers-color-scheme: light) {
-  :root:not(.dark) {
-     --alm-bg-main: #ffffff; --alm-bg-sec: #f0f2f5; --alm-accent: #2196F3;
-     --alm-text-main: #1a1a1a; --alm-bot-bg: #e4e6eb; --alm-user-bg: #2196F3;
-     --alm-user-text: #ffffff; --alm-input-bg: #ffffff; --alm-border: rgba(0,0,0,0.1);
-  }
-}
-/* MODO CLARO FORZADO POR CLASE */
-body.light, body.light-mode, [data-theme="light"] {
-     --alm-bg-main: #ffffff !important; --alm-bg-sec: #f0f2f5 !important;
-     --alm-accent: #2196F3 !important; --alm-text-main: #1a1a1a !important;
-     --alm-bot-bg: #e4e6eb !important; --alm-user-bg: #2196F3 !important;
-     --alm-user-text: #ffffff !important; --alm-input-bg: #ffffff !important;
-     --alm-border: rgba(0,0,0,0.15) !important;
+/* TEMA CLARO - Sincronizado con ThemeToggle */
+html:not(.dark) {
+  --alm-bg-main: #E3F2FD;
+  --alm-bg-sec: #BBDEFB;
+  --alm-accent: #2196F3;
+  --alm-text-main: #0D47A1;
+  --alm-text-sec: #1565C0;
+  --alm-bot-bg: #90CAF9;
+  --alm-user-bg: #2196F3;
+  --alm-user-text: #ffffff;
+  --alm-input-bg: #ffffff;
+  --alm-border: rgba(33, 150, 243, 0.3);
 }
 
 /* --- VENTANA PRINCIPAL (FLEX COLUMN ES LA CLAVE) --- */
@@ -111,16 +109,57 @@ body.light, body.light-mode, [data-theme="light"] {
   border: 1px solid var(--alm-accent); background: transparent; color: var(--alm-text-main); cursor: pointer;
 }
 
-/* --- BOTÓN FLOTANTE --- */
+/* --- BOTÓN FLOTANTE REDONDO CON CARA DE BOT --- */
 .almamod-chat-button {
-  position: fixed !important; bottom: 490px !important; right: -110px !important;
-  width: 60px !important; height: 52px !important; z-index: 99999999 !important;
+  position: fixed !important;
+  bottom: 490px !important;
+  right: -110px !important;
+  width: 60px !important;
+  height: 60px !important;
+  z-index: 9999999 !important;
 }
+
 .almamod-chat-button-icon {
-  background: var(--alm-accent) !important; color: var(--alm-user-text) !important;
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  background: var(--alm-accent) !important;
+  color: var(--alm-user-text) !important;
   box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  border: none !important;
+  font-size: 28px !important;
 }
-.almamod-chat-button-icon.open { background: #ff4757 !important; color: white !important; }
+
+.almamod-chat-button-icon::before {
+  content: '🤖';
+  font-size: 32px;
+}
+
+/* Ocultar el SVG del JSX, solo mostrar el emoji */
+.almamod-chat-button-icon svg {
+  display: none !important;
+}
+
+.almamod-chat-button-icon:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4) !important;
+}
+
+.almamod-chat-button-icon.open {
+  background: #ff4757 !important;
+  color: white !important;
+  transform: rotate(90deg) !important;
+}
+
+.almamod-chat-button-icon.open::before {
+  content: '✕';
+  font-size: 28px;
+}
 
 /* --- TYPING INDICATOR --- */
 .almamod-typing-indicator { display: flex; gap: 4px; padding: 5px; }
@@ -132,9 +171,53 @@ body.light, body.light-mode, [data-theme="light"] {
 
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-  .almamod-chat-window {
-    width: auto !important; left: 15px !important; right: 15px !important;
-    bottom: 490px !important; height: 65vh !important;
+  /* Botón 100px arriba de Tienda Alma en móviles */
+  .almamod-chat-button {
+    bottom: 175px !important;
+    right: 15px !important;
+    width: 55px !important;
+    height: 55px !important;
+    z-index: 9999999 !important;
   }
-  .almamod-chat-button { bottom: 15px !important; right: 15px !important; }
+
+  .almamod-chat-button-icon {
+    width: 55px !important;
+    height: 55px !important;
+  }
+
+  /* Ventana de chat adaptada para móvil */
+  .almamod-chat-window {
+    width: auto !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 240px !important;
+    height: calc(100vh - 280px) !important;
+    max-height: 500px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .almamod-chat-button {
+    bottom: 175px !important;
+    right: 12px !important;
+    width: 52px !important;
+    height: 52px !important;
+  }
+
+  .almamod-chat-button-icon {
+    width: 52px !important;
+    height: 52px !important;
+  }
+
+  .almamod-chat-button-icon::before {
+    font-size: 28px !important;
+  }
+
+  .almamod-chat-window {
+    left: 8px !important;
+    right: 8px !important;
+    bottom: 238px !important;
+    height: calc(100vh - 280px) !important;
+    max-height: 450px !important;
+  }
 }

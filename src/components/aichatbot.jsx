@@ -101,6 +101,7 @@ function AIChatBot() {
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         className={`almamod-chat-button almamod-chat-button-icon ${isOpen ? 'open' : ''}`}
+        style={{ zIndex: 99999999 }}
         whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
       >
         {isOpen ? (
