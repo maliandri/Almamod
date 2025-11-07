@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import './aichatbot.css';
+import './AIChatbot.css';
 import { sendMessageToGemini, initializeChat } from '../utils/geminiHelper';
 
 function AIChatBot() {
