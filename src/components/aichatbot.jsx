@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './aichatbot.css';
+import { sendMessageToGemini, initializeChat, resetChat } from '../utils/geminiHelper';
 
 function AIChatBot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,35 +24,6 @@ function AIChatBot() {
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
-  // Base de conocimientos de Almita
-  const knowledgeBase = {
-    products: {
-      'micasita': 'MiCasita es nuestro módulo más compacto de 12m² (4.88m × 2.44m). Perfecto para primera vivienda, oficina o espacio de trabajo. Incluye baño completo y cocina-dormitorio integrado. Precio: $15.300.000. Plazo de entrega: 30 días. ¿Te gustaría saber más detalles?',
-      'alma 18': 'Alma 18 tiene 18m² (6m × 3m) con 1 dormitorio independiente. Incluye baño completo, cocina-comedor y un dormitorio. Precio: $32.050.000. Ideal para parejas o personas solas. ¿Quieres conocer las especificaciones técnicas?',
-      'alma 27': 'Alma 27 ofrece 27m² (9m × 3m) con distribución más amplia. Incluye baño completo, cocina, estar-comedor y un dormitorio. Precio: $42.120.000. Perfecto equilibrio entre espacio y eficiencia. ¿Te interesa ver planos?',
-      'alma loft 28': 'Alma Loft 28 es nuestro diseño tipo loft con 28m² (21m² en planta baja + 7m² en entrepiso). Incluye baño, cocina, estar-comedor y dormitorio en altillo. Precio: $38.500.000. Un diseño moderno y funcional. ¿Quieres más información?',
-      'alma 36': 'Alma 36 es nuestro módulo de 36m² (12m × 3m) con 2 dormitorios. Incluye baño completo, cocina, estar-comedor y dos dormitorios. Precio: $50.075.000. Ideal para familias pequeñas. ¿Te gustaría agendar una visita?',
-      'alma 36 refugio': 'Alma 36 Refugio tiene 36m² (12m × 3m) con diseño especial tipo refugio patagónico. Incluye baño completo, cocina, estar-comedor y dos dormitorios. Precio: $54.800.000. Perfecto para zonas de montaña. ¿Quieres ver el video 360°?'
-    },
-    panelSIP: 'Los Paneles SIP (Structural Insulated Panel) son el corazón de nuestra tecnología. Son paneles estructurales térmicos con núcleo aislante de poliestireno expandido y revestimiento OSB. Ofrecen: 50% de ahorro energético, 70% menos tiempo de construcción, 90% menos residuos, y vida útil de 50+ años. ¿Quieres saber más sobre PROPANEL®?',
-    propanel: 'PROPANEL® es nuestro sistema constructivo certificado. Características: Espesor 9cm, Transmitancia térmica K=0.28 W/m²K, Resistencia al fuego Clase B, Certificación CAT (Ministerio de Desarrollo Territorial), Certificación CAS sismorresistente (INPRES). Es el sistema más avanzado de Argentina. ¿Te interesa conocer las certificaciones?',
-    certificaciones: {
-      'cat': 'El CAT (Certificado de Aptitud Técnica) es otorgado por el Ministerio de Desarrollo Territorial. Certifica que PROPANEL® cumple con todos los estándares de sistemas constructivos no tradicionales. Garantiza calidad estructural y térmica.',
-      'cas': 'El CAS (Certificado de Aptitud Sismorresistente) es otorgado por INPRES. Certifica que nuestras construcciones resisten movimientos sísmicos de zona 2-4. Fundamental para la Patagonia.',
-      'edge': 'EDGE Advanced es certificación internacional del Banco Mundial. Garantiza: 40%+ reducción energética, 20%+ ahorro de agua, 20%+ reducción de energía incorporada. Somos líderes en construcción verde en Argentina.',
-      'cacmi': 'CACMI (Cámara Argentina de Construcción Modular) nos certifica como empresa de excelencia en construcción modular. Garantiza procesos, calidad y ética profesional.'
-    },
-    servicios: 'En AlmaMod ofrecemos soluciones integrales: 1) Estructura con Paneles SIP PROPANEL®, 2) Diseño y revestimiento exterior (chapa, siding, EIFS), 3) Construcción modular inteligente, 4) Fabricación en Neuquén adaptada al clima patagónico, 5) Interiores a medida y llave en mano, 6) Fundaciones y obras civiles. ¿Cuál te interesa conocer más?',
-    ventajas: 'Las principales ventajas de construir con AlmaMod son: Eficiencia energética superior (50% ahorro en climatización), Construcción rápida (70% más rápida que tradicional), Sustentabilidad (90% menos residuos), Durabilidad (50+ años), Certificaciones oficiales, Resistencia climática patagónica, Calidad de aire interior superior. ¿Quieres profundizar en alguna?',
-    precios: 'Nuestros módulos van desde $15.300.000 (MiCasita 12m²) hasta $54.800.000 (Alma 36 Refugio). Todos incluyen: Estructura completa, Paneles SIP PROPANEL®, Aberturas con DVH, Instalaciones completas, Baño equipado, Cocina amoblada, Pisos vinílicos. Entrega en 30 días. ¿Te interesa algún modelo específico?',
-    financiacion: 'Trabajamos con diferentes opciones de financiación. Podemos coordinar una reunión para analizar tu caso particular. También aceptamos permuta por terrenos o vehículos. ¿Quieres que te contactemos para hablar de financiación?',
-    proceso: 'Nuestro proceso es: 1) Consulta inicial gratuita, 2) Diseño personalizado según tus necesidades, 3) Presupuesto detallado, 4) Fabricación en nuestro taller en Neuquén (30 días), 5) Transporte e instalación, 6) Entrega llave en mano. Todo con seguimiento constante. ¿En qué etapa te gustaría empezar?',
-    ubicacion: 'Estamos en Neuquén, Argentina. Fabricamos localmente para adaptarnos al clima patagónico. Entregamos en toda la Patagonia argentina: Neuquén, Río Negro, Chubut, Santa Cruz y Tierra del Fuego. También vendemos a otras provincias. ¿En qué zona estás?',
-    sustentabilidad: 'La sustentabilidad es nuestro ADN. Certificación EDGE Advanced (Banco Mundial), Reducción 90% residuos de obra, Ahorro 50% energía climatización, Materiales reciclables, Menor huella de carbono, Construcción en seco (ahorro de agua). Somos construcción verde certificada. ¿Te importa el medio ambiente?',
-    contacto: 'Puedes contactarnos por: 📱 WhatsApp: +54 9 299 408 7106, 📧 Email: info@almamod.com.ar, 📍 Ubicación: Neuquén, Argentina, 🌐 Web: www.almamod.com.ar, o directamente desde este chat. ¿Cómo prefieres que te contactemos?',
-    visita: 'Puedes agendar una visita a nuestro taller en Neuquén para ver los módulos en vivo y conocer el proceso de fabricación. También hacemos videollamadas para mostrarte todo virtualmente. ¿Prefieres visita presencial o virtual?'
-  };
-
   const quickReplies = [
     { text: "Ver catálogo de módulos", key: "catalogo" },
     { text: "Sistema PROPANEL®", key: "propanel" },
@@ -66,17 +38,20 @@ function AIChatBot() {
   }, [messages]);
 
   useEffect(() => {
+    // Inicializar Gemini chat
+    initializeChat();
+
     // Cargar conversaciones guardadas
     const savedConversations = localStorage.getItem('almamod_conversations');
     if (savedConversations) {
       setConversations(JSON.parse(savedConversations));
     }
-    
+
     // Cargar datos guardados
     const savedName = localStorage.getItem('almamod_user_name');
     const savedEmail = localStorage.getItem('almamod_user_email');
     const savedPhone = localStorage.getItem('almamod_user_phone');
-    
+
     if (savedName) {
       setUserName(savedName);
       setConversationStep('chat');
@@ -275,95 +250,39 @@ function AIChatBot() {
     }
   };
 
-  const getResponse = (userInput) => {
-    const input = userInput.toLowerCase();
+  const getResponse = async (userInput) => {
+    // Usar Gemini para generar respuesta
+    try {
+      const response = await sendMessageToGemini(userInput, userName);
+      return response;
+    } catch (error) {
+      console.error('Error con Gemini, usando respuestas de fallback:', error);
 
-    // Saludos
-    if (input.match(/(hola|hello|hi|buenos días|buenas tardes|buenas noches|hey)/)) {
-      return userName
-        ? `¡Hola ${userName}! 😊 ¿En qué más te puedo ayudar?`
-        : '¡Hola! ¿En qué te puedo ayudar?';
-    }
-    
-    // Productos específicos
-    for (const [key, response] of Object.entries(knowledgeBase.products)) {
-      if (input.includes(key) || input.includes(key.replace(' ', ''))) {
+      // Fallback a respuestas predefinidas si falla Gemini
+      const input = userInput.toLowerCase();
+
+      // Saludos
+      if (input.match(/(hola|hello|hi|buenos días|buenas tardes|buenas noches|hey)/)) {
         return userName
-          ? `Mirá ${userName}, ${response.toLowerCase().replace(/^./, response[0])}`
-          : response;
+          ? `¡Hola ${userName}! 😊 ¿En qué más te puedo ayudar?`
+          : '¡Hola! ¿En qué te puedo ayudar?';
       }
-    }
 
-    // Catálogo
-    if (input.match(/(catálogo|catalogo|módulos|modulos|productos|viviendas|casas)/)) {
-      const intro = userName ? `Perfecto ${userName}, ` : '¡Dale! ';
-      return `${intro}te muestro nuestros 6 modelos:\n\n🏠 MiCasita (12m²) - $15.300.000\n🏠 Alma 18 (18m²) - $32.050.000\n🏠 Alma 27 (27m²) - $42.120.000\n🏠 Alma Loft 28 (28m²) - $38.500.000\n🏠 Alma 36 (36m²) - $50.075.000\n🏠 Alma 36 Refugio (36m²) - $54.800.000\n\nTodos se entregan en 30 días. ¿Te interesa alguno en particular?`;
-    }
-    
-    // Panel SIP
-    if (input.match(/(panel|sip|tecnología|tecnologia|construcción|construccion)/)) {
-      const intro = userName ? `${userName}, te cuento que ` : '¡Te cuento! ';
-      return `${intro}los Paneles SIP (Structural Insulated Panel) son el corazón de nuestra tecnología. Son paneles estructurales térmicos con núcleo aislante de poliestireno expandido y revestimiento OSB.\n\nLas ventajas son increíbles:\n• 50% de ahorro energético\n• 70% menos tiempo de construcción\n• 90% menos residuos\n• Vida útil de 50+ años\n\n¿Querés saber más sobre PROPANEL®?`;
-    }
+      // Catálogo
+      if (input.match(/(catálogo|catalogo|módulos|modulos|productos|viviendas|casas)/)) {
+        const intro = userName ? `Perfecto ${userName}, ` : '¡Dale! ';
+        return `${intro}te muestro nuestros 6 modelos:\n\n🏠 MiCasita (12m²) - $15.300.000\n🏠 Alma 18 (18m²) - $32.050.000\n🏠 Alma 27 (27m²) - $42.120.000\n🏠 Alma Loft 28 (28m²) - $38.500.000\n🏠 Alma 36 (36m²) - $50.075.000\n🏠 Alma 36 Refugio (36m²) - $54.800.000\n\nTodos se entregan en 30 días. ¿Te interesa alguno en particular?`;
+      }
 
-    // PROPANEL
-    if (input.match(/(propanel)/)) {
-      return `PROPANEL® es nuestro sistema constructivo certificado. Es lo mejor que vas a encontrar en Argentina:\n\n✓ Espesor 9cm\n✓ Transmitancia térmica K=0.28 W/m²K\n✓ Resistencia al fuego Clase B\n✓ Certificación CAT (Ministerio de Desarrollo Territorial)\n✓ Certificación CAS sismorresistente (INPRES)\n\nEs el sistema más avanzado del país. ¿Te interesa conocer más sobre las certificaciones?`;
-    }
+      // Contacto
+      if (input.match(/(contacto|contactar|teléfono|telefono|email|mail|whatsapp)/)) {
+        return `Podés contactarnos por:\n\n📱 WhatsApp: +54 9 299 408 7106\n📧 Email: info@almamod.com.ar\n📍 Ubicación: Neuquén, Argentina\n🌐 Web: www.almamod.com.ar\n\nO directamente desde este chat. ¿Cómo preferís que te contactemos?`;
+      }
 
-    // Certificaciones
-    if (input.match(/(certificación|certificacion|certificaciones|certificado)/)) {
-      return `Tenemos todas las certificaciones oficiales que importan:\n\n🏆 CAT: Certificado de Aptitud Técnica del Ministerio de Desarrollo Territorial. Garantiza calidad estructural y térmica.\n\n🏆 CAS: Certificado Sismorresistente del INPRES. Resistimos movimientos sísmicos de zona 2-4 (fundamental para la Patagonia).\n\n🏆 EDGE Advanced: Certificación internacional del Banco Mundial. Garantizamos más del 40% de reducción energética.\n\n🏆 CACMI: Cámara Argentina de Construcción Modular. Certificación de excelencia en procesos y ética profesional.\n\n¿Querés profundizar en alguna?`;
+      // Respuesta por defecto
+      const intro = userName ? `${userName}, ` : '';
+      return `${intro}perdón, no estoy segura de haber entendido tu pregunta 😅\n\n¿Podrías reformularla? También podés usar las respuestas rápidas de abajo para navegar por los temas principales.`;
     }
-
-    // Servicios
-    if (input.match(/(servicio|servicios|qué ofrecen|que ofrecen)/)) {
-      return `En AlmaMod te ofrecemos soluciones integrales:\n\n1️⃣ Estructura con Paneles SIP PROPANEL®\n2️⃣ Diseño y revestimiento exterior (chapa, siding, EIFS)\n3️⃣ Construcción modular inteligente\n4️⃣ Fabricación en Neuquén adaptada al clima patagónico\n5️⃣ Interiores a medida y llave en mano\n6️⃣ Fundaciones y obras civiles\n\n¿Cuál te interesa conocer más?`;
-    }
-
-    // Ventajas
-    if (input.match(/(ventaja|ventajas|beneficio|beneficios|por qué|porque)/)) {
-      return `Las principales ventajas de construir con AlmaMod son:\n\n⚡ Eficiencia energética superior (50% ahorro en climatización)\n⏱️ Construcción rápida (70% más rápida que tradicional)\n🌱 Sustentabilidad (90% menos residuos)\n💪 Durabilidad (50+ años de vida útil)\n📜 Certificaciones oficiales\n🏔️ Resistencia climática patagónica\n🌬️ Calidad de aire interior superior\n\n¿Querés que te cuente más sobre alguna?`;
-    }
-
-    // Precios
-    if (input.match(/(precio|precios|costo|costos|cuánto|cuanto|valor)/)) {
-      return `Nuestros módulos van desde $15.300.000 (MiCasita 12m²) hasta $54.800.000 (Alma 36 Refugio).\n\nTodos incluyen:\n✓ Estructura completa\n✓ Paneles SIP PROPANEL®\n✓ Aberturas con DVH\n✓ Instalaciones completas\n✓ Baño equipado\n✓ Cocina amoblada\n✓ Pisos vinílicos\n\nEntrega en 30 días. ¿Te interesa algún modelo específico?`;
-    }
-
-    // Financiación
-    if (input.match(/(financiación|financiacion|cuota|cuotas|pago|pagos|crédito|credito)/)) {
-      return `Trabajamos con diferentes opciones de financiación y también aceptamos permuta por terrenos o vehículos.\n\n¿Querés que te contactemos para analizar tu caso particular y ver qué opciones tenés disponibles?`;
-    }
-
-    // Proceso
-    if (input.match(/(proceso|cómo funciona|como funciona|paso|pasos|etapa|etapas)/)) {
-      return `Nuestro proceso es súper simple:\n\n1️⃣ Consulta inicial gratuita\n2️⃣ Diseño personalizado según tus necesidades\n3️⃣ Presupuesto detallado\n4️⃣ Fabricación en nuestro taller en Neuquén (30 días)\n5️⃣ Transporte e instalación\n6️⃣ Entrega llave en mano\n\nTodo con seguimiento constante. ¿En qué etapa te gustaría empezar?`;
-    }
-
-    // Ubicación
-    if (input.match(/(ubicación|ubicacion|dónde|donde|dirección|direccion)/)) {
-      return `Estamos en Neuquén, Argentina. Fabricamos localmente para adaptarnos al clima patagónico.\n\nEntregamos en toda la Patagonia: Neuquén, Río Negro, Chubut, Santa Cruz y Tierra del Fuego. También vendemos a otras provincias.\n\n¿En qué zona estás vos?`;
-    }
-
-    // Sustentabilidad
-    if (input.match(/(sustentable|sustentabilidad|ecológico|ecologico|verde|medio ambiente)/)) {
-      return `La sustentabilidad es nuestro ADN 💚\n\n🌍 Certificación EDGE Advanced (Banco Mundial)\n♻️ Reducción 90% residuos de obra\n⚡ Ahorro 50% energía climatización\n🌱 Materiales reciclables\n👣 Menor huella de carbono\n💧 Construcción en seco (ahorro de agua)\n\nSomos construcción verde certificada. ¿Te importa el medio ambiente?`;
-    }
-
-    // Contacto
-    if (input.match(/(contacto|contactar|teléfono|telefono|email|mail|whatsapp)/)) {
-      return `Podés contactarnos por:\n\n📱 WhatsApp: +54 9 299 408 7106\n📧 Email: info@almamod.com.ar\n📍 Ubicación: Neuquén, Argentina\n🌐 Web: www.almamod.com.ar\n\nO directamente desde este chat. ¿Cómo preferís que te contactemos?`;
-    }
-
-    // Visita
-    if (input.match(/(visita|visitar|ver|conocer|taller|showroom)/)) {
-      return `¡Nos encantaría que vengas! Podés agendar una visita a nuestro taller en Neuquén para ver los módulos en vivo y conocer todo el proceso de fabricación.\n\nTambién hacemos videollamadas para mostrarte todo virtualmente si preferís. ¿Qué te resulta mejor, presencial o virtual?`;
-    }
-
-    // Respuesta por defecto
-    const intro = userName ? `${userName}, ` : '';
-    return `${intro}perdón, no estoy segura de haber entendido tu pregunta 😅\n\n¿Podrías reformularla? También podés usar las respuestas rápidas de abajo para navegar por los temas principales.`;
   };
 
   const handleSendMessage = async (customMessage = null) => {
@@ -385,7 +304,7 @@ function AIChatBot() {
       await handleCollectingContact(messageText);
     } else {
       // Conversación normal
-      const response = getResponse(messageText);
+      const response = await getResponse(messageText);
       await addBotMessage(response);
 
       // Mostrar respuestas rápidas después de responder
@@ -398,7 +317,7 @@ function AIChatBot() {
     saveCurrentConversation();
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -411,7 +330,7 @@ function AIChatBot() {
 
     await simulateTyping();
 
-    const response = getResponse(reply.text);
+    const response = await getResponse(reply.text);
     await addBotMessage(response);
 
     // Mostrar respuestas rápidas después de responder
@@ -464,7 +383,10 @@ function AIChatBot() {
     setShowConversations(false);
     setShowQuickReplies(false);
     setConversationStep('initial');
-    
+
+    // Reset Gemini chat session
+    resetChat();
+
     // Iniciar nueva conversación
     setTimeout(() => {
       addBotMessage('¡Hola! Soy Almita, tu asistente virtual de AlmaMod 🏠\n\nAntes de empezar, me encantaría saber tu nombre para poder atenderte mejor. ¿Cómo te llamas?');
@@ -877,7 +799,7 @@ function AIChatBot() {
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyDown}
                   placeholder="Escribe tu mensaje..."
                   disabled={isTyping}
                   className="almamod-chat-input"

@@ -11,6 +11,7 @@
     "tailwind-init": "tailwindcss init -p"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@supabase/supabase-js": "^2.76.1",
     "axios": "^1.12.2",
     "express-validator": "^7.2.1",
