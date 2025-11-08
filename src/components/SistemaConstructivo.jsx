@@ -154,6 +154,14 @@ function SistemaConstructivo({ isOpen, onClose }) {
 
   return createPortal(
     <AnimatePresence>
+      {/* ✅ SEO OPTIMIZADO PARA SISTEMA CONSTRUCTIVO */}
+      <SEO
+        title="Sistema Constructivo PROPANEL - Paneles SIP | AlmaMod Neuquén"
+        description="Sistema constructivo con Paneles SIP PROPANEL certificados EDGE Advanced y CACMI. Eficiencia energética superior, construcción rápida, sismo-resistente. Tecnología térmica para Patagonia."
+        keywords="paneles sip propanel, sistema constructivo sip, construccion modular neuquen, paneles termicos patagonia, certificacion edge, construccion sustentable, aislacion termica"
+        canonical="/sistema-constructivo"
+        image="/assets/propanel.webp"
+      />
       <motion.div
         className="modal-overlay"
         onClick={onClose}
