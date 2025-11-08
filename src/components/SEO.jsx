@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 
 function SEO({ title, description, keywords, canonical, image, type = 'website', product, breadcrumb, schema, noindex = false }) {
   useEffect(() => {
-    // ✅ URL base del sitio (con www)
-    const siteUrl = 'https://www.almamod.com.ar';
+    // ✅ URL base del sitio (sin www)
+    const siteUrl = 'https://almamod.com.ar';
     
     // ✅ IMPORTANTE: Si canonical viene como path (/tiendaalma), construir URL completa
     // Si viene como URL completa (http...), usarla directamente
