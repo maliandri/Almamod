@@ -1,112 +1,80 @@
-import { useEffect } from 'react';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
 
-function SEO({ title, description, keywords, canonical, image, type = 'website', product, breadcrumb, schema, noindex = false }) {
-  useEffect(() => {
-    // ✅ URL base del sitio (sin www)
-    const siteUrl = 'https://almamod.com.ar';
-    
-    // ✅ IMPORTANTE: Si canonical viene como path (/tiendaalma), construir URL completa
-    // Si viene como URL completa (http...), usarla directamente
-    const fullUrl = (() => {
-      if (!canonical) return siteUrl;
-      if (canonical.startsWith('http')) return canonical;
-      // Si canonical es un path relativo, agregar el siteUrl
-      return `${siteUrl}${canonical.startsWith('/') ? canonical : '/' + canonical}`;
-    })();
-    
-    const fullTitle = title 
-      ? `${title} | AlmaMod`
-      : 'AlmaMod - Construcción Modular en Neuquén | Paneles SIP PROPANEL';
-    
-    const metaDescription = description || 
-      'Construimos viviendas modulares sustentables en Neuquén con Paneles SIP PROPANEL. Certificación EDGE Advanced y CACMI. Entrega en 30 días.';
+function SEO({ 
+  title, 
+  description, 
+  keywords, 
+  canonical, 
+  image, 
+  type = 'website',
+  noindex = false,
+  schema = null // NUEVO: Soporte para datos estructurados
+}) {
+  const siteUrl = 'https://almamod.com.ar';
 
-    // Actualizar título
-    document.title = fullTitle;
+  // ✅ NORMALIZACIÓN DE URL CANÓNICA (Evita duplicados con/sin trailing slash)
+  const fullCanonicalUrl = (() => {
+    if (!canonical) return `${siteUrl}/`;
+    if (canonical.startsWith('http')) return canonical;
 
-    // Función para crear/actualizar meta tags
-    const setMetaTag = (name, content, isProperty = false) => {
-      if (!content) return;
-      
-      const attribute = isProperty ? 'property' : 'name';
-      let element = document.querySelector(`meta[${attribute}="${name}"]`);
-      
-      if (!element) {
-        element = document.createElement('meta');
-        element.setAttribute(attribute, name);
-        document.head.appendChild(element);
-      }
-      element.setAttribute('content', content);
-    };
+    // Asegurar que canonical comienza con /
+    const cleanPath = canonical.startsWith('/') ? canonical : `/${canonical}`;
 
-    // Meta tags básicos
-    setMetaTag('description', metaDescription);
-    if (keywords) setMetaTag('keywords', keywords);
+    // ⚠️ IMPORTANTE: Remover trailing slash excepto para root (/)
+    // Esto evita duplicados: /tiendaalma vs /tiendaalma/
+    const normalizedPath = cleanPath === '/' ? '/' : cleanPath.replace(/\/$/, '');
 
-    // Robots meta tag
-    const robotsContent = noindex ? 'noindex, follow' : 'index, follow';
-    setMetaTag('robots', robotsContent);
+    return `${siteUrl}${normalizedPath}`;
+  })();
 
-    // Open Graph
-    setMetaTag('og:type', type, true);
-    setMetaTag('og:title', fullTitle, true);
-    setMetaTag('og:description', metaDescription, true);
-    setMetaTag('og:url', fullUrl, true);
-    setMetaTag('og:site_name', 'AlmaMod', true);
-    setMetaTag('og:locale', 'es_AR', true);
-    
-    if (image) {
-      const fullImageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
-      setMetaTag('og:image', fullImageUrl, true);
-      setMetaTag('og:image:width', '1200', true);
-      setMetaTag('og:image:height', '630', true);
-    }
+  const fullTitle = title ? `${title} | AlmaMod` : 'AlmaMod - Construcción Modular';
+  
+  // Si keywords es un array, lo unimos con comas. Si es string, lo dejamos igual.
+  const metaKeywords = Array.isArray(keywords) ? keywords.join(', ') : keywords;
 
-    // Twitter
-    setMetaTag('twitter:card', 'summary_large_image');
-    setMetaTag('twitter:title', fullTitle);
-    setMetaTag('twitter:description', metaDescription);
-    if (image) {
-      const fullImageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
-      setMetaTag('twitter:image', fullImageUrl);
-    }
+  const metaImage = image 
+    ? (image.startsWith('http') ? image : `${siteUrl}${image}`)
+    : `${siteUrl}/og-image-default.jpg`;
 
-    // ✅ CANONICAL TAG - CRÍTICO
-    let linkCanonical = document.querySelector('link[rel="canonical"]');
-    if (!linkCanonical) {
-      linkCanonical = document.createElement('link');
-      linkCanonical.rel = 'canonical';
-      document.head.appendChild(linkCanonical);
-    }
-    linkCanonical.href = fullUrl;
+  return (
+    <Helmet>
+      {/* --- Tags Básicos --- */}
+      <title>{fullTitle}</title>
+      <meta name="description" content={description} />
+      {metaKeywords && <meta name="keywords" content={metaKeywords} />}
+      <link rel="canonical" href={fullCanonicalUrl} />
+      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
 
-    // Alternate
-    let linkAlternate = document.querySelector('link[rel="alternate"][hreflang="es-ar"]');
-    if (!linkAlternate) {
-      linkAlternate = document.createElement('link');
-      linkAlternate.rel = 'alternate';
-      linkAlternate.setAttribute('hreflang', 'es-ar');
-      document.head.appendChild(linkAlternate);
-    }
-    linkAlternate.href = fullUrl;
+      {/* --- Open Graph --- */}
+      <meta property="og:type" content={type} />
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={fullCanonicalUrl} />
+      <meta property="og:image" content={metaImage} />
+      <meta property="og:site_name" content="AlmaMod" />
+      <meta property="og:locale" content="es_AR" />
 
-    // Schema.org
-    if (product || breadcrumb || schema) {
-      const schemaData = product || breadcrumb || schema;
-      let scriptElement = document.getElementById('schema-org-json');
-      
-      if (!scriptElement) {
-        scriptElement = document.createElement('script');
-        scriptElement.id = 'schema-org-json';
-        scriptElement.type = 'application/ld+json';
-        document.head.appendChild(scriptElement);
-      }
-      scriptElement.textContent = JSON.stringify(schemaData);
-    }
+      {/* --- Twitter --- */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={metaImage} />
 
-  }, [title, description, keywords, canonical, image, type, product, breadcrumb, schema, noindex]);
+      {/* --- Geo Tags --- */}
+      <meta name="geo.region" content="AR-Q" />
+      <meta name="geo.placename" content="Neuquén" />
+      <meta name="geo.position" content="-38.9516;-68.0591" />
+      <meta name="ICBM" content="-38.9516, -68.0591" />
 
-  return null;
+      {/* --- SCHEMA.ORG (DATOS ESTRUCTURADOS) --- */}
+      {schema && (
+        <script type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      )}
+    </Helmet>
+  );
 }
 
 export default SEO;

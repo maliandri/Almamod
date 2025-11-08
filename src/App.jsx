@@ -1,57 +1,106 @@
-// src/App.jsx - VERSIÓN FINAL CORREGIDA
-import React, { useEffect } from 'react';
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+// src/App.jsx - VERSIÓN FINAL REALMENTE CORREGIDA (CONECTADA A METADATA)
+import React, { useEffect, Suspense, lazy } from 'react';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 import './index.css';
 
-// --- Imports ---
+// --- IMPORTS CRÍTICOS (Se cargan rápido al inicio) ---
 import logoAlmamod from './assets/almamod.webp';
-import ObrasCarousel from './components/ObrasCarousel.jsx';
-import Ubicacion from './components/Ubicacion.jsx';
-import SocialButton from './components/SocialButton.jsx';
-import ServiciosCarousel from './components/ServiciosCarousel.jsx';
-import TiendaAlma from './components/TiendaAlma.jsx';
-import Certificaciones from './components/Certificaciones.jsx';
-import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
+import SEO from './components/SEO.jsx';
 import AIChatBot from './components/aichatbot';
 import ThemeToggle from './components/ThemeToggle.jsx';
-import SEO from './components/SEO.jsx';
+import SocialButton from './components/SocialButton.jsx';
+import PageLayout from './components/PageLayout.jsx';
+
+// --- IMPORT DE METADATA (TU CEREBRO SEO) ---
+// Asegúrate de que seo-metadata.js esté en src/utils/
+import { PAGE_METADATA } from './utils/seo-metadata';
+
+// --- LAZY LOADING (Mejora velocidad inicial) ---
+// Estos componentes solo se descargan cuando se necesitan
+const TiendaAlma = lazy(() => import('./components/TiendaAlma.jsx'));
+const ObrasCarousel = lazy(() => import('./components/ObrasCarousel.jsx'));
+const Ubicacion = lazy(() => import('./components/Ubicacion.jsx'));
+const SistemaConstructivo = lazy(() => import('./components/SistemaConstructivo.jsx'));
+// Si tienes un icono específico para importar, hazlo así:
+// import { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
+// O si es default export, úsalo como componente normal.
+
+const ServiciosCarousel = lazy(() => import('./components/ServiciosCarousel.jsx'));
+const Certificaciones = lazy(() => import('./components/Certificaciones.jsx'));
+
+// Componente de carga mientras llegan las páginas
+const LoadingFallback = () => (
+  <div className="min-h-[60vh] flex items-center justify-center">
+    <div className="animate-pulse text-brand-gold text-xl font-semibold p-8">
+      Cargando experiencia AlmaMod...
+    </div>
+  </div>
+);
 
 // ====================================================================
-// Componente para la página de inicio
+// PÁGINA DE INICIO (OPTIMIZADA Y CONECTADA A METADATA)
 // ====================================================================
 function HomePage() {
+  // AQUÍ ESTÁ LA MAGIA: Usamos los datos de tu archivo central
+  const meta = PAGE_METADATA.home;
+
   return (
-    <>
+    <PageLayout>
+      {/* Inyectamos SEO automáticamente desde el archivo central */}
       <SEO
-        title="AlmaMod - Casas Modulares en Neuquén | Construcción Rápida con Paneles SIP"
-        description="Viviendas modulares certificadas en Neuquén. Entrega en 30 días. Paneles SIP PROPANEL con certificación EDGE Advanced. Desde $15.300.000. Construcción sustentable, sismo-resistente y eficiente."
-        keywords="casas modulares neuquen, construccion rapida, paneles sip precio, viviendas prefabricadas, construccion modular patagonia, almamod, propanel neuquen"
+        title={meta.title}
+        description={meta.description}
+        keywords={meta.keywords}
+        schema={meta.schema}
         canonical="/"
-        image="/assets/almamod.webp"
       />
-      <section className="animation-section">
-        <div className="animation-content-wrapper">
-          <ServiciosCarousel />
-          <Certificaciones />
+      
+      {/* Hero Section (Mantengo tu estructura original de header para no romper estilos) */}
+      <header className="hero-section">
+        <div className="hero-content-wrapper">
+          <div className="hero-branding">
+            <Link to="/" aria-label="Ir a inicio de AlmaMod">
+              <img src={logoAlmamod} alt="AlmaMod - Construcción Modular en Neuquén" className="hero-logo" width="180" height="60" />
+            </Link>
+          </div>
+          <div className="hero-text-container fade-in-up">
+            <h1>El Futuro de la <span className="text-brand-gold">Construcción Modular</span></h1>
+            <p>Viviendas sustentables certificadas • Entrega en 60 días • Neuquén, Patagonia</p>
+          </div>
         </div>
-      </section>
-    </>
+      </header>
+
+      {/* Secciones principales cargadas bajo demanda */}
+      <Suspense fallback={<div className="h-96" />}>
+        <section className="py-16 px-4">
+          <ServiciosCarousel />
+        </section>
+
+        <section className="py-16 bg-gray-50 dark:bg-gray-900/50 transition-colors duration-300">
+          <Certificaciones />
+        </section>
+      </Suspense>
+    </PageLayout>
   );
 }
 
 // ====================================================================
-// Componente principal App
+// COMPONENTE PRINCIPAL APP
 // ====================================================================
 function App() {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // ✅ INICIALIZAR TEMA AL CARGAR LA APLICACIÓN
+  // Scroll automático hacia arriba al cambiar de ruta
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  // Inicializar tema (mantengo tu lógica que ya funcionaba bien)
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
       document.documentElement.classList.add('dark');
     } else {
@@ -59,200 +108,139 @@ function App() {
     }
   }, []);
 
-  // ✅ FUNCIONES PARA ABRIR MODALES CON NAVEGACIÓN
-  const openSistemaConstructivo = () => {
-    navigate('/sistema-constructivo');
-  };
+  // Funciones de navegación (igual que antes)
+  const openSistemaConstructivo = () => navigate('/sistema-constructivo');
+  const openTiendaAlma = () => navigate('/tiendaalma');
+  const openObras = () => navigate('/obras');
+  const openUbicacion = () => navigate('/ubicacion');
 
-  const openTiendaAlma = () => {
-    navigate('/tiendaalma');
-  };
-
-  const openObras = () => {
-    navigate('/obras');
-  };
-
-  const openUbicacion = () => {
-    navigate('/ubicacion');
-  };
-
-  // ✅ Verificar si estamos en una ruta de TiendaAlma
-  const isTiendaAlmaRoute = location.pathname.startsWith('/tiendaalma');
+  // Helpers para modales
+  const isHome = location.pathname === '/';
+  const isSistemaOpen = location.pathname === '/sistema-constructivo';
+  const isObrasOpen = location.pathname === '/obras';
+  const isUbicacionOpen = location.pathname === '/ubicacion';
+  const isTiendaRoute = location.pathname.startsWith('/tiendaalma');
 
   return (
-    <div className="App">
-      {/* ✅ TOGGLE DE TEMA - Posición fija superior derecha */}
+    <div className="App min-h-screen flex flex-col bg-light-bg-primary dark:bg-dark-bg-primary text-light-text-primary dark:text-dark-text-primary transition-colors duration-300">
+      
+      {/* --- ELEMENTOS FLOTANTES GLOBAL --- */}
       <ThemeToggle />
 
-      {/* HEADER - SEO Optimizado */}
-      <header className="hero-section">
-  <div className="hero-content-wrapper">
-    <div className="hero-branding">
-      <Link to="/" aria-label="Ir a inicio de AlmaMod">
-        <img src={logoAlmamod} alt="AlmaMod - Construcción Modular en Neuquén" className="hero-logo" />
-      </Link>
-    </div>
-    <div className="hero-text-container">
-      <h1>Construcción Modular en Neuquén | Paneles SIP</h1>
-      <p>Viviendas sustentables certificadas • Entrega en 30 días • Neuquén, Patagonia Argentina</p>
-    </div>
-  </div>
-</header>
+      {/* --- CONTENIDO PRINCIPAL (RUTAS) --- */}
+      <main className="flex-grow">
+        {/* Siempre mostramos HomePage de fondo si estamos en rutas "modal" */}
+        {(isHome || isSistemaOpen || isObrasOpen || isUbicacionOpen) && <HomePage />}
 
-      {/* ✅ MODALES CONTROLADOS POR RUTAS */}
-      
-      {/* Sistema Constructivo */}
-      <SistemaConstructivo 
-        isOpen={location.pathname === '/sistema-constructivo'}
-        onClose={() => navigate('/')}
-      />
-
-      {/* ✅ TiendaAlma - SOLO se renderiza si estamos en su ruta */}
-      {isTiendaAlmaRoute && <TiendaAlma />}
-
-      {/* ObrasCarousel */}
-      <ObrasCarousel 
-        isOpen={location.pathname === '/obras'}
-        onClose={() => navigate('/')}
-      />
-
-      {/* Ubicacion */}
-      <Ubicacion 
-        isOpen={location.pathname === '/ubicacion'}
-        onClose={() => navigate('/')}
-      />
-
-      {/* CONTENIDO PRINCIPAL */}
-      <main style={{ backgroundColor: 'var(--bg-primary)' }}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          
-          {/* ✅ RUTAS PARA LOS MODALES */}
-          <Route path="/sistema-constructivo" element={<HomePage />} />
-          <Route path="/tiendaalma" element={null} />
-          <Route path="/tiendaalma/:slug" element={null} />
-          <Route path="/obras" element={<HomePage />} />
-          <Route path="/ubicacion" element={<HomePage />} />
-        </Routes>
+        {/* Suspense para cargar los componentes pesados solo cuando hacen falta */}
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            {/* Rutas principales */}
+            <Route path="/" element={null} /* Ya renderizado arriba */ />
+            <Route path="/tiendaalma/*" element={<TiendaAlma />} />
+            
+            {/* Rutas que actúan como modales sobre la home */}
+            <Route path="/sistema-constructivo" element={
+              <SistemaConstructivo isOpen={true} onClose={() => navigate('/')} />
+            } />
+            <Route path="/obras" element={
+              <ObrasCarousel isOpen={true} onClose={() => navigate('/')} />
+            } />
+            <Route path="/ubicacion" element={
+              <Ubicacion isOpen={true} onClose={() => navigate('/')} />
+            } />
+            
+            {/* 404 */}
+            <Route path="*" element={
+              !isHome && !isSistemaOpen && !isObrasOpen && !isUbicacionOpen && !isTiendaRoute ? (
+                <div className="text-center py-20">
+                  <h2>Página no encontrada</h2>
+                  <Link to="/" className="btn-primary mt-4 inline-block">Volver al Inicio</Link>
+                </div>
+              ) : null
+            } />
+          </Routes>
+        </Suspense>
       </main>
 
-      {/* BOTONES FLOTANTES */}
+      {/* --- BARRA LATERAL DE NAVEGACIÓN (Tus botones flotantes) --- */}
       <div className="floating-buttons-container">
-        {/* Botón TiendaAlma */}
-        <button 
-          className="floating-button tienda-button"
-          onClick={openTiendaAlma}
-          title="Tienda Alma"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-          <span className="button-label">Tienda Alma</span>
+        <button className="floating-button tienda-button" onClick={openTiendaAlma} title="Ver Modelos">
+          <span className="text-xl">🏠</span>
+          <span className="button-label">Modelos</span>
+        </button>
+        <button className="floating-button" onClick={openObras} title="Nuestras Obras">
+           <span className="text-xl">🔨</span>
+           <span className="button-label">Obras</span>
+        </button>
+        <button className="floating-button" onClick={openUbicacion} title="Ubicación">
+           <span className="text-xl">📍</span>
+           <span className="button-label">Ubicación</span>
+        </button>
+        
+        <hr className="separator opacity-20 my-2" />
+        
+        {/* Redes Sociales */}
+        <div className="flex flex-col gap-2 items-center">
+          <SocialButton platform="whatsapp" url="https://wa.me/542994087106" label="WhatsApp" />
+          <SocialButton platform="instagram" url="https://instagram.com/_almamod_" label="Instagram" />
+        </div>
+
+        <hr className="separator opacity-20 my-2" />
+
+        <button className="floating-button sistema-constructivo-button" onClick={openSistemaConstructivo} title="Sistema Constructivo">
+           <span className="text-xl">🏗️</span>
+           <span className="button-label">Sistema</span>
         </button>
 
-        {/* Botón Obras */}
-        <button 
-          className="floating-button"
-          onClick={openObras}
-          title="Nuestras Obras"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-            <polyline points="21 15 16 10 5 21"></polyline>
-          </svg>
-          <span className="button-label">Nuestras Obras</span>
-        </button>
-
-        {/* Botón Ubicación */}
-        <button 
-          className="floating-button"
-          onClick={openUbicacion}
-          title="Ubicación"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
-          </svg>
-          <span className="button-label">Ubicación</span>
-        </button>
-        
-        <hr className="separator" />
-        
-        <SocialButton
-          platform="whatsapp"
-          label="WhatsApp"
-          url="https://wa.me/542994087106"
-        />
-        <SocialButton
-          platform="instagram"
-          label="Instagram"
-          url="https://instagram.com/_almamod_"
-        />
-        <SocialButton
-          platform="facebook"
-          label="Facebook"
-          url="https://facebook.com/61578686948419"
-        />
-        
-        <hr className="separator" />
-        
-        {/* Botón Sistema Constructivo */}
-        <button 
-          className="floating-button sistema-constructivo-button"
-          onClick={openSistemaConstructivo}
-          title="Sistema Constructivo"
-        >
-          <SistemaConstructivoIcon />
-          <span className="button-label">Sistema Constructivo</span>
-        </button>
-        
-        <div className="separator-line"></div>
-        
-        <div className="mini-buttons-row">
-          <AIChatBot/>
+        <div className="mt-auto pt-4">
+           <AIChatBot />
         </div>
       </div>
 
-      {/* FOOTER - SEO Optimizado */}
-      <footer
-        className="main-footer"
-        style={{
-          backgroundColor: 'var(--bg-secondary)',
-          color: 'var(--text-secondary)',
-          borderTop: '1px solid var(--border-color)',
-          padding: '2rem 1rem',
-        }}
-      >
-        {/* Enlaces de navegación del footer */}
-        <nav aria-label="Navegación principal del sitio" style={{ marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', fontSize: '0.95rem' }}>
-          <Link to="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Inicio</Link>
-          <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
-          <Link to="/sistema-constructivo" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Sistema Constructivo</Link>
-          <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
-          <Link to="/tiendaalma" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Tienda Alma</Link>
-          <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
-          <Link to="/obras" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Nuestras Obras</Link>
-          <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
-          <Link to="/ubicacion" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Ubicación</Link>
-        </nav>
+      {/* --- FOOTER OPTIMIZADO (Sin JS innecesario) --- */}
+      <footer className="main-footer bg-gray-100 dark:bg-gray-950 py-8 mt-auto border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
+        <div className="container mx-auto px-4 text-center md:text-left grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Columna 1: Logo y copy */}
+          <div className="flex flex-col items-center md:items-start">
+            <img src={logoAlmamod} alt="AlmaMod Logo" className="h-12 w-auto mb-4 opacity-90" />
+            <p className="text-sm opacity-75 max-w-xs">
+              Construcción modular inteligente en la Patagonia Argentina. Calidad, rapidez y eficiencia energética.
+            </p>
+          </div>
+          
+          {/* Columna 2: Enlaces Rápidos (Usando clases CSS para hover, NO JS) */}
+          <div className="flex flex-col items-center md:items-start">
+            <h4 className="font-semibold mb-4 text-brand-gold">Enlaces Rápidos</h4>
+            <nav className="flex flex-col gap-2">
+               <Link to="/" className="hover:text-brand-gold transition-colors duration-200">Inicio</Link>
+               <Link to="/tiendaalma" className="hover:text-brand-gold transition-colors duration-200">Modelos Disponibles</Link>
+               <Link to="/sistema-constructivo" className="hover:text-brand-gold transition-colors duration-200">Tecnología SIP</Link>
+               <Link to="/obras" className="hover:text-brand-gold transition-colors duration-200">Proyectos Entregados</Link>
+            </nav>
+          </div>
 
-        <address style={{ fontStyle: 'normal' }}>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-            📧 <a href="mailto:info@almamod.com.ar" style={{ color: 'inherit', textDecoration: 'none' }}>info@almamod.com.ar</a>
-          </p>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-            📍 C. la Caña de Azúcar 18, Q8300, Neuquén, Argentina
-          </p>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-            📞 <a href="tel:+542994087106" style={{ color: 'inherit', textDecoration: 'none' }}>+54 299 408-7106</a>
-          </p>
-        </address>
-
-        <p style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem', marginTop: '1rem' }}>
-          &copy; 2025 AlmaMod - Construcción Modular. Todos los derechos reservados.
-        </p>
+          {/* Columna 3: Contacto */}
+          <div className="flex flex-col items-center md:items-start">
+            <h4 className="font-semibold mb-4 text-brand-gold">Contacto</h4>
+            <address className="not-italic flex flex-col gap-2 opacity-80">
+              <a href="mailto:info@almamod.com.ar" className="hover:text-brand-gold transition-colors duration-200 flex items-center gap-2">
+                <span>📧</span> info@almamod.com.ar
+              </a>
+              <a href="tel:+5492994087106" className="hover:text-brand-gold transition-colors duration-200 flex items-center gap-2">
+                <span>📞</span> +54 9 299 408-7106
+              </a>
+              <p className="flex items-center gap-2">
+                <span>📍</span> Neuquén Capital, Argentina
+              </p>
+            </address>
+          </div>
+        </div>
+        
+        {/* Copyright Bar */}
+        <div className="text-center mt-8 pt-8 border-t border-gray-300 dark:border-gray-800 opacity-60 text-sm">
+          © {new Date().getFullYear()} AlmaMod. Todos los derechos reservados.
+        </div>
       </footer>
     </div>
   );
