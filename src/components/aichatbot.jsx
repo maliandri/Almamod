@@ -79,7 +79,12 @@ function AIChatBot() {
     setIsTyping(true);
     detectContactInfo(text);
     try {
-      const response = await sendMessageToGemini(text, userData.name);
+      // ✅ FIX: Pasar el historial de mensajes formateado correctamente
+      const history = messages.map(msg => ({
+        sender: msg.isBot ? 'model' : 'user',
+        text: msg.text
+      }));
+      const response = await sendMessageToGemini(text, history);
       setIsTyping(false);
       addBotMessage(response);
     } catch (error) {
