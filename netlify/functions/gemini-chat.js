@@ -59,7 +59,7 @@ export async function handler(event) {
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY_SECRET);
     const model = genAI.getGenerativeModel({
-      model: "gemini-pro",
+      model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.7,
         topK: 40,
