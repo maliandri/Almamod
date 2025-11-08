@@ -21,6 +21,10 @@ import SEO from './components/SEO.jsx';
 // Componente para la página de inicio
 // ====================================================================
 function HomePage() {
+  const location = useLocation();
+  // Detectar si estamos en una ruta modal (no es la home)
+  const isModalRoute = location.pathname !== '/';
+
   return (
     <>
       <SEO
@@ -29,6 +33,7 @@ function HomePage() {
         keywords="casas modulares neuquen, construccion rapida, paneles sip precio, viviendas prefabricadas, construccion modular patagonia, almamod, propanel neuquen"
         canonical="/"
         image="/assets/almamod.webp"
+        noindex={isModalRoute}
       />
       <section className="animation-section">
         <div className="animation-content-wrapper">
