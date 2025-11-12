@@ -67,6 +67,10 @@ function SEO({
       <meta name="geo.position" content="-38.9516;-68.0591" />
       <meta name="ICBM" content="-38.9516, -68.0591" />
 
+      {/* --- Hreflang (sitio monoidioma español) --- */}
+      <link rel="alternate" hrefLang="es-AR" href={fullCanonicalUrl} />
+      <link rel="alternate" hrefLang="x-default" href={fullCanonicalUrl} />
+
       {/* --- SCHEMA.ORG (DATOS ESTRUCTURADOS) --- */}
       {schema && (
         <script type="application/ld+json">

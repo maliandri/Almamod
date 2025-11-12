@@ -50,7 +50,7 @@ export const PAGE_METADATA = {
   // ===================================================================
   tiendaalma: {
     title: 'Tienda Alma - Catálogo Viviendas Modulares | Precios 2025',
-    description: 'Catálogo completo de casas modulares desde $15.300.000. Módulos desde 12m² hasta 36m². MiCasita, Alma 18, Alma 27, Alma 36 y Alma Refugio. Entrega en 30 días.',
+    description: 'Casas modulares desde $15.300.000. Módulos 12m² a 36m². MiCasita, Alma 18, 27, 36 y Refugio. Entrega en 30 días.',
     keywords: [
       'tienda casas modulares',
       'catalogo viviendas modulares',
@@ -77,7 +77,7 @@ export const PAGE_METADATA = {
   // ===================================================================
   sistemaConstructivo: {
     title: 'Sistema Constructivo Paneles SIP PROPANEL | Certificación EDGE',
-    description: 'Tecnología de construcción modular con Paneles SIP PROPANEL. Certificación EDGE Advanced del Banco Mundial. 40% ahorro energético. Sismo-resistente según normativa INPRES-CIRSOC.',
+    description: 'Paneles SIP PROPANEL con EDGE Advanced. 40% ahorro energético. Sismo-resistente INPRES-CIRSOC. Construcción modular certificada.',
     keywords: [
       'paneles sip propanel',
       'sistema constructivo sip',
@@ -104,7 +104,7 @@ export const PAGE_METADATA = {
   // ===================================================================
   obras: {
     title: 'Nuestras Obras - Proyectos Entregados | AlmaMod',
-    description: 'Galería de proyectos de construcción modular entregados en Neuquén y Patagonia. Viviendas, cabañas y módulos habitacionales con Paneles SIP PROPANEL.',
+    description: 'Galería de construcción modular en Neuquén y Patagonia. Viviendas, cabañas y módulos con Paneles SIP PROPANEL.',
     keywords: [
       'obras construccion modular',
       'proyectos casas modulares',
@@ -129,7 +129,7 @@ export const PAGE_METADATA = {
   // ===================================================================
   ubicacion: {
     title: 'Ubicación y Contacto | AlmaMod Neuquén',
-    description: 'Visitá nuestro showroom en Neuquén Capital. C. la Caña de Azúcar 18, Q8300. WhatsApp: +54 299 408-7106. Email: info@almamod.com.ar. Horario: Lun-Vie 9-18hs.',
+    description: 'Showroom Neuquén Capital. Caña de Azúcar 18, Q8300. WhatsApp: +54 299 408-7106. Lun-Vie 9-18hs.',
     keywords: [
       'almamod ubicacion',
       'showroom neuquen',

@@ -18,33 +18,11 @@
   </url>
 
   <!-- ========================================== -->
-  <!-- SISTEMA CONSTRUCTIVO                       -->
+  <!-- NOTAS: /sistema-constructivo, /obras y     -->
+  <!-- /ubicacion son modales sobre la home.      -->
+  <!-- NO se incluyen en sitemap (noindex=true)   -->
   <!-- ========================================== -->
-  <url>
-    <loc>https://almamod.com.ar/sistema-constructivo</loc>
-    <lastmod>2025-11-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
 
-  <!-- ========================================== -->
-  <!-- OBRAS                                      -->
-  <!-- ========================================== -->
-  <url>
-    <loc>https://almamod.com.ar/obras</loc>
-    <lastmod>2025-11-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_OBRA_1.webp</image:loc>
-      <image:title>Obra AlmaMod - Neuquén Capital</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_OBRA_2.webp</image:loc>
-      <image:title>Cabaña Patagónica - Villa La Angostura</image:title>
-    </image:image>
-  </url>
-  
   <!-- ========================================== -->
   <!-- TIENDA ALMA - CATÁLOGO                     -->
   <!-- ========================================== -->
