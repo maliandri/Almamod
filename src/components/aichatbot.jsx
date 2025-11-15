@@ -70,6 +70,36 @@ function AIChatBot() {
     return false;
   };
 
+  const sendLeadToServer = async () => {
+    try {
+      const response = await fetch('/.netlify/functions/saveLead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userName: userData.name,
+          userEmail: userData.email,
+          userPhone: userData.phone
+        })
+      });
+
+      if (response.ok) {
+        console.log('✅ Lead enviado correctamente a info@almamod.com.ar');
+      }
+    } catch (error) {
+      console.error('❌ Error enviando lead:', error);
+    }
+  };
+
+  const detectContactRequest = (text) => {
+    const contactKeywords = [
+      'contactar', 'contacto', 'llamar', 'llamame', 'llámame',
+      'escribir', 'enviar', 'comunicar', 'asesor', 'humano',
+      'whatsapp', 'telefono', 'teléfono', 'mail', 'email'
+    ];
+    const lowerText = text.toLowerCase();
+    return contactKeywords.some(keyword => lowerText.includes(keyword));
+  };
+
   const handleSendMessage = async (textOverride = null) => {
     const text = textOverride || inputValue.trim();
     if (!text) return;
@@ -78,6 +108,10 @@ function AIChatBot() {
     setShowQuickReplies(false);
     setIsTyping(true);
     detectContactInfo(text);
+
+    // Detectar si el usuario pide ser contactado
+    const wantsContact = detectContactRequest(text);
+
     try {
       // ✅ FIX: Pasar el historial de mensajes formateado correctamente
       const history = messages.map(msg => ({
@@ -87,6 +121,11 @@ function AIChatBot() {
       const response = await sendMessageToGemini(text, history);
       setIsTyping(false);
       addBotMessage(response);
+
+      // Si el usuario pide contacto y tenemos al menos un dato, enviar lead
+      if (wantsContact && (userData.name || userData.email || userData.phone)) {
+        setTimeout(() => sendLeadToServer(), 500);
+      }
     } catch (error) {
       setIsTyping(false);
       addBotMessage("Tuve un pequeño lapsus. ¿Me lo repetís?");
