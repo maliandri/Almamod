@@ -177,7 +177,7 @@ html:not(.dark) {
     right: 15px !important;
     width: 55px !important;
     height: 55px !important;
-    z-index: 9999999 !important;
+    z-index: 2147483647 !important;
   }
 
   .almamod-chat-button-icon {

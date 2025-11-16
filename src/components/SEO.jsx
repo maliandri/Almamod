@@ -1,82 +1,87 @@
+// ============================================
+// SEO.JSX - Componente SEO optimizado
+// ============================================
+// Maneja metadata dinámica con React Helmet
+// ELIMINADO: keywords, hreflang, geo tags
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { SITE_CONFIG, ROBOTS_CONFIG } from '../seo';
 
-function SEO({ 
-  title, 
-  description, 
-  keywords, 
-  canonical, 
-  image, 
+function SEO({
+  title,
+  description,
+  canonical,
+  image,
   type = 'website',
   noindex = false,
-  schema = null // NUEVO: Soporte para datos estructurados
+  schemas = [] // Array de schemas JSON-LD
 }) {
-  const siteUrl = 'https://almamod.com.ar';
-
-  // ✅ NORMALIZACIÓN DE URL CANÓNICA (Evita duplicados con/sin trailing slash)
+  // ============================================
+  // NORMALIZACIÓN DE URL CANÓNICA
+  // ============================================
   const fullCanonicalUrl = (() => {
-    if (!canonical) return `${siteUrl}/`;
+    if (!canonical) return `${SITE_CONFIG.url}/`;
     if (canonical.startsWith('http')) return canonical;
 
     // Asegurar que canonical comienza con /
     const cleanPath = canonical.startsWith('/') ? canonical : `/${canonical}`;
 
-    // ⚠️ IMPORTANTE: Remover trailing slash excepto para root (/)
-    // Esto evita duplicados: /tiendaalma vs /tiendaalma/
+    // Remover trailing slash excepto para root (/)
     const normalizedPath = cleanPath === '/' ? '/' : cleanPath.replace(/\/$/, '');
 
-    return `${siteUrl}${normalizedPath}`;
+    return `${SITE_CONFIG.url}${normalizedPath}`;
   })();
 
-  const fullTitle = title ? `${title} | AlmaMod` : 'AlmaMod - Construcción Modular';
-  
-  // Si keywords es un array, lo unimos con comas. Si es string, lo dejamos igual.
-  const metaKeywords = Array.isArray(keywords) ? keywords.join(', ') : keywords;
+  // ============================================
+  // TITLE FINAL
+  // ============================================
+  const fullTitle = title ? `${title} | ${SITE_CONFIG.name}` : `${SITE_CONFIG.name} - Construcción Modular`;
 
-  const metaImage = image 
-    ? (image.startsWith('http') ? image : `${siteUrl}${image}`)
-    : `${siteUrl}/og-image-default.jpg`;
+  // ============================================
+  // IMAGE OPTIMIZATION
+  // ============================================
+  const metaImage = image
+    ? (image.startsWith('http') ? image : `${SITE_CONFIG.url}${image}`)
+    : `${SITE_CONFIG.url}${SITE_CONFIG.images.ogDefault}`;
+
+  // ============================================
+  // ROBOTS META
+  // ============================================
+  const robotsContent = noindex ? ROBOTS_CONFIG.noindex : ROBOTS_CONFIG.index;
 
   return (
     <Helmet>
-      {/* --- Tags Básicos --- */}
+      {/* --- BÁSICOS --- */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
-      {metaKeywords && <meta name="keywords" content={metaKeywords} />}
       <link rel="canonical" href={fullCanonicalUrl} />
-      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="robots" content={robotsContent} />
+      <meta name="googlebot" content={robotsContent} />
 
-      {/* --- Open Graph --- */}
+      {/* --- OPEN GRAPH --- */}
       <meta property="og:type" content={type} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={fullCanonicalUrl} />
       <meta property="og:image" content={metaImage} />
-      <meta property="og:site_name" content="AlmaMod" />
-      <meta property="og:locale" content="es_AR" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:site_name" content={SITE_CONFIG.name} />
+      <meta property="og:locale" content={SITE_CONFIG.locale} />
 
-      {/* --- Twitter --- */}
+      {/* --- TWITTER CARDS --- */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={metaImage} />
 
-      {/* --- Geo Tags --- */}
-      <meta name="geo.region" content="AR-Q" />
-      <meta name="geo.placename" content="Neuquén" />
-      <meta name="geo.position" content="-38.9516;-68.0591" />
-      <meta name="ICBM" content="-38.9516, -68.0591" />
-
-      {/* --- Hreflang (sitio monoidioma español) --- */}
-      <link rel="alternate" hrefLang="es-AR" href={fullCanonicalUrl} />
-      <link rel="alternate" hrefLang="x-default" href={fullCanonicalUrl} />
-
-      {/* --- SCHEMA.ORG (DATOS ESTRUCTURADOS) --- */}
-      {schema && (
-        <script type="application/ld+json">
+      {/* --- SCHEMAS JSON-LD --- */}
+      {schemas.length > 0 && schemas.map((schema, index) => (
+        <script key={`schema-${index}`} type="application/ld+json">
           {JSON.stringify(schema)}
         </script>
-      )}
+      ))}
     </Helmet>
   );
 }

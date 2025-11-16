@@ -6,6 +6,7 @@ import './TiendaAlma.css';
 
 // ✅ IMPORTAR SEO
 import SEO from './SEO';
+import { PAGES, PRODUCTS, generateProductSchema, generateBreadcrumbSchema, combineSchemas } from '../seo';
 
 // ✅ IMPORTAR CLOUDINARY
 import { getCloudinaryUrl, getVideoUrl, IMG_CARD, IMG_DETAIL, IMG_THUMB } from '../config/cloudinary';
@@ -807,102 +808,55 @@ function TiendaAlma() {
     <>
       {/* ✅ SEO OPTIMIZADO PARA CATÁLOGO */}
       {isOpen && !selectedModule && (
-        <SEO 
-          title="Tienda Alma - Catálogo Viviendas Modulares | Precios 2025"
-          description="Catálogo completo de casas modulares desde $15.300.000. Módulos desde 12m² hasta 36m². MiCasita, Alma 18, Alma 27, Alma 36 y Alma Refugio. Entrega en 30 días. Construcción modular llave en mano certificada EDGE."
-          keywords="tienda casas modulares, catalogo viviendas modulares, precios casas prefabricadas neuquen, modulos habitacionales 2025, micasita precio, alma 36 precio, casas modulares llave en mano"
-          canonical="/tiendaalma"
+        <SEO
+          title={PAGES.tiendaalma.title}
+          description={PAGES.tiendaalma.description}
+          canonical={PAGES.tiendaalma.canonical}
+          image={PAGES.tiendaalma.image}
+          type={PAGES.tiendaalma.type}
         />
       )}
 
-      {/* ✅ SEO MEJORADO PARA PRODUCTO ESPECÍFICO - CON KEYWORDS AMPLIADAS */}
-      {selectedModule && (
-        <SEO 
-          title={`${selectedModule.nombre} ${selectedModule.superficie} - ${selectedModule.habitaciones} | Precio ${formatearPrecio(selectedModule.precio)}`}
-          description={`${selectedModule.descripcion} Precio llave en mano: ${formatearPrecio(selectedModule.precio)}. Incluye: ${selectedModule.incluye.join(', ')}. Entrega garantizada en ${selectedModule.plazo}. ${selectedModule.keywordsPrincipales.slice(0, 2).join(', ')}.`}
-          keywords={`${selectedModule.nombre}, ${selectedModule.keywordsPrincipales.join(', ')}, ${selectedModule.superficie}, ${selectedModule.habitaciones}, precio ${selectedModule.nombre.toLowerCase()}, ${formatearPrecio(selectedModule.precio)}`}
-          canonical={`/tiendaalma/${selectedModule.slug}`}
-          type="product"
-          image={getCloudinaryUrl(selectedModule.imagenPortada, IMG_DETAIL)}
-          product={{
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": `${selectedModule.nombre} - ${selectedModule.superficie}`,
-            "image": getCloudinaryUrl(selectedModule.imagenPortada, IMG_DETAIL),
-            "description": selectedModule.descripcion,
-            "sku": `ALMA-${selectedModule.id.toUpperCase()}`,
-            "brand": {
-              "@type": "Brand",
-              "name": "AlmaMod"
-            },
-            "offers": {
-              "@type": "Offer",
-              "url": `https://www.almamod.com.ar/tiendaalma/${selectedModule.slug}`,
-              "priceCurrency": "ARS",
-              "price": selectedModule.precio,
-              "priceValidUntil": "2025-12-31",
-              "availability": "https://schema.org/PreOrder",
-              "itemCondition": "https://schema.org/NewCondition",
-              "seller": {
-                "@type": "Organization",
-                "name": "AlmaMod"
-              },
-              "deliveryLeadTime": {
-                "@type": "QuantitativeValue",
-                "value": 30,
-                "unitCode": "DAY"
-              }
-            },
-            "additionalProperty": [
-              {
-                "@type": "PropertyValue",
-                "name": "Superficie",
-                "value": selectedModule.superficie
-              },
-              {
-                "@type": "PropertyValue",
-                "name": "Habitaciones",
-                "value": selectedModule.habitaciones
-              },
-              {
-                "@type": "PropertyValue",
-                "name": "Dimensiones",
-                "value": selectedModule.dimensiones
-              },
-              {
-                "@type": "PropertyValue",
-                "name": "Plazo de entrega",
-                "value": selectedModule.plazo
-              }
-            ],
-            "category": "Vivienda Modular"
-          }}
-          breadcrumb={{
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Inicio",
-                "item": "https://www.almamod.com.ar"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Tienda Alma",
-                "item": "https://www.almamod.com.ar/tiendaalma"
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": selectedModule.nombre,
-                "item": `https://www.almamod.com.ar/tiendaalma/${selectedModule.slug}`
-              }
-            ]
-          }}
-        />
-      )}
+      {/* ✅ SEO MEJORADO PARA PRODUCTO ESPECÍFICO */}
+      {selectedModule && (() => {
+        // Mapear slug del módulo a clave de PRODUCTS
+        const productKey = selectedModule.slug.replace(/-/g, '');
+        const productMeta = PRODUCTS[productKey];
+
+        if (!productMeta) {
+          // Fallback si no existe en PRODUCTS
+          return (
+            <SEO
+              title={`${selectedModule.nombre} ${selectedModule.superficie}`}
+              description={selectedModule.descripcion}
+              canonical={`/tiendaalma/${selectedModule.slug}`}
+              image={getCloudinaryUrl(selectedModule.imagenPortada, IMG_DETAIL)}
+              type="product"
+            />
+          );
+        }
+
+        // Generar schemas usando helpers
+        const productSchema = generateProductSchema(productMeta.productData, productMeta.slug);
+        const breadcrumbSchema = generateBreadcrumbSchema([
+          { name: 'Inicio', url: '/' },
+          { name: 'Tienda Alma', url: '/tiendaalma' },
+          { name: selectedModule.nombre, url: `/tiendaalma/${selectedModule.slug}` }
+        ]);
+
+        const schemas = [productSchema, breadcrumbSchema];
+
+        return (
+          <SEO
+            title={productMeta.title}
+            description={productMeta.description}
+            canonical={productMeta.canonical}
+            image={getCloudinaryUrl(selectedModule.imagenPortada, IMG_DETAIL)}
+            type="product"
+            schemas={schemas}
+          />
+        );
+      })()}
 
       <motion.button 
         className="floating-button tienda-button"

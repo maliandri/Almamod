@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCloudinaryUrl, IMG_DETAIL } from '../config/cloudinary';
 import SEO from './SEO';
+import { PAGES } from '../seo';
 
 const GalleryIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -165,11 +166,12 @@ function ObrasCarousel({ isOpen: isOpenProp, onClose: onCloseProp }) {
       {/* ✅ SEO OPTIMIZADO PARA OBRAS */}
       {isOpen && (
         <SEO
-          title="Nuestras Obras - Casas Modulares Construidas | AlmaMod Neuquén"
-          description="Galería de casas modulares construidas por AlmaMod en Neuquén y Patagonia. Proyectos reales de viviendas con Paneles SIP PROPANEL. Construcción modular certificada, entrega en 30 días."
-          keywords="obras casas modulares neuquen, proyectos viviendas modulares patagonia, galeria construccion modular, casas prefabricadas construidas, portfolio almamod"
-          canonical="/obras"
-          image={obras[0] ? getCloudinaryUrl(obras[0].imagen, IMG_DETAIL) : '/assets/almamod.webp'}
+          title={PAGES.obras.title}
+          description={PAGES.obras.description}
+          canonical={PAGES.obras.canonical}
+          image={obras[0] ? getCloudinaryUrl(obras[0].imagen, IMG_DETAIL) : PAGES.obras.image}
+          type={PAGES.obras.type}
+          noindex={PAGES.obras.noindex}
         />
       )}
 

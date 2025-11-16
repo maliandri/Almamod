@@ -17,18 +17,31 @@ import AIChatBot from './components/aichatbot';
 import ThemeToggle from './components/ThemeToggle.jsx';
 import SEO from './components/SEO.jsx';
 
+// --- SEO Imports ---
+import { PAGES, generateOrganizationSchema, generateWebSiteSchema, generateFAQSchema, GENERAL_FAQ } from './seo';
+
 // ====================================================================
 // Componente para la página de inicio
 // ====================================================================
 function HomePage() {
+  const homeData = PAGES.home;
+
+  // Generar schemas para home
+  const schemas = [
+    generateOrganizationSchema(),
+    generateWebSiteSchema(),
+    generateFAQSchema(GENERAL_FAQ)
+  ];
+
   return (
     <>
       <SEO
-        title="AlmaMod - Casas Modulares en Neuquén | Construcción Rápida con Paneles SIP"
-        description="Viviendas modulares certificadas en Neuquén. Entrega en 30 días. Paneles SIP PROPANEL con certificación EDGE Advanced. Desde $15.300.000. Construcción sustentable, sismo-resistente y eficiente."
-        keywords="casas modulares neuquen, construccion rapida, paneles sip precio, viviendas prefabricadas, construccion modular patagonia, almamod, propanel neuquen"
-        canonical="/"
-        image="/assets/almamod.webp"
+        title={homeData.title}
+        description={homeData.description}
+        canonical={homeData.canonical}
+        image={homeData.image}
+        type={homeData.type}
+        schemas={schemas}
       />
       <section className="animation-section">
         <div className="animation-content-wrapper">

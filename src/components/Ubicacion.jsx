@@ -6,6 +6,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Ubicacion.css';
 import SEO from './SEO';
+import { PAGES } from '../seo';
 
 // Fix para el icono del marcador de Leaflet
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -39,11 +40,12 @@ function Ubicacion({ isOpen: isOpenProp, onClose: onCloseProp }) {
       {/* ✅ SEO CON NOINDEX PARA UBICACIÓN (solo contacto, no aporta SEO) */}
       {isOpen && (
         <SEO
-          title="Ubicación y Contacto | AlmaMod Neuquén"
-          description="Visitá nuestro showroom en Neuquén Capital. C. la Caña de Azúcar 18, Q8300 Neuquén. Atención: Lunes a Viernes 9-18hs. WhatsApp: +54 299 408-7106"
-          keywords="ubicacion almamod, showroom casas modulares neuquen, contacto almamod"
-          canonical="/ubicacion"
-          noindex={true}
+          title={PAGES.ubicacion.title}
+          description={PAGES.ubicacion.description}
+          canonical={PAGES.ubicacion.canonical}
+          image={PAGES.ubicacion.image}
+          type={PAGES.ubicacion.type}
+          noindex={PAGES.ubicacion.noindex}
         />
       )}
 

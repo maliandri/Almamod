@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { getCloudinaryUrl, IMG_CARD } from '../config/cloudinary';
 import './SistemaConstructivo.css';
 import SEO from './SEO';
+import { PAGES } from '../seo';
 
 // Ícono del botón con imagen de PROPANEL - EXPORTADO
 export const SistemaConstructivoIcon = () => (
@@ -156,11 +157,12 @@ function SistemaConstructivo({ isOpen, onClose }) {
     <AnimatePresence>
       {/* ✅ SEO OPTIMIZADO PARA SISTEMA CONSTRUCTIVO */}
       <SEO
-        title="Sistema Constructivo PROPANEL - Paneles SIP | AlmaMod Neuquén"
-        description="Sistema constructivo con Paneles SIP PROPANEL certificados EDGE Advanced y CACMI. Eficiencia energética superior, construcción rápida, sismo-resistente. Tecnología térmica para Patagonia."
-        keywords="paneles sip propanel, sistema constructivo sip, construccion modular neuquen, paneles termicos patagonia, certificacion edge, construccion sustentable, aislacion termica"
-        canonical="/sistema-constructivo"
-        image="/assets/propanel.webp"
+        title={PAGES.sistemaConstructivo.title}
+        description={PAGES.sistemaConstructivo.description}
+        canonical={PAGES.sistemaConstructivo.canonical}
+        image={PAGES.sistemaConstructivo.image}
+        type={PAGES.sistemaConstructivo.type}
+        noindex={PAGES.sistemaConstructivo.noindex}
       />
       <motion.div
         className="modal-overlay"

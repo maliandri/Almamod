@@ -1,29 +1,22 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html lang="es-AR" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- ============================================
-       SCRIPT PARA PREVENIR FLASH DE TEMA
-       Este script se ejecuta ANTES de cargar React
-       para aplicar el tema inmediatamente
-       ============================================ -->
-  <script>
-    (function() {
-      // Obtener tema guardado o preferencia del sistema
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      // Aplicar tema inmediatamente (antes de que React cargue)
-      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    })();
-  </script>
-  
+  <meta name="theme-color" content="#000000" />
+
+  <!-- ========== FAVICON ========== -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+
+  <!-- ========== PRECONNECT OPTIMIZATION ========== -->
+  <link rel="preconnect" href="https://res.cloudinary.com" />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
   <!-- ========== GOOGLE TAG MANAGER ========== -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -31,151 +24,23 @@
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-KVXWRFQZ');</script>
   <!-- End Google Tag Manager -->
-  
-  <!-- ========== GOOGLE SEARCH CONSOLE VERIFICATION ========== -->
+
+  <!-- ========== GOOGLE SEARCH CONSOLE ========== -->
   <meta name="google-site-verification" content="C4FoHxvgUpXe-yiDJsA2H7nkALu4pRIHxR0io_0MdIM" />
-  
-  <!-- ========== FAVICON - Logo de AlmaMod ========== -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
-  <meta name="theme-color" content="#000000" />
-  
-  <!-- ========== META TAGS BÁSICOS ========== -->
-  <!-- ✅ TÍTULO OPTIMIZADO (menos de 580px) -->
-  <title>AlmaMod - Casas Modulares Neuquén | Paneles SIP</title>
-  <meta name="description" content="Viviendas modulares certificadas en Neuquén. Entrega en 30 días. Paneles SIP PROPANEL con certificación EDGE Advanced. Desde $15.300.000. Construcción sustentable y sismo-resistente." />
-  <meta name="keywords" content="casas modulares neuquen, construccion rapida, paneles sip precio, viviendas prefabricadas, construccion modular patagonia, almamod, propanel neuquen" />
-  <meta name="author" content="AlmaMod - Construcción Modular" />
-  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
-  <!-- ========== CANONICAL URL (CRÍTICO PARA SEO) ========== -->
-  <link rel="canonical" href="https://almamod.com.ar/" />
+  <!-- ========== THEME FLASH PREVENTION ========== -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  <!-- ========== IDIOMA Y LOCALIZACIÓN ========== -->
-  <link rel="alternate" hreflang="es-ar" href="https://almamod.com.ar/" />
-  <link rel="alternate" hreflang="x-default" href="https://almamod.com.ar/" />
-  
-  <!-- ========== GEO META TAGS ========== -->
-  <meta name="geo.region" content="AR-Q" />
-  <meta name="geo.placename" content="Neuquén, Argentina" />
-  <meta name="geo.position" content="-38.9516;-68.0591" />
-  <meta name="ICBM" content="-38.9516, -68.0591" />
-  
-  <!-- ========== OPEN GRAPH TAGS ========== -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="AlmaMod - Casas Modulares Neuquén | Paneles SIP" />
-  <meta property="og:description" content="Viviendas modulares certificadas en Neuquén. Entrega en 30 días. Paneles SIP PROPANEL con certificación EDGE Advanced." />
-  <meta property="og:url" content="https://almamod.com.ar/" />
-  <meta property="og:site_name" content="AlmaMod" />
-  <meta property="og:locale" content="es_AR" />
-  <meta property="og:image" content="https://almamod.com.ar/og-image.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-
-  <!-- ========== TWITTER CARDS ========== -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="AlmaMod - Casas Modulares Neuquén | Paneles SIP" />
-  <meta name="twitter:description" content="Viviendas modulares certificadas en Neuquén. Entrega en 30 días. Paneles SIP PROPANEL con certificación EDGE Advanced." />
-  <meta name="twitter:image" content="https://almamod.com.ar/og-image.jpg" />
-
-  <!-- ========== PRECONNECT & DNS-PREFETCH ========== -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://res.cloudinary.com" />
-  <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  
-  <!-- ========== SCHEMA.ORG - ORGANIZATION ========== -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "AlmaMod",
-    "alternateName": "AlmaMod Construcción Modular",
-    "url": "https://almamod.com.ar",
-    "logo": "https://almamod.com.ar/android-chrome-512x512.png",
-    "description": "Empresa de construcción modular especializada en viviendas sustentables con Paneles SIP PROPANEL en Neuquén, Patagonia Argentina.",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "C. la Caña de Azúcar 18",
-      "addressLocality": "Neuquén",
-      "addressRegion": "Neuquén",
-      "postalCode": "8300",
-      "addressCountry": "AR"
-    },
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+54-299-408-7106",
-      "contactType": "Ventas",
-      "availableLanguage": ["es"],
-      "areaServed": ["AR-Q", "AR-R"]
-    },
-    "sameAs": [
-      "https://www.facebook.com/almamod",
-      "https://www.instagram.com/almamod"
-    ]
-  }
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
   </script>
-  
-  <!-- ========== SCHEMA.ORG - LOCAL BUSINESS ========== -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "AlmaMod - Construcción Modular",
-    "image": "https://almamod.com.ar/android-chrome-512x512.png",
-    "@id": "https://almamod.com.ar",
-    "url": "https://almamod.com.ar",
-    "telephone": "+54-299-408-7106",
-    "priceRange": "$$$$",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "C. la Caña de Azúcar 18",
-      "addressLocality": "Neuquén",
-      "addressRegion": "Neuquén",
-      "postalCode": "8300",
-      "addressCountry": "AR"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": -38.9516,
-      "longitude": -68.0591
-    },
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
-      ],
-      "opens": "09:00",
-      "closes": "18:00"
-    }
-  }
-  </script>
-  
-  <!-- ========== SCHEMA.ORG - WEBSITE ========== -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "AlmaMod",
-    "url": "https://almamod.com.ar",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://almamod.com.ar/tiendaalma?search={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  }
-  </script>
-  
 </head>
 <body>
   <!-- ========== GOOGLE TAG MANAGER (noscript) ========== -->
@@ -183,110 +48,25 @@
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <!-- ========== CONTENIDO ESTÁTICO PARA SEO (HIDDEN AFTER JS LOADS) ========== -->
-  <!-- Este contenido es visible para crawlers pero se oculta cuando React monta -->
+  <!-- ========== FALLBACK PARA USUARIOS SIN JS ========== -->
   <noscript>
-    <div style="max-width: 1200px; margin: 0 auto; padding: 2rem; font-family: system-ui, -apple-system, sans-serif;">
-      <header style="text-align: center; margin-bottom: 3rem;">
-        <img src="/android-chrome-512x512.png" alt="Logo AlmaMod" style="width: 120px; height: auto; margin-bottom: 1rem;" />
-        <h1 style="font-size: 2.5rem; color: #1a1a1a; margin-bottom: 1rem;">AlmaMod - Construcción Modular en Neuquén</h1>
-        <p style="font-size: 1.25rem; color: #4a4a4a;">Casas modulares sustentables con Paneles SIP PROPANEL</p>
-      </header>
-
-      <main>
-        <section style="margin-bottom: 3rem;">
-          <h2 style="font-size: 2rem; color: #1a1a1a; margin-bottom: 1rem;">Viviendas Modulares Certificadas</h2>
-          <p style="font-size: 1.1rem; line-height: 1.8; color: #333;">
-            Construimos viviendas modulares sustentables en Neuquén con Paneles SIP PROPANEL.
-            Sistema constructivo certificado EDGE Advanced por el Banco Mundial, CACMI (Centro de Arquitectura,
-            Construcción y Mobiliario de Industria), y sismo-resistente según normativa argentina.
-          </p>
-          <p style="font-size: 1.1rem; line-height: 1.8; color: #333;">
-            <strong>Entrega garantizada en 30 días.</strong> Modelos desde $15.300.000 ARS.
-          </p>
-        </section>
-
-        <section style="margin-bottom: 3rem;">
-          <h2 style="font-size: 2rem; color: #1a1a1a; margin-bottom: 1rem;">¿Qué son los Paneles SIP?</h2>
-          <p style="font-size: 1.1rem; line-height: 1.8; color: #333;">
-            Los Paneles SIP (Structural Insulated Panels) son paneles estructurales aislados compuestos por
-            un núcleo de poliestireno expandido (EPS) de alta densidad, revestido por ambos lados con placas
-            de OSB (Oriented Strand Board). Este sistema constructivo ofrece:
-          </p>
-          <ul style="font-size: 1.1rem; line-height: 2; color: #333; margin-left: 2rem;">
-            <li><strong>Eficiencia energética:</strong> Hasta 60% de ahorro en calefacción y refrigeración</li>
-            <li><strong>Construcción rápida:</strong> Reducción de tiempos de obra hasta 70%</li>
-            <li><strong>Sustentabilidad:</strong> Menor huella de carbono y materiales reciclables</li>
-            <li><strong>Resistencia estructural:</strong> Certificado para zonas sísmicas</li>
-            <li><strong>Aislación térmica y acústica:</strong> Confort superior durante todo el año</li>
-          </ul>
-        </section>
-
-        <section style="margin-bottom: 3rem;">
-          <h2 style="font-size: 2rem; color: #1a1a1a; margin-bottom: 1rem;">Certificaciones y Garantías</h2>
-          <h3 style="font-size: 1.5rem; color: #2a2a2a; margin-bottom: 0.75rem;">EDGE Advanced (Banco Mundial)</h3>
-          <p style="font-size: 1.1rem; line-height: 1.8; color: #333;">
-            Certificación internacional que garantiza eficiencia en consumo de energía, agua y materiales.
-          </p>
-
-          <h3 style="font-size: 1.5rem; color: #2a2a2a; margin-bottom: 0.75rem; margin-top: 1.5rem;">CACMI</h3>
-          <p style="font-size: 1.1rem; line-height: 1.8; color: #333;">
-            Centro de Arquitectura, Construcción y Mobiliario de Industria. Certificación nacional argentina.
-          </p>
-
-          <h3 style="font-size: 1.5rem; color: #2a2a2a; margin-bottom: 0.75rem; margin-top: 1.5rem;">Sismo-resistente</h3>
-          <p style="font-size: 1.1rem; line-height: 1.8; color: #333;">
-            Cumple con normativa INPRES-CIRSOC para construcciones en zonas sísmicas de Argentina.
-          </p>
-        </section>
-
-        <section style="margin-bottom: 3rem;">
-          <h2 style="font-size: 2rem; color: #1a1a1a; margin-bottom: 1rem;">Nuestros Servicios</h2>
-          <ul style="font-size: 1.1rem; line-height: 2; color: #333; margin-left: 2rem;">
-            <li>Viviendas modulares personalizadas</li>
-            <li>Ampliaciones y refacciones</li>
-            <li>Locales comerciales modulares</li>
-            <li>Oficinas y espacios de trabajo</li>
-            <li>Construcción tradicional (obra húmeda)</li>
-            <li>Servicio de arquitectura y diseño</li>
-          </ul>
-        </section>
-
-        <section style="margin-bottom: 3rem;">
-          <h2 style="font-size: 2rem; color: #1a1a1a; margin-bottom: 1rem;">Ubicación</h2>
-          <p style="font-size: 1.1rem; line-height: 1.8; color: #333;">
-            <strong>Dirección:</strong> C. la Caña de Azúcar 18, Q8300, Neuquén, Argentina<br />
-            <strong>Teléfono:</strong> <a href="tel:+542994087106" style="color: #d4a574;">+54 299 408-7106</a><br />
-            <strong>Email:</strong> <a href="mailto:info@almamod.com.ar" style="color: #d4a574;">info@almamod.com.ar</a><br />
-            <strong>Horario:</strong> Lunes a Viernes, 9:00 - 18:00 hs
-          </p>
-        </section>
-
-        <nav style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e5e5e5;">
-          <h2 style="font-size: 1.5rem; color: #1a1a1a; margin-bottom: 1rem;">Enlaces</h2>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem;"><a href="/" style="color: #d4a574; text-decoration: none;">Inicio</a></li>
-            <li style="margin-bottom: 0.5rem;"><a href="/sistema-constructivo" style="color: #d4a574; text-decoration: none;">Sistema Constructivo</a></li>
-            <li style="margin-bottom: 0.5rem;"><a href="/tiendaalma" style="color: #d4a574; text-decoration: none;">Tienda Alma</a></li>
-            <li style="margin-bottom: 0.5rem;"><a href="/obras" style="color: #d4a574; text-decoration: none;">Nuestras Obras</a></li>
-            <li style="margin-bottom: 0.5rem;"><a href="/ubicacion" style="color: #d4a574; text-decoration: none;">Ubicación</a></li>
-          </ul>
-        </nav>
-      </main>
-
-      <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 2px solid #e5e5e5; text-align: center; color: #666;">
-        <p>&copy; 2025 AlmaMod. Todos los derechos reservados.</p>
-        <p style="margin-top: 1rem;">
-          <a href="https://www.facebook.com/61578686948419" style="color: #d4a574; margin: 0 1rem;">Facebook</a>
-          <a href="https://instagram.com/_almamod_" style="color: #d4a574; margin: 0 1rem;">Instagram</a>
-          <a href="https://wa.me/542994087106" style="color: #d4a574; margin: 0 1rem;">WhatsApp</a>
-        </p>
-      </footer>
+    <div style="max-width: 800px; margin: 2rem auto; padding: 2rem; font-family: system-ui, sans-serif; text-align: center;">
+      <h1>AlmaMod - Construcción Modular en Neuquén</h1>
+      <p>Este sitio requiere JavaScript para funcionar correctamente.</p>
+      <p>Contactá con nosotros:</p>
+      <p>
+        <strong>Tel:</strong> <a href="tel:+542994087106">+54 299 408-7106</a><br />
+        <strong>Email:</strong> <a href="mailto:info@almamod.com.ar">info@almamod.com.ar</a><br />
+        <strong>WhatsApp:</strong> <a href="https://wa.me/542994087106">+54 299 408-7106</a>
+      </p>
     </div>
   </noscript>
 
+  <!-- ========== REACT APP ROOT ========== -->
   <div id="root"></div>
   <div id="modal-portal"></div>
+
+  <!-- ========== VITE ENTRY POINT ========== -->
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
