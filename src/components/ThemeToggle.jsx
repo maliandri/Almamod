@@ -47,7 +47,7 @@ function ThemeToggle() {
         position: 'fixed',
         top: '24px',
         right: '24px',
-        zIndex: 9999,
+        zIndex: 10000000,
         width: '48px',
         height: '48px',
         borderRadius: '50%',

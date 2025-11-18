@@ -317,5 +317,76 @@
       <video:duration>90</video:duration>
     </video:video>
   </url>
-  
+
+  <!-- ========================================== -->
+  <!-- CERTIFICACIONES                            -->
+  <!-- ========================================== -->
+  <url>
+    <loc>https://almamod.com.ar/cat</loc>
+    <lastmod>2025-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/CAT-CERTIFICADO_APTITUD_TECNICA.WEBP</image:loc>
+      <image:title>Certificado de Aptitud Técnica (CAT)</image:title>
+      <image:caption>Sistema constructivo PROPANEL certificado por el Ministerio de Desarrollo Territorial y Hábitat</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/cat_propanelcert.webp</image:loc>
+      <image:title>Certificado CAT - PROPANEL</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://almamod.com.ar/cas</loc>
+    <lastmod>2025-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/cat-sismoresistente-icono.webp</image:loc>
+      <image:title>Certificado de Aptitud Sismorresistente (CAS)</image:title>
+      <image:caption>Sistema PROPANEL certificado por INPRES para zonas sísmicas</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/cas_propanel_1.webp</image:loc>
+      <image:title>Certificado CAS - PROPANEL</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/zona_sismicas_argentina.webp</image:loc>
+      <image:title>Zonas Sísmicas de Argentina</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://almamod.com.ar/edge</loc>
+    <lastmod>2025-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/edge-icono.webp</image:loc>
+      <image:title>EDGE Advanced Certified</image:title>
+      <image:caption>Certificación internacional de construcción sustentable del Banco Mundial</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/edge_advance_propanelCERT.webp</image:loc>
+      <image:title>Certificado EDGE Advanced - PROPANEL</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://almamod.com.ar/cacmi</loc>
+    <lastmod>2025-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/cacmi-icono.webp</image:loc>
+      <image:title>Certificación CACMI</image:title>
+      <image:caption>Miembro certificado de la Cámara Argentina de la Construcción Modular e Industrializada</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dlshym1te/image/upload/cacmicert.webp</image:loc>
+      <image:title>Certificado CACMI</image:title>
+    </image:image>
+  </url>
+
 </urlset>

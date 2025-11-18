@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { getCloudinaryUrl, IMG_CARD } from '../config/cloudinary';
 import './SistemaConstructivo.css';
-import SEO from './SEO';
+import SEO from './seo';
 import { PAGES } from '../seo';
 
 // Ícono del botón con imagen de PROPANEL - EXPORTADO
@@ -222,7 +222,7 @@ function SistemaConstructivo({ isOpen, onClose }) {
                     </div>
 
                     <motion.a
-                      href={getCloudinaryUrl('informe_propanel_unco.pdf', IMG_CARD)}
+                      href="/informe_propanel_unco.pdf"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hero-pdf-button"

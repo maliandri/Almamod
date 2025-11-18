@@ -1,5 +1,5 @@
 // src/App.jsx - VERSIÓN FINAL CORREGIDA
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import './index.css';
@@ -11,11 +11,12 @@ import Ubicacion from './components/Ubicacion.jsx';
 import SocialButton from './components/SocialButton.jsx';
 import ServiciosCarousel from './components/ServiciosCarousel.jsx';
 import TiendaAlma from './components/TiendaAlma.jsx';
-import Certificaciones from './components/Certificaciones.jsx';
+import Certificaciones from './components/certificaciones.jsx';
+import CertificacionDetalle from './components/CertificacionDetalle.jsx';
 import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
 import AIChatBot from './components/aichatbot';
 import ThemeToggle from './components/ThemeToggle.jsx';
-import SEO from './components/SEO.jsx';
+import SEO from './components/seo.jsx';
 
 // --- SEO Imports ---
 import { PAGES, generateOrganizationSchema, generateWebSiteSchema, generateFAQSchema, GENERAL_FAQ } from './seo';
@@ -92,6 +93,9 @@ function App() {
   // ✅ Verificar si estamos en una ruta de TiendaAlma
   const isTiendaAlmaRoute = location.pathname.startsWith('/tiendaalma');
 
+  // ✅ Verificar si estamos en una ruta de Certificación
+  const isCertificacionRoute = ['cat', 'cas', 'edge', 'cacmi'].includes(location.pathname.substring(1));
+
   return (
     <div className="App">
       {/* ✅ TOGGLE DE TEMA - Posición fija superior derecha */}
@@ -146,11 +150,14 @@ function App() {
           <Route path="/tiendaalma/:slug" element={null} />
           <Route path="/obras" element={<HomePage />} />
           <Route path="/ubicacion" element={<HomePage />} />
+
+          {/* ✅ RUTAS PARA CERTIFICACIONES */}
+          <Route path="/:slug" element={<CertificacionDetalle />} />
         </Routes>
       </main>
 
-      {/* BOTONES FLOTANTES */}
-      <div className="floating-buttons-container">
+      {/* BOTONES FLOTANTES - Ocultar en rutas de certificaciones */}
+      {!isCertificacionRoute && <div className="floating-buttons-container">
         {/* Botón TiendaAlma */}
         <button
           className="floating-button tienda-button"
@@ -226,10 +233,10 @@ function App() {
         <div className="mini-buttons-row">
           <AIChatBot/>
         </div>
-      </div>
+      </div>}
 
-      {/* FOOTER - SEO Optimizado */}
-      <footer
+      {/* FOOTER - SEO Optimizado - Ocultar en rutas de certificaciones */}
+      {!isCertificacionRoute && <footer
         className="main-footer"
         style={{
           backgroundColor: 'var(--bg-secondary)',
@@ -266,7 +273,7 @@ function App() {
         <p style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem', marginTop: '1rem' }}>
           &copy; 2025 AlmaMod - Construcción Modular. Todos los derechos reservados.
         </p>
-      </footer>
+      </footer>}
     </div>
   );
 }

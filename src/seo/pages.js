@@ -53,5 +53,44 @@ export const PAGES = {
     image: '/og-image.jpg',
     type: 'website',
     noindex: true // Modal contacto, no aporta SEO
+  },
+
+  // ============================================
+  // CERTIFICACIONES
+  // ============================================
+  cat: {
+    title: 'Certificado de Aptitud Técnica CAT | Paneles SIP PROPANEL',
+    description: 'Sistema PROPANEL certificado CAT por el Ministerio de Desarrollo Territorial. Aislación 10x superior, resistencia estructural 20 ton/m². Neuquén.',
+    keywords: ['CAT', 'Certificado Aptitud Técnica', 'PROPANEL', 'Paneles SIP certificados', 'construcción modular certificada', 'vivienda social Argentina', 'sistemas constructivos no tradicionales', 'IRAM construcción', 'certificación ministerial vivienda'],
+    canonical: '/cat',
+    image: '/og-image.jpg',
+    type: 'article'
+  },
+
+  cas: {
+    title: 'Certificado Sismorresistente CAS | INPRES PROPANEL',
+    description: 'Sistema PROPANEL con CAS otorgado por INPRES. Resistencia sísmica zonas 2-4. Estructura monolítica, 10x más liviano que construcción tradicional.',
+    keywords: ['CAS', 'Certificado Sismorresistente', 'INPRES', 'PROPANEL sismo resistente', 'construcción antisísmica', 'zonas sísmicas Argentina', 'Patagonia construcción', 'resistencia sísmica certificada', 'seguridad estructural'],
+    canonical: '/cas',
+    image: '/og-image.jpg',
+    type: 'article'
+  },
+
+  edge: {
+    title: 'Certificación EDGE Advanced | Construcción Sustentable',
+    description: 'AlmaMod certificado EDGE Advanced (Banco Mundial). Reducción 40% consumo energético, 20% agua. Construcción verde Argentina. Financiamiento verde.',
+    keywords: ['EDGE Advanced', 'certificación sustentable', 'Banco Mundial construcción', 'IFC certificación', 'construcción verde', 'eficiencia energética vivienda', 'casa sustentable Argentina', 'crédito hipotecario verde', 'ahorro energético'],
+    canonical: '/edge',
+    image: '/og-image.jpg',
+    type: 'article'
+  },
+
+  cacmi: {
+    title: 'Certificación CACMI | Cámara Construcción Modular',
+    description: 'AlmaMod miembro CACMI: Cámara Argentina de Construcción Modular e Industrializada. Calidad certificada, procesos auditados, normativas IRAM.',
+    keywords: ['CACMI', 'Cámara Construcción Modular', 'construcción industrializada', 'certificación IRAM', 'calidad construcción modular', 'auditoría construcción', 'normativas IRAM vivienda', 'procesos certificados'],
+    canonical: '/cacmi',
+    image: '/og-image.jpg',
+    type: 'article'
   }
 };

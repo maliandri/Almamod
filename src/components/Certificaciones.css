@@ -83,6 +83,8 @@
   color: #fff;
   position: relative;
   overflow: hidden;
+  text-decoration: none;
+  width: 100%;
 }
 
 /* Modo claro */
@@ -557,5 +559,182 @@
   .specs-list li {
     font-size: 0.85rem;
     padding: 0.75rem 1rem;
+  }
+}
+
+/* ========================================
+   ESTILOS PARA PÁGINA DE DETALLE
+   ======================================== */
+
+.cert-boton-link {
+  text-decoration: none;
+  display: block;
+}
+
+.cert-detalle-page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  padding-top: 6rem;
+  padding-bottom: 4rem;
+  background: var(--bg-primary);
+  position: relative;
+  z-index: 999999;
+}
+
+.cert-detalle-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+}
+
+/* Header interno dentro del modal */
+.cert-detalle-header-interno {
+  padding: 1.5rem 2rem 0;
+}
+
+/* MODO OSCURO - Botón en marrón/dorado */
+.cert-volver-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(212, 165, 116, 0.1);
+  color: #d4a574;
+  border: 2px solid rgba(212, 165, 116, 0.3);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cert-volver-btn:hover {
+  background: rgba(212, 165, 116, 0.2);
+  border-color: rgba(212, 165, 116, 0.5);
+  transform: translateX(-5px);
+}
+
+/* MODO CLARO - Botón en azul */
+:root:not(.dark) .cert-volver-btn {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 2px solid rgba(59, 130, 246, 0.3);
+}
+
+:root:not(.dark) .cert-volver-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* MODO OSCURO - Fondo negro */
+.cert-detalle-page .cert-modal {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #1a1a2e;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  z-index: 1000000;
+  border: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+/* MODO CLARO - Fondo gris claro */
+:root:not(.dark) .cert-detalle-page .cert-modal {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cert-detalle-page .cert-modal-body {
+  background: #1a1a2e;
+}
+
+:root:not(.dark) .cert-detalle-page .cert-modal-body {
+  background: #ffffff;
+}
+
+.cert-detalle-page .cert-modal-content {
+  background: #1a1a2e;
+  position: relative;
+  z-index: 2;
+}
+
+:root:not(.dark) .cert-detalle-page .cert-modal-content {
+  background: #ffffff;
+}
+
+.cert-detalle-page .cert-specs {
+  background: #1a1a2e;
+  position: relative;
+  z-index: 3;
+}
+
+:root:not(.dark) .cert-detalle-page .cert-specs {
+  background: #ffffff;
+}
+
+.cert-detalle-page .cert-footer {
+  background: #1a1a2e;
+  position: relative;
+  z-index: 3;
+}
+
+:root:not(.dark) .cert-detalle-page .cert-footer {
+  background: #ffffff;
+}
+
+/* Títulos H1 y H2 - "Beneficios y Ventajas", "Especificaciones Técnicas" */
+.cert-detalle-page .cert-modal h1,
+.cert-detalle-page .cert-modal h2 {
+  font-size: 2rem;
+  margin: 0;
+  color: #d4a574; /* Marrón/Dorado en modo oscuro */
+}
+
+.cert-detalle-page .cert-modal h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+:root:not(.dark) .cert-detalle-page .cert-modal h1,
+:root:not(.dark) .cert-detalle-page .cert-modal h2 {
+  color: #3b82f6; /* Azul en modo claro */
+}
+
+/* Títulos H3 - Subtítulos de beneficios */
+.cert-detalle-page .cert-modal h3 {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #d4a574; /* Marrón/Dorado en modo oscuro */
+}
+
+:root:not(.dark) .cert-detalle-page .cert-modal h3 {
+  color: #3b82f6; /* Azul en modo claro */
+}
+
+/* Textos normales - párrafos y listas */
+/* MODO OSCURO - Texto blanco */
+.cert-detalle-page .cert-modal p,
+.cert-detalle-page .cert-modal li {
+  color: #ffffff;
+}
+
+/* MODO CLARO - Texto negro */
+:root:not(.dark) .cert-detalle-page .cert-modal p,
+:root:not(.dark) .cert-detalle-page .cert-modal li {
+  color: #1f2937;
+}
+
+/* Responsive para página de detalle */
+@media (max-width: 768px) {
+  .cert-detalle-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .cert-detalle-page .cert-modal h1 {
+    font-size: 1.5rem;
+  }
+
+  .cert-volver-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
   }
 }
