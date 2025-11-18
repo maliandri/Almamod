@@ -11,7 +11,7 @@ import Ubicacion from './components/Ubicacion.jsx';
 import SocialButton from './components/SocialButton.jsx';
 import ServiciosCarousel from './components/ServiciosCarousel.jsx';
 import TiendaAlma from './components/TiendaAlma.jsx';
-import Certificaciones from './components/certificaciones.jsx';
+import Certificaciones from './components/Certificaciones.jsx';
 import CertificacionDetalle from './components/CertificacionDetalle.jsx';
 import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
 import AIChatBot from './components/aichatbot';
