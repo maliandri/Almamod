@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { getCloudinaryUrl, IMG_CARD } from '../config/cloudinary';
 import './SistemaConstructivo.css';
-import SEO from './seo';
+import SEO from './SEO';
 import { PAGES } from '../seo';
 
 // Ícono del botón con imagen de PROPANEL - EXPORTADO

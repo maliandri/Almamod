@@ -16,7 +16,7 @@ import CertificacionDetalle from './components/CertificacionDetalle.jsx';
 import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
 import AIChatBot from './components/aichatbot';
 import ThemeToggle from './components/ThemeToggle.jsx';
-import SEO from './components/seo.jsx';
+import SEO from './components/SEO.jsx';
 
 // --- SEO Imports ---
 import { PAGES, generateOrganizationSchema, generateWebSiteSchema, generateFAQSchema, GENERAL_FAQ } from './seo';

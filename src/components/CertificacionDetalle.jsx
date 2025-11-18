@@ -1,7 +1,7 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getCloudinaryUrl, IMG_CARD, IMG_DETAIL } from '../config/cloudinary';
-import SEO from './seo';
+import SEO from './SEO';
 import { PAGES } from '../seo';
 import './Certificaciones.css';
 
