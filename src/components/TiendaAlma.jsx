@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import './TiendaAlma.css';
 
 // ✅ IMPORTAR SEO
@@ -972,56 +972,57 @@ function TiendaAlma() {
                     key={modulo.id}
                     className="modulo-card"
                     whileHover={{ y: -5 }}
-                    onClick={() => openDetails(modulo)}
                   >
-                    <div className="modulo-image-container">
-                      <img 
-                        src={getCloudinaryUrl(modulo.imagenPortada, IMG_CARD)} 
-                        alt={`${modulo.nombre} - ${modulo.superficie} - ${modulo.habitaciones} - Precio ${formatearPrecio(modulo.precio)}`}
-                        className="modulo-image"
-                        loading="lazy"
-                      />
-                      <div className="modulo-overlay">
-                        <span className="ver-detalles">Ver Detalles →</span>
-                      </div>
-                      {/* ✅ Badge especial para Alma 36 (más vendido) */}
-                      {modulo.id === 'almamod36' && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '10px',
-                          right: '10px',
-                          background: '#10b981',
-                          color: 'white',
-                          padding: '5px 12px',
-                          borderRadius: '20px',
-                          fontSize: '0.75rem',
-                          fontWeight: 'bold',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-                        }}>
-                          MÁS VENDIDO
+                    <Link to={`/tiendaalma/${modulo.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                      <div className="modulo-image-container">
+                        <img
+                          src={getCloudinaryUrl(modulo.imagenPortada, IMG_CARD)}
+                          alt={`${modulo.nombre} - ${modulo.superficie} - ${modulo.habitaciones} - Precio ${formatearPrecio(modulo.precio)}`}
+                          className="modulo-image"
+                          loading="lazy"
+                        />
+                        <div className="modulo-overlay">
+                          <span className="ver-detalles">Ver Detalles →</span>
                         </div>
-                      )}
-                    </div>
-                    <div className="modulo-info">
-                      <h3>{modulo.nombre}</h3>
-                      <div className="modulo-specs">
-                        <span className="spec-badge">{modulo.superficie}</span>
-                        <span className="spec-badge">{modulo.habitaciones}</span>
+                        {/* ✅ Badge especial para Alma 36 (más vendido) */}
+                        {modulo.id === 'almamod36' && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '10px',
+                            background: '#10b981',
+                            color: 'white',
+                            padding: '5px 12px',
+                            borderRadius: '20px',
+                            fontSize: '0.75rem',
+                            fontWeight: 'bold',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                          }}>
+                            MÁS VENDIDO
+                          </div>
+                        )}
                       </div>
-                      <p className="modulo-description">{modulo.descripcion}</p>
-                      <div className="modulo-price">
-                        {formatearPrecio(modulo.precio)}
+                      <div className="modulo-info">
+                        <h3>{modulo.nombre}</h3>
+                        <div className="modulo-specs">
+                          <span className="spec-badge">{modulo.superficie}</span>
+                          <span className="spec-badge">{modulo.habitaciones}</span>
+                        </div>
+                        <p className="modulo-description">{modulo.descripcion}</p>
+                        <div className="modulo-price">
+                          {formatearPrecio(modulo.precio)}
+                        </div>
+                        {/* ✅ Mostrar badge de plazo */}
+                        <div style={{
+                          marginTop: '8px',
+                          fontSize: '0.85rem',
+                          color: '#10b981',
+                          fontWeight: '600'
+                        }}>
+                          🚀 Entrega en {modulo.plazo}
+                        </div>
                       </div>
-                      {/* ✅ Mostrar badge de plazo */}
-                      <div style={{ 
-                        marginTop: '8px', 
-                        fontSize: '0.85rem', 
-                        color: '#10b981',
-                        fontWeight: '600'
-                      }}>
-                        🚀 Entrega en {modulo.plazo}
-                      </div>
-                    </div>
+                    </Link>
                   </motion.div>
                 ))}
               </div>
