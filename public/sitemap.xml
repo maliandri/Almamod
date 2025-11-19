@@ -18,9 +18,18 @@
   </url>
 
   <!-- ========================================== -->
-  <!-- NOTAS: /sistema-constructivo, /obras y     -->
-  <!-- /ubicacion son modales sobre la home.      -->
-  <!-- NO se incluyen en sitemap (noindex=true)   -->
+  <!-- SISTEMA CONSTRUCTIVO                       -->
+  <!-- ========================================== -->
+  <url>
+    <loc>https://almamod.com.ar/sistema-constructivo</loc>
+    <lastmod>2025-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- ========================================== -->
+  <!-- NOTAS: /obras y /ubicacion son modales     -->
+  <!-- sobre la home. NO se incluyen en sitemap   -->
   <!-- ========================================== -->
 
   <!-- ========================================== -->

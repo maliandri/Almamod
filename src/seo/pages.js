@@ -31,8 +31,7 @@ export const PAGES = {
     keywords: PAGE_KEYWORDS.sistemaConstructivo,
     canonical: '/sistema-constructivo',
     image: '/og-image.jpg',
-    type: 'article',
-    noindex: true // Modal sobre home, no indexar
+    type: 'article'
   },
 
   obras: {
