@@ -264,6 +264,8 @@ function App() {
           <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
           <Link to="/obras" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Nuestras Obras</Link>
           <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
+          <Link to="/almita" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Almita</Link>
+          <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">|</span>
           <Link to="/ubicacion" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Ubicación</Link>
         </nav>
 

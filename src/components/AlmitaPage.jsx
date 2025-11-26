@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import AIChatBot from './aichatbot';
 import './AlmitaPage.css';
@@ -73,9 +73,9 @@ function AlmitaPage() {
 
         <div className="almita-cta">
           <h2>¿Listo para empezar?</h2>
-          <p>Hacé clic en el botón del chatbot en la esquina inferior derecha para comenzar a conversar conmigo</p>
+          <p>Hacé clic en el botón del chatbot a la derecha para comenzar a conversar conmigo</p>
           <div className="almita-arrow-down">
-            ↓
+            →
           </div>
         </div>
       </div>
