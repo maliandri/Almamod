@@ -1,0 +1,198 @@
+/* =====================================================================
+   ALMITA PAGE - Página dedicada para el chatbot
+   ===================================================================== */
+
+.almita-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+}
+
+/* Hero Section */
+.almita-hero {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.almita-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.almita-avatar-large {
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 40px rgba(76, 1, 249, 0.3);
+  animation: float 3s ease-in-out infinite;
+}
+
+.robot-emoji {
+  font-size: 80px;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.almita-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.almita-subtitle {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.almita-description {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0;
+}
+
+/* Features Grid */
+.almita-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.almita-feature {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: center;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-md);
+}
+
+.almita-feature:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.almita-feature h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.almita-feature p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* CTA Section */
+.almita-cta {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.almita-cta h2 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.almita-cta p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
+}
+
+.almita-arrow-down {
+  font-size: 3rem;
+  color: var(--color-accent-primary);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .almita-page {
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .almita-title {
+    font-size: 2rem;
+  }
+
+  .almita-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .almita-description {
+    font-size: 1rem;
+  }
+
+  .almita-avatar-large {
+    width: 120px;
+    height: 120px;
+  }
+
+  .robot-emoji {
+    font-size: 60px;
+  }
+
+  .almita-features {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .almita-cta h2 {
+    font-size: 1.5rem;
+  }
+
+  .almita-cta p {
+    font-size: 1rem;
+  }
+}

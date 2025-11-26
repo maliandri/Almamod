@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import './AIChatbot.css';
 import { sendMessageToGemini, initializeChat } from '../utils/geminiHelper';
@@ -9,7 +10,7 @@ function AIChatBot() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showQuickReplies, setShowQuickReplies] = useState(false);
-  const [userData, setUserData] = useState({ name: '', email: '', phone: '' });
+  const [userData, setUserData] = useState({ name: '', email: '', phone: '', interestedProduct: '' });
   const [hasGreeted, setHasGreeted] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -70,6 +71,30 @@ function AIChatBot() {
     return false;
   };
 
+  const detectProductInterest = (text) => {
+    const productKeywords = {
+      'MiCasita': ['micasita', 'mi casita', '12m', '15.3m'],
+      'Alma 18': ['alma 18', 'alma18', '18m²', '32m'],
+      'Alma Loft 28': ['loft', 'alma loft', 'loft 28', '28m²', '38.5m'],
+      'Alma 27': ['alma 27', 'alma27', '27m²', '42.1m'],
+      'Alma 36': ['alma 36', 'alma36', '36m²', '50m', 'dos dormitorios', '2 dormitorios'],
+      'Alma 36 Refugio': ['refugio', 'alma 36 refugio', 'premium', '54.8m']
+    };
+
+    const lowerText = text.toLowerCase();
+    for (const [product, keywords] of Object.entries(productKeywords)) {
+      if (keywords.some(keyword => lowerText.includes(keyword))) {
+        setUserData(prev => {
+          const updated = { ...prev, interestedProduct: product };
+          localStorage.setItem('almamod_user_data', JSON.stringify(updated));
+          return updated;
+        });
+        return product;
+      }
+    }
+    return null;
+  };
+
   const sendLeadToServer = async () => {
     try {
       const response = await fetch('/.netlify/functions/saveLead', {
@@ -78,7 +103,8 @@ function AIChatBot() {
         body: JSON.stringify({
           userName: userData.name,
           userEmail: userData.email,
-          userPhone: userData.phone
+          userPhone: userData.phone,
+          interestedProduct: userData.interestedProduct
         })
       });
 
@@ -108,6 +134,7 @@ function AIChatBot() {
     setShowQuickReplies(false);
     setIsTyping(true);
     detectContactInfo(text);
+    detectProductInterest(text);
 
     // Detectar si el usuario pide ser contactado
     const wantsContact = detectContactRequest(text);
@@ -140,25 +167,45 @@ function AIChatBot() {
     }
   };
 
-  return (
+  const handleClearChat = () => {
+    setMessages([]);
+    setUserData({ name: '', email: '', phone: '', interestedProduct: '' });
+    setHasGreeted(false);
+    localStorage.removeItem('almamod_user_data');
+    setShowQuickReplies(false);
+  };
+
+  return ReactDOM.createPortal(
     <>
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`almamod-chat-button almamod-chat-button-icon ${isOpen ? 'open' : ''}`}
-        style={{ zIndex: 99999999 }}
-        whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-      >
-        {isOpen ? (
-           <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-        ) : (
-           <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-        )}
-      </motion.button>
+      {!isOpen && (
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`almamod-chat-button almamod-chat-button-icon`}
+          style={{
+            position: 'fixed',
+            bottom: '490px',
+            right: '20px',
+            zIndex: 2147483647
+          }}
+          whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+        >
+          <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+        </motion.button>
+      )}
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
             className="almamod-chat-window"
+            style={{
+              position: 'fixed',
+              bottom: '80px',
+              right: '20px',
+              zIndex: 2147483647
+            }}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -166,16 +213,50 @@ function AIChatBot() {
           >
             {/* HEADER */}
             <div className="almamod-chat-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
                 <div className="almamod-avatar-bot">A</div>
                 <div>
                   <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: 'white' }}>Almita</h3>
                   <p style={{ margin: 0, fontSize: '11px', opacity: 0.9, color: 'rgba(255,255,255,0.8)' }}>● En línea | Asesora Comercial</p>
                 </div>
               </div>
-              <button onClick={() => handleSendMessage("Quiero contactar a un humano")} className="almamod-human-btn">
-                📞 Asesor Humano
-              </button>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button
+                  onClick={handleClearChat}
+                  className="almamod-clear-btn"
+                  title="Borrar conversación"
+                >
+                  🗑️
+                </button>
+                <button onClick={() => handleSendMessage("Quiero contactar a un humano")} className="almamod-human-btn">
+                  📞 Asesor Humano
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="almamod-close-btn"
+                  title="Cerrar chat"
+                  style={{
+                    background: 'rgba(255,255,255,0.2)',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '32px',
+                    height: '32px',
+                    color: 'white',
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'background 0.2s ease',
+                    fontWeight: 'bold',
+                    marginLeft: '4px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.35)'}
+                  onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             {/* BODY (MENSAJES) - Clases nuevas aquí */}
@@ -226,7 +307,8 @@ function AIChatBot() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </>,
+    document.body
   );
 }
 

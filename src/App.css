@@ -397,7 +397,6 @@ html:not(.dark) .header-nav .nav-link-button:hover {
 
 .animation-content-wrapper {
   width: 100%;
-  max-width: calc(100vw - 320px);
   display: flex;
   flex-direction: column;
   gap: 2rem;

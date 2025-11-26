@@ -15,6 +15,7 @@ import Certificaciones from './components/Certificaciones.jsx';
 import CertificacionDetalle from './components/CertificacionDetalle.jsx';
 import SistemaConstructivo, { SistemaConstructivoIcon } from './components/SistemaConstructivo.jsx';
 import AIChatBot from './components/aichatbot';
+import AlmitaPage from './components/AlmitaPage.jsx';
 import ThemeToggle from './components/ThemeToggle.jsx';
 import SEO from './components/SEO.jsx';
 
@@ -96,13 +97,16 @@ function App() {
   // ✅ Verificar si estamos en una ruta de Certificación
   const isCertificacionRoute = ['cat', 'cas', 'edge', 'cacmi'].includes(location.pathname.substring(1));
 
+  // ✅ Verificar si estamos en la página de Almita
+  const isAlmitaRoute = location.pathname === '/almita';
+
   return (
     <div className="App">
       {/* ✅ TOGGLE DE TEMA - Posición fija superior derecha */}
       <ThemeToggle />
 
-      {/* HEADER - SEO Optimizado */}
-      <header className="hero-section">
+      {/* HEADER - SEO Optimizado - Ocultar en página de Almita */}
+      {!isAlmitaRoute && <header className="hero-section">
         <div className="hero-content-wrapper">
           <div className="hero-branding">
             <Link to="/" aria-label="Ir a inicio de AlmaMod">
@@ -114,7 +118,7 @@ function App() {
             <p>Viviendas sustentables certificadas • Entrega en 30 días • Neuquén, Patagonia Argentina</p>
           </div>
         </div>
-      </header>
+      </header>}
 
       {/* ✅ MODALES CONTROLADOS POR RUTAS */}
 
@@ -151,13 +155,16 @@ function App() {
           <Route path="/obras" element={<HomePage />} />
           <Route path="/ubicacion" element={<HomePage />} />
 
+          {/* ✅ RUTA PARA ALMITA */}
+          <Route path="/almita" element={<AlmitaPage />} />
+
           {/* ✅ RUTAS PARA CERTIFICACIONES */}
           <Route path="/:slug" element={<CertificacionDetalle />} />
         </Routes>
       </main>
 
-      {/* BOTONES FLOTANTES - Ocultar en rutas de certificaciones */}
-      {!isCertificacionRoute && <div className="floating-buttons-container">
+      {/* BOTONES FLOTANTES - Ocultar en rutas de certificaciones y Almita */}
+      {!isCertificacionRoute && !isAlmitaRoute && <div className="floating-buttons-container">
         {/* Botón TiendaAlma */}
         <button
           className="floating-button tienda-button"
@@ -230,13 +237,15 @@ function App() {
 
         <div className="separator-line"></div>
 
-        <div className="mini-buttons-row">
-          <AIChatBot/>
-        </div>
+        {!isAlmitaRoute && (
+          <div className="mini-buttons-row">
+            <AIChatBot/>
+          </div>
+        )}
       </div>}
 
-      {/* FOOTER - SEO Optimizado - Ocultar en rutas de certificaciones */}
-      {!isCertificacionRoute && <footer
+      {/* FOOTER - SEO Optimizado - Ocultar en rutas de certificaciones y Almita */}
+      {!isCertificacionRoute && !isAlmitaRoute && <footer
         className="main-footer"
         style={{
           backgroundColor: 'var(--bg-secondary)',

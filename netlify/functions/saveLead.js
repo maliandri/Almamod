@@ -8,16 +8,17 @@ export const handler = async (event) => {
   try {
     const data = JSON.parse(event.body);
 
-    const { userName, userEmail, userPhone } = data;
+    const { userName, userEmail, userPhone, interestedProduct } = data;
 
-    console.log('📝 Nuevo lead recibido:', { userName, userEmail, userPhone });
+    console.log('📝 Nuevo lead recibido:', { userName, userEmail, userPhone, interestedProduct });
 
     // Guardar en Supabase
     const { error: dbError } = await supabase.from('leads').insert([
       {
         nombre: userName || '',
         email: userEmail || '',
-        telefono: userPhone || ''
+        telefono: userPhone || '',
+        producto_interes: interestedProduct || ''
       }
     ]);
 
@@ -36,7 +37,7 @@ export const handler = async (event) => {
       const emailResult = await resend.emails.send({
         from: process.env.RESEND_FROM,
         to: process.env.RESEND_TO,
-        subject: `🏠 Nuevo contacto de ${userName || 'un cliente'} - AlmaMod`,
+        subject: `🏠 Nuevo contacto de ${userName || 'un cliente'} - ${interestedProduct ? interestedProduct : 'AlmaMod'}`,
         html: `
           <!DOCTYPE html>
           <html>
@@ -53,6 +54,7 @@ export const handler = async (event) => {
               .value { color: #333; font-size: 16px; font-weight: 500; }
               .footer { text-align: center; padding: 20px; color: #999; font-size: 12px; }
               .badge { display: inline-block; background: #4C01F9; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; margin-top: 10px; }
+              .product-badge { display: inline-block; background: #28a745; color: white; padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 10px; }
             </style>
           </head>
           <body>
@@ -60,11 +62,19 @@ export const handler = async (event) => {
               <div class="header">
                 <h1>📬 Nuevo Lead desde Almita</h1>
                 <div class="badge">Chatbot AlmaMod</div>
+                ${interestedProduct ? `<div class="product-badge">🏠 Interesado en: ${interestedProduct}</div>` : ''}
               </div>
               <div class="content">
                 <p style="font-size: 16px; color: #666; margin-bottom: 20px;">
                   Un cliente ha solicitado ser contactado a través del chatbot de AlmaMod.
                 </p>
+
+                ${interestedProduct ? `
+                <div class="info-row" style="border-left: 4px solid #28a745;">
+                  <div class="label">🏡 Producto de Interés</div>
+                  <div class="value" style="color: #28a745; font-weight: 700; font-size: 18px;">${interestedProduct}</div>
+                </div>
+                ` : ''}
 
                 <div class="info-row">
                   <div class="label">👤 Nombre Completo</div>
@@ -82,7 +92,7 @@ export const handler = async (event) => {
                 </div>
 
                 <div style="margin-top: 30px; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
-                  <strong>⏰ Acción requerida:</strong> Contactar al cliente lo antes posible para capitalizar el interés.
+                  <strong>⏰ Acción requerida:</strong> Contactar al cliente lo antes posible ${interestedProduct ? `y enviarle la ficha técnica del <strong>${interestedProduct}</strong>` : 'para capitalizar el interés'}.
                 </div>
               </div>
               <div class="footer">
