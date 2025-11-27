@@ -227,6 +227,16 @@
   </url>
 
   <!-- ========================================== -->
+  <!-- ALMITA - ASISTENTE VIRTUAL                 -->
+  <!-- ========================================== -->
+  <url>
+    <loc>https://almamod.com.ar/almita</loc>
+    <lastmod>2025-11-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- ========================================== -->
   <!-- CERTIFICACIONES                            -->
   <!-- ========================================== -->
   <url>

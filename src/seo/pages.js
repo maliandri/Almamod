@@ -59,7 +59,7 @@ export const PAGES = {
   // ============================================
   cat: {
     title: 'Certificado de Aptitud Técnica CAT | Paneles SIP PROPANEL',
-    description: 'Sistema PROPANEL certificado CAT por el Ministerio de Desarrollo Territorial. Aislación 10x superior, resistencia estructural 20 ton/m². Neuquén.',
+    description: 'PROPANEL certificado CAT por Ministerio Desarrollo Territorial. Aislación 10x superior, resistencia 20 ton/m². Neuquén.',
     keywords: ['CAT', 'Certificado Aptitud Técnica', 'PROPANEL', 'Paneles SIP certificados', 'construcción modular certificada', 'vivienda social Argentina', 'sistemas constructivos no tradicionales', 'IRAM construcción', 'certificación ministerial vivienda'],
     canonical: '/cat',
     image: '/og-image.jpg',

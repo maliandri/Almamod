@@ -14,20 +14,20 @@ function AlmitaPage() {
     <>
       <Helmet>
         <title>Almita - Tu Asistente Virtual de AlmaMod | Construcción Modular en Neuquén</title>
-        <meta name="description" content="Conocé a Almita, tu asesora virtual de AlmaMod. Consultá sobre nuestros modelos, precios, tiempos de entrega y financiación. Disponible 24/7 para ayudarte con tu proyecto de construcción modular." />
+        <meta name="description" content="Almita: tu asesora virtual de AlmaMod 24/7. Consultá modelos, precios, financiación y tiempos de entrega de viviendas modulares en Neuquén." />
         <meta name="keywords" content="almita, chatbot, asistente virtual, almamod, construcción modular, neuquén, consultas, asesoramiento" />
         <link rel="canonical" href="https://almamod.com.ar/almita" />
 
         {/* Open Graph */}
         <meta property="og:title" content="Almita - Tu Asistente Virtual de AlmaMod" />
-        <meta property="og:description" content="Conocé a Almita, tu asesora virtual disponible 24/7 para ayudarte con tu proyecto de construcción modular." />
+        <meta property="og:description" content="Almita: asesora virtual 24/7 para tu proyecto de construcción modular. Consultá modelos, precios y financiación." />
         <meta property="og:url" content="https://almamod.com.ar/almita" />
         <meta property="og:type" content="website" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Almita - Tu Asistente Virtual de AlmaMod" />
-        <meta name="twitter:description" content="Conocé a Almita, tu asesora virtual disponible 24/7 para ayudarte con tu proyecto de construcción modular." />
+        <meta name="twitter:description" content="Almita: asesora virtual 24/7 para tu proyecto de construcción modular. Consultá modelos, precios y financiación." />
       </Helmet>
 
       <div className="almita-page">
