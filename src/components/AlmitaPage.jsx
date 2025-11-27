@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
+import { useNavigate } from 'react-router-dom';
 import AIChatBot from './aichatbot';
 import './AlmitaPage.css';
 
 function AlmitaPage() {
   const [mounted, setMounted] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMounted(true);
@@ -31,6 +33,15 @@ function AlmitaPage() {
       </Helmet>
 
       <div className="almita-page">
+        {/* Botón para volver a la página principal */}
+        <button
+          onClick={() => navigate('/')}
+          className="almita-back-button"
+          aria-label="Volver al inicio"
+        >
+          ← Volver al inicio
+        </button>
+
         <div className="almita-hero">
           <div className="almita-hero-content">
             <div className="almita-avatar-large">
