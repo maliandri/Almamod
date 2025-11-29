@@ -269,6 +269,20 @@ function App() {
           <Link to="/ubicacion" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Ubicación</Link>
         </nav>
 
+        {/* Sección Recursos - SEO Content Hub */}
+        <div style={{ marginBottom: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-primary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+          <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: '1rem', textAlign: 'center' }}>📚 Recursos y Guías</h3>
+          <nav aria-label="Recursos educativos" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', fontSize: '0.9rem' }}>
+            <a href="/recursos/paneles-sip-neuquen.html" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Paneles SIP: Precios y Guía</a>
+            <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">•</span>
+            <a href="/recursos/modulos-habitacionales-neuquen.html" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Módulos Habitacionales</a>
+            <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">•</span>
+            <a href="/recursos/contenedores-vs-modulos-neuquen.html" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Contenedores vs Módulos</a>
+            <span style={{ color: 'var(--text-tertiary)' }} aria-hidden="true">•</span>
+            <a href="/recursos/construccion-sustentable-argentina.html" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = '#d4a574'} onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}>Construcción Sustentable</a>
+          </nav>
+        </div>
+
         <address style={{ fontStyle: 'normal' }}>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
             📧 <a href="mailto:info@almamod.com.ar" style={{ color: 'inherit', textDecoration: 'none' }}>info@almamod.com.ar</a>

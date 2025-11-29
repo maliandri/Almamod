@@ -307,4 +307,35 @@
     </image:image>
   </url>
 
+  <!-- ========================================== -->
+  <!-- RECURSOS Y GUÍAS - SEO CONTENT HUB         -->
+  <!-- ========================================== -->
+  <url>
+    <loc>https://almamod.com.ar/recursos/paneles-sip-neuquen.html</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://almamod.com.ar/recursos/modulos-habitacionales-neuquen.html</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://almamod.com.ar/recursos/contenedores-vs-modulos-neuquen.html</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <url>
+    <loc>https://almamod.com.ar/recursos/construccion-sustentable-argentina.html</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
 </urlset>
