@@ -898,7 +898,7 @@ function TiendaAlma() {
                 margin: '0 20px 20px'
               }}>
                 <h3 style={{ marginTop: 0, fontSize: '1.3rem' }}>
-                  Viviendas Modulares Llave en Mano desde $15.300.000
+                  Viviendas Modulares Llave en Mano desde $16.500.000
                 </h3>
                 <p style={{ margin: '10px 0', fontSize: '0.95rem' }}>
                   ✅ <strong>Entrega garantizada en 30 días</strong> • 
