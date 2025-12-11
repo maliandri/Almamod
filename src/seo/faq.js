@@ -6,7 +6,7 @@
 export const GENERAL_FAQ = [
   {
     question: '¿Cuánto cuesta una casa modular en Neuquén?',
-    answer: 'Las viviendas modulares AlmaMod van desde $15.300.000 (MiCasita 12m²) hasta $54.800.000 (Alma 36 Refugio). Todos los precios son llave en mano e incluyen estructura, instalaciones, terminaciones y aberturas.'
+    answer: 'Las viviendas modulares AlmaMod van desde $16.500.000 (MiCasita 12m²) hasta $58.400.000 (Alma 36 Refugio). Todos los precios son llave en mano e incluyen estructura, instalaciones, terminaciones y aberturas.'
   },
   {
     question: '¿Cuánto tiempo tarda la construcción?',

@@ -34,7 +34,7 @@ const modulosData = [
     superficie: '12 m²',
     dimensiones: '4.88m × 2.44m',
     habitaciones: 'Monoambiente',
-    precio: 15300000,
+    precio: 16500000,
     incluye: ['Baño completo', 'Cocina-dormitorio'],
     plazo: '30 días',
     imagenPortada: 'ALMAMOD_MICASITA_PORTADA.webp',
@@ -72,7 +72,7 @@ const modulosData = [
     
     // ✅ NUEVO: Ventajas específicas con keywords
     ventajas: [
-      'Precio más económico del mercado: $15.300.000',
+      'Precio más económico del mercado: $16.300.000',
       'Entrega garantizada en 30 días',
       'Construcción modular sin escombros',
       'Ahorro energético del 40% con Paneles SIP',
@@ -119,7 +119,7 @@ const modulosData = [
     faqProducto: [
       {
         pregunta: '¿Cuánto cuesta MiCasita?',
-        respuesta: 'MiCasita cuesta $15.300.000 llave en mano, siendo la opción más económica de vivienda modular en Neuquén. Incluye todo lo necesario para habitar.'
+        respuesta: 'MiCasita cuesta $16.500.000 llave en mano, siendo la opción más económica de vivienda modular en Neuquén. Incluye todo lo necesario para habitar.'
       },
       {
         pregunta: '¿Se puede usar como primera vivienda?',
@@ -146,7 +146,7 @@ const modulosData = [
     superficie: '18 m²',
     dimensiones: '6m × 3m',
     habitaciones: '1 dormitorio',
-    precio: 32050000,
+    precio: 34200000,
     incluye: ['Baño completo', 'Cocina-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: 'ALMAMOD_18_PORTADA.webp',
@@ -186,7 +186,7 @@ const modulosData = [
       'Cocina-comedor amplia',
       'Baño completo con ducha 120x70cm',
       'Diseño optimizado para confort',
-      'Precio excelente: $32.050.000',
+      'Precio excelente: $34.200.000',
       'Llave en mano en 30 días'
     ],
     
@@ -252,7 +252,7 @@ const modulosData = [
     superficie: '27 m²',
     dimensiones: '9m × 3m',
     habitaciones: '1 dormitorio',
-    precio: 42120000,
+    precio: 45300000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
     plazo: '30 días',
     imagenPortada: 'ALMAMOD_27_PORTADA.webp',
@@ -335,7 +335,7 @@ const modulosData = [
     faqProducto: [
       {
         pregunta: '¿Cuánto cuesta Alma 27?',
-        respuesta: 'Alma 27 cuesta $42.120.000 llave en mano. Incluye ambientes separados: dormitorio, living-comedor, cocina y baño.'
+        respuesta: 'Alma 27 cuesta $45.300.000 llave en mano. Incluye ambientes separados: dormitorio, living-comedor, cocina y baño.'
       },
       {
         pregunta: '¿Alcanza para una familia de 3 personas?',
@@ -354,7 +354,7 @@ const modulosData = [
     superficie: '28 m²',
     dimensiones: '7m × 3m (21m² planta baja + 7m² entrepiso)',
     habitaciones: 'Loft con entrepiso',
-    precio: 38500000,
+    precio: 40600000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
     plazo: '30 días',
     imagenPortada: 'ALMAMOD_28_LOFT_PORTADA.webp',
@@ -393,7 +393,7 @@ const modulosData = [
       'Entrepiso para dormitorio privado',
       'Estética moderna y juvenil',
       'Aprovechamiento vertical del espacio',
-      'Precio competitivo: $38.500.000',
+      'Precio competitivo: $40.600.000',
       'Sensación de amplitud'
     ],
     
@@ -436,7 +436,7 @@ const modulosData = [
     faqProducto: [
       {
         pregunta: '¿Cuánto cuesta Alma Loft 28?',
-        respuesta: 'Alma Loft 28 cuesta $38.500.000. Incluye diseño tipo loft con entrepiso, doble altura y terminaciones modernas.'
+        respuesta: 'Alma Loft 28 cuesta $40.600.000. Incluye diseño tipo loft con entrepiso, doble altura y terminaciones modernas.'
       },
       {
         pregunta: '¿Qué es un loft?',
@@ -459,7 +459,7 @@ const modulosData = [
     superficie: '36 m²',
     dimensiones: '12m × 3m',
     habitaciones: '2 dormitorios',
-    precio: 50075000,
+    precio: 53500000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
     imagenPortada: 'ALMAMOD_36_PORTADA.webp',
@@ -545,7 +545,7 @@ const modulosData = [
     faqProducto: [
       {
         pregunta: '¿Cuánto cuesta Alma 36?',
-        respuesta: 'Alma 36 cuesta $50.075.000 llave en mano. Es nuestro modelo más vendido por su excelente relación precio-espacio-funcionalidad.'
+        respuesta: 'Alma 36 cuesta $53.500.000.000 llave en mano. Es nuestro modelo más vendido por su excelente relación precio-espacio-funcionalidad.'
       },
       {
         pregunta: '¿Alcanza para una familia de 4?',
@@ -572,7 +572,7 @@ const modulosData = [
     superficie: '36 m²',
     dimensiones: '12m × 3m',
     habitaciones: '2 dormitorios',
-    precio: 54800000,
+    precio: 58400000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
     plazo: '30 días',
     imagenPortada: 'ALMAMOD_36_REFUGIO_PORTADA.webp',
@@ -617,7 +617,7 @@ const modulosData = [
       'Ideal para inversión turística premium',
       'Atrae turistas de alto valor',
       'Diseño rústico-moderno único',
-      'Precio: $54.800.000'
+      'Precio: $58.400.000'
     ],
     
     keywordsPrincipales: [
@@ -659,7 +659,7 @@ const modulosData = [
     faqProducto: [
       {
         pregunta: '¿Cuánto cuesta Alma 36 Refugio?',
-        respuesta: 'Alma 36 Refugio cuesta $54.800.000. Incluye diseño exclusivo estilo refugio patagónico con terminaciones premium.'
+        respuesta: 'Alma 36 Refugio cuesta $58.400.000. Incluye diseño exclusivo estilo refugio patagónico con terminaciones premium.'
       },
       {
         pregunta: '¿Por qué cuesta más que Alma 36 estándar?',
