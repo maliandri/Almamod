@@ -29,10 +29,12 @@ netlify dev
 \`\`\`
 
 ¿Querés saber sobre nuestros modelos? Te puedo contar sobre:
-- MiCasita ($15.3M)
-- Alma 18 ($32M)
-- Alma 27 ($42.1M)
-- Alma 36 ($50M)`;
+- MiCasita ($16.5M)
+- Alma 18 ($34.2M)
+- Alma 27 ($45.3M)
+- Alma Loft 28 ($40.6M)
+- Alma 36 ($53.5M)
+- Alma 36 Refugio ($58.4M)`;
     }
 
     // ✅ PRODUCCIÓN: Usar Netlify Function
