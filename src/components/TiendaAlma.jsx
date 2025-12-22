@@ -695,13 +695,30 @@ const formatearPrecio = (precio) => {
 function TiendaAlma() {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const [isOpen, setIsOpen] = useState(false);
   const [selectedModule, setSelectedModule] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showSpecs, setShowSpecs] = useState(false);
+
+  // Estados para filtros
+  const [showFilters, setShowFilters] = useState(false);
+  const [priceRange, setPriceRange] = useState([16500000, 58400000]);
+  const [surfaceRange, setSurfaceRange] = useState([12, 36]);
+  const [selectedRooms, setSelectedRooms] = useState([]);
+  const [selectedUses, setSelectedUses] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Detectar cambios de tamaño de pantalla
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const getMediaItems = (modulo) => {
     if (!modulo) return [];
@@ -763,11 +780,77 @@ function TiendaAlma() {
     navigate('/tiendaalma');
   };
 
-  const filteredModules = modulosData.filter(modulo =>
-    modulo.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    modulo.superficie.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    modulo.habitaciones.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Función para resetear filtros
+  const resetFilters = () => {
+    setPriceRange([16500000, 58400000]);
+    setSurfaceRange([12, 36]);
+    setSelectedRooms([]);
+    setSelectedUses([]);
+    setSearchTerm('');
+  };
+
+  // Función para toggle de habitaciones
+  const toggleRoom = (room) => {
+    setSelectedRooms(prev =>
+      prev.includes(room) ? prev.filter(r => r !== room) : [...prev, room]
+    );
+  };
+
+  // Función para toggle de usos
+  const toggleUse = (use) => {
+    setSelectedUses(prev =>
+      prev.includes(use) ? prev.filter(u => u !== use) : [...prev, use]
+    );
+  };
+
+  // Extrae superficie numérica (ej: "12 m²" -> 12)
+  const getSuperficieNumero = (superficie) => {
+    return parseInt(superficie.match(/\d+/)[0]);
+  };
+
+  // Filtrado completo con todos los criterios
+  const filteredModules = modulosData.filter(modulo => {
+    // Filtro de búsqueda por texto
+    const matchSearch =
+      modulo.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      modulo.superficie.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      modulo.habitaciones.toLowerCase().includes(searchTerm.toLowerCase());
+
+    if (searchTerm && !matchSearch) return false;
+
+    // Filtro de precio
+    if (modulo.precio < priceRange[0] || modulo.precio > priceRange[1]) return false;
+
+    // Filtro de superficie
+    const superficieNum = getSuperficieNumero(modulo.superficie);
+    if (superficieNum < surfaceRange[0] || superficieNum > surfaceRange[1]) return false;
+
+    // Filtro de habitaciones
+    if (selectedRooms.length > 0) {
+      const hasMatch = selectedRooms.some(room => {
+        if (room === 'monoambiente') return modulo.habitaciones.toLowerCase().includes('monoambiente');
+        if (room === '1dorm') return modulo.habitaciones === '1 dormitorio' || modulo.habitaciones.toLowerCase().includes('loft');
+        if (room === '2dorm') return modulo.habitaciones === '2 dormitorios';
+        return false;
+      });
+      if (!hasMatch) return false;
+    }
+
+    // Filtro de uso (busca en casosDeUso)
+    if (selectedUses.length > 0) {
+      const hasMatch = selectedUses.some(use => {
+        const keywords = modulo.casosDeUso.flatMap(caso => caso.keywords);
+        if (use === 'vivienda') return keywords.some(k => k.includes('primera vivienda') || k.includes('vivienda'));
+        if (use === 'oficina') return keywords.some(k => k.includes('oficina') || k.includes('home office'));
+        if (use === 'turismo') return keywords.some(k => k.includes('turismo') || k.includes('cabaña') || k.includes('airbnb'));
+        if (use === 'familiar') return keywords.some(k => k.includes('familia') || k.includes('pareja'));
+        return false;
+      });
+      if (!hasMatch) return false;
+    }
+
+    return true;
+  });
 
   const handleSearchSelect = (modulo) => {
     openDetails(modulo);
@@ -885,8 +968,8 @@ function TiendaAlma() {
               exit={{ scale: 0.8, opacity: 0 }}
             >
               <div className="tienda-header">
+                <button onClick={handleCloseStore} className="close-button" style={{ order: -1 }}>&times;</button>
                 <h2>Tienda Alma - Nuestros Módulos</h2>
-                <button onClick={handleCloseStore} className="close-button">&times;</button>
               </div>
 
               {/* ✅ NUEVO: Texto introductorio con keywords */}
@@ -913,28 +996,66 @@ function TiendaAlma() {
               </div>
 
               <div className="search-container">
-                <div className="search-wrapper">
-                  <svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.35-4.35"></path>
-                  </svg>
-                  <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Buscar por nombre, tamaño o habitaciones..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                  />
-                  {searchTerm && (
-                    <button 
-                      className="clear-search"
-                      onClick={() => setSearchTerm('')}
-                    >
-                      ×
-                    </button>
-                  )}
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', width: '100%' }}>
+                  <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="filter-toggle-button"
+                    style={{
+                      background: showFilters ? '#667eea' : '#f1f5f9',
+                      color: showFilters ? 'white' : '#1e293b',
+                      border: 'none',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      fontSize: '0.95rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      transition: 'all 0.2s',
+                      flexShrink: 0,
+                      minWidth: isMobile ? '48px' : 'auto'
+                    }}
+                    title="Filtros"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="4" y1="21" x2="4" y2="14"></line>
+                      <line x1="4" y1="10" x2="4" y2="3"></line>
+                      <line x1="12" y1="21" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12" y2="3"></line>
+                      <line x1="20" y1="21" x2="20" y2="16"></line>
+                      <line x1="20" y1="12" x2="20" y2="3"></line>
+                      <line x1="1" y1="14" x2="7" y2="14"></line>
+                      <line x1="9" y1="8" x2="15" y2="8"></line>
+                      <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
+                    {!isMobile && <span>{showFilters ? 'Ocultar' : 'Filtros'}</span>}
+                  </button>
+
+                  <div className="search-wrapper" style={{ flex: 1 }}>
+                    <svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="Buscar por nombre, tamaño o habitaciones..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onFocus={() => setIsSearchFocused(true)}
+                      onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                    />
+                    {searchTerm && (
+                      <button
+                        className="clear-search"
+                        onClick={() => setSearchTerm('')}
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {isSearchFocused && searchTerm && (
@@ -966,7 +1087,189 @@ function TiendaAlma() {
                 )}
               </div>
 
-              <div className="tienda-grid">
+              {/* ✅ CONTENEDOR CON SIDEBAR + GRID */}
+              <div className="tienda-content-container">
+                {/* SIDEBAR DE FILTROS */}
+                <AnimatePresence>
+                  {showFilters && isMobile && (
+                    <motion.div
+                      className="filter-overlay-mobile"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setShowFilters(false)}
+                      style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        zIndex: 1999
+                      }}
+                    />
+                  )}
+                  {showFilters && (
+                    <motion.div
+                      className="filters-sidebar"
+                      initial={isMobile ? { y: 500, opacity: 0 } : { x: -300, opacity: 0 }}
+                      animate={isMobile ? { y: 0, opacity: 1 } : { x: 0, opacity: 1 }}
+                      exit={isMobile ? { y: 500, opacity: 0 } : { x: -300, opacity: 0 }}
+                      transition={{ type: 'spring', damping: 25 }}
+                    >
+                      <div className="filters-header">
+                        <h3>🔍 Filtros</h3>
+                        <button
+                          onClick={resetFilters}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#667eea',
+                            fontSize: '0.85rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            textDecoration: 'underline'
+                          }}
+                        >
+                          Limpiar todo
+                        </button>
+                      </div>
+
+                      <div className="filter-section">
+                        <label className="filter-label">
+                          💰 Precio
+                          <span className="filter-value">
+                            {formatearPrecio(priceRange[0])} - {formatearPrecio(priceRange[1])}
+                          </span>
+                        </label>
+                        <div className="dual-range-container">
+                          <input
+                            type="range"
+                            min="16500000"
+                            max="58400000"
+                            step="1000000"
+                            value={priceRange[0]}
+                            onChange={(e) => setPriceRange([parseInt(e.target.value), priceRange[1]])}
+                            className="range-input"
+                          />
+                          <input
+                            type="range"
+                            min="16500000"
+                            max="58400000"
+                            step="1000000"
+                            value={priceRange[1]}
+                            onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                            className="range-input"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="filter-section">
+                        <label className="filter-label">
+                          📐 Superficie
+                          <span className="filter-value">
+                            {surfaceRange[0]}m² - {surfaceRange[1]}m²
+                          </span>
+                        </label>
+                        <div className="dual-range-container">
+                          <input
+                            type="range"
+                            min="12"
+                            max="36"
+                            step="1"
+                            value={surfaceRange[0]}
+                            onChange={(e) => setSurfaceRange([parseInt(e.target.value), surfaceRange[1]])}
+                            className="range-input"
+                          />
+                          <input
+                            type="range"
+                            min="12"
+                            max="36"
+                            step="1"
+                            value={surfaceRange[1]}
+                            onChange={(e) => setSurfaceRange([surfaceRange[0], parseInt(e.target.value)])}
+                            className="range-input"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="filter-section">
+                        <label className="filter-label">🛏️ Dormitorios</label>
+                        <div className="checkbox-group">
+                          <label className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={selectedRooms.includes('monoambiente')}
+                              onChange={() => toggleRoom('monoambiente')}
+                            />
+                            <span>Monoambiente</span>
+                          </label>
+                          <label className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={selectedRooms.includes('1dorm')}
+                              onChange={() => toggleRoom('1dorm')}
+                            />
+                            <span>1 Dormitorio</span>
+                          </label>
+                          <label className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={selectedRooms.includes('2dorm')}
+                              onChange={() => toggleRoom('2dorm')}
+                            />
+                            <span>2 Dormitorios</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="filter-section">
+                        <label className="filter-label">🏷️ Uso</label>
+                        <div className="checkbox-group">
+                          <label className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={selectedUses.includes('vivienda')}
+                              onChange={() => toggleUse('vivienda')}
+                            />
+                            <span>Primera vivienda</span>
+                          </label>
+                          <label className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={selectedUses.includes('oficina')}
+                              onChange={() => toggleUse('oficina')}
+                            />
+                            <span>Oficina</span>
+                          </label>
+                          <label className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={selectedUses.includes('turismo')}
+                              onChange={() => toggleUse('turismo')}
+                            />
+                            <span>Turismo</span>
+                          </label>
+                          <label className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={selectedUses.includes('familiar')}
+                              onChange={() => toggleUse('familiar')}
+                            />
+                            <span>Familiar</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="filter-results">
+                        {filteredModules.length} {filteredModules.length === 1 ? 'resultado' : 'resultados'}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* GRID DE PRODUCTOS */}
+                <div className="tienda-grid" style={{ flex: 1 }}>
                 {filteredModules.map((modulo) => (
                   <motion.div
                     key={modulo.id}
@@ -1025,6 +1328,7 @@ function TiendaAlma() {
                     </Link>
                   </motion.div>
                 ))}
+                </div>
               </div>
             </motion.div>
           </motion.div>
