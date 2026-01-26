@@ -35,7 +35,7 @@ const modulosData = [
     dimensiones: '4.88m × 2.44m',
     habitaciones: 'Monoambiente',
     precio: 16500000,
-    incluye: ['Baño completo', 'Cocina-dormitorio'],
+    incluye: ['Baño completo con sanitarios y griferías de primera calidad', 'Cocina con grifería, bacha, alacena y bajo mesada', 'Instalación eléctrica, de agua y cloacas'],
     plazo: '30 días',
     imagenPortada: 'ALMAMOD_MICASITA_PORTADA.webp',
     imagenesDetalle: [
@@ -44,7 +44,7 @@ const modulosData = [
       'ALMAMOD_MICASITA_PLANIMETRIA.webp'
     ],
     video: 'VIDEO_MI_CASITA_VERTICAL.mp4',
-    descripcion: 'Módulo monoambiente compacto de 12m². Ideal como primera vivienda económica, oficina home office o habitación adicional. Construcción rápida en 30 días con Paneles SIP PROPANEL.',
+    descripcion: 'Compacto, funcional y accesible. El MICASITA es un módulo monoambiente ideal para una persona sola o una pareja joven que busca independencia, practicidad y confort en pocos metros. Posee un valor muy accesible. Su diseño compacto lo convierte en una solución versátil y económica, ya sea como primera vivienda, espacio de trabajo o cabaña de descanso. Ampliable: puede crecer a futuro con nuevos módulos de 12 m² (4,88 x 2,44) o 6 m² (2,44 x 2,44).',
     
     // ✅ NUEVO: Casos de uso (Keywords long-tail)
     casosDeUso: [
@@ -91,27 +91,30 @@ const modulosData = [
     
     especificacionesTecnicas: {
       construccion: [
-        { titulo: 'Patín', detalle: 'Armado con perfil UPN 120mm y caño estructural, pintado con esmalte sintético 3 en 1 color negro.' },
         { titulo: 'Estructura piso', detalle: 'Panel SIP PROPANEL 9cm, pintado en la cara inferior con pintura asfáltica.' },
         { titulo: 'Muros', detalle: 'Panel SIP PROPANEL 9cm.' },
-        { titulo: 'Techo', detalle: 'Panel SIP cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
-        { titulo: 'Revestimiento de muros exterior', detalle: 'machimbre de 1era calidad protegido contra rayos UV humedad y corrosión o siding horizontal/vertical 6mm, pintado símil madera o látex exterior.' },
-        { titulo: 'Revestimiento de muros interior', detalle: 'machimbre de 1era calidad barnizado o placas de yeso con junta tomada y pintura látex lavable.' },
-        { titulo: 'Terminación piso interior', detalle: 'Pisos vinílicos SPC de alto tránsito 5.5 mm.' },
-        { titulo: 'Terminación interior techo', detalle: 'Panel de cielorraso laqueado color madera o sintético blanco.' },
-        { titulo: 'Aberturas', detalle: 'Puerta y ventanas de aluminio negro, con vidrio DVH.' },
-        { titulo: 'Revestimientos de baño', detalle: 'placas PVC símil mármol a elección' },
+        { titulo: 'Techo', detalle: 'Panel SIP Cielorraso PROPANEL 9cm sobre tirantes de pino y terminado en cubierta con chapa trapezoidal negra y zinguerías de cierre de chapa negra.' },
+        { titulo: 'Revestimiento de muros exterior', detalle: 'Siding vertical 8mm, pintado látex exterior.' },
+        { titulo: 'Revestimiento de muros interior', detalle: 'Osb o fenólico Machimplak achimbre barnizados.' },
+        { titulo: 'Terminación piso interior', detalle: 'Osb impermeabilizado con Cétol.' },
+        { titulo: 'Terminación cielorraso', detalle: 'Machinplak barnizado color madera o látex blanco.' },
+        { titulo: 'Aberturas', detalle: 'Puerta en chapa inyectada y ventanas de aluminio negro, con vidrio simple.' },
+        { titulo: 'Revestimientos de baño', detalle: 'Placas PVC símil mármol a elección.' },
+        { titulo: 'Revestimientos de cocina', detalle: 'Placas PVC símil mármol a elección.' },
         { titulo: 'Instalación eléctrica', detalle: 'Instalación eléctrica con cables normalizados desde 6 mm a 1.5 mm.' },
         { titulo: 'Instalación de agua', detalle: 'Por cañería termofusión.' },
-        { titulo: 'Instalación de desagüe', detalle: 'sistema cloacal de cañerías con o-ring.' }
+        { titulo: 'Instalación de desagüe', detalle: 'Sistema cloacal de cañerías con o-ring.' }
       ],
       equipamiento: [
-        { titulo: 'Inodoro con depósito', detalle: ' Italiana' },
-        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Hidromet' },
-        { titulo: 'Vanitory', detalle: 'en MDF.' },
+        { titulo: 'Inodoro con depósito y bidet', detalle: 'Italiana.' },
+        { titulo: 'Griferías bidet, vanitory, ducha, bacha cocina', detalle: 'Hidromet.' },
+        { titulo: 'Vanitory', detalle: 'En MDF.' },
         { titulo: 'Receptáculo de ducha', detalle: '70x70cm con mampara.' },
         { titulo: 'Mesada y Bajo mesada', detalle: 'Mesada en mármol sintético y bajo mesada en MDF.' },
-        { titulo: 'Puertas interior', detalle: 'Placa con marco de aluminio' }
+        { titulo: 'Puertas interior', detalle: 'Placa con marco de aluminio.' },
+        { titulo: 'Instalación eléctrica', detalle: 'Cables normalizados desde 6 mm a 1.5 mm, plafones led o lámparas led a elección.' },
+        { titulo: 'Instalación agua', detalle: 'Caños de termofusión y termotanque eléctrico de 40 lts.' },
+        { titulo: 'Instalación cloacal', detalle: 'Caños junta o-ring.' }
       ]
     },
     

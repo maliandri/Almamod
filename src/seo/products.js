@@ -9,7 +9,7 @@ import { PRODUCT_KEYWORDS } from './keywords';
 export const PRODUCTS = {
   micasita: {
     title: 'MiCasita 12m² | Módulo desde $16.5M',
-    description: 'Módulo 12m² con baño y cocina. Primera vivienda, oficina u inversión. $16.500.000 llave en mano. Entrega 30 días Neuquén.',
+    description: 'Módulo monoambiente 12m² compacto, funcional y accesible. Ideal persona sola o pareja joven. Baño completo, cocina equipada. Ampliable. Entrega 30 días.',
     keywords: PRODUCT_KEYWORDS.micasita,
     canonical: '/tiendaalma/micasita',
     slug: 'micasita',
@@ -23,7 +23,7 @@ export const PRODUCTS = {
       currency: 'ARS',
       availability: 'https://schema.org/InStock',
       condition: 'https://schema.org/NewCondition',
-      description: 'Módulo monoambiente de 12m² con baño completo y cocina. Ideal para primera vivienda, oficina home office, habitación adicional o inversión.',
+      description: 'Compacto, funcional y accesible. Módulo monoambiente ideal para persona sola o pareja joven. Incluye baño completo con sanitarios de primera calidad, cocina con grifería, bacha, alacena y bajo mesada. Ampliable con módulos de 12m² o 6m².',
       image: 'https://res.cloudinary.com/dlshym1te/image/upload/ALMAMOD_MICASITA_PORTADA.webp',
       imageWidth: 1200,
       imageHeight: 800,
