@@ -7,7 +7,7 @@
 export const PAGE_KEYWORDS = {
   home: 'casas modulares neuquen, paneles sip propanel, viviendas prefabricadas patagonia, construccion rapida 30 dias, certificacion edge',
 
-  tiendaalma: 'catalogo casas modulares, precios viviendas 2025, micasita alma 18 alma 27 alma 36, modulos llave en mano neuquen',
+  tiendaalma: 'catalogo casas modulares, precios viviendas 2026, micasita alma 18 alma 27 alma 36, modulos llave en mano neuquen',
 
   sistemaConstructivo: 'paneles sip propanel, sistema constructivo modular, certificacion edge advanced, construccion sismo resistente',
 

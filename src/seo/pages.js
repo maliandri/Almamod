@@ -17,7 +17,7 @@ export const PAGES = {
   },
 
   tiendaalma: {
-    title: 'Catálogo Viviendas Modulares | Precios 2025',
+    title: 'Catálogo Viviendas Modulares | Precios 2026',
     description: 'Casas modulares desde $15.3M. MiCasita 12m², Alma 18, 27, 36. Llave en mano. Certificación EDGE Advanced. Entrega 30 días Neuquén.',
     keywords: PAGE_KEYWORDS.tiendaalma,
     canonical: '/tiendaalma',

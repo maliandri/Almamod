@@ -296,7 +296,7 @@ function App() {
         </address>
 
         <p style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem', marginTop: '1rem' }}>
-          &copy; 2025 AlmaMod - Construcción Modular. Todos los derechos reservados.
+          &copy; 2026 AlmaMod - Construcción Modular. Todos los derechos reservados.
         </p>
       </footer>}
     </div>
