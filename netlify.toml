@@ -52,6 +52,13 @@
   status = 301
   force = true
 
+# ========== EVITAR DUPLICADO /index.html ==========
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
 # ========== SPA FALLBACK ==========
 # Debe ir AL FINAL
 [[redirects]]

@@ -8,7 +8,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -22,7 +22,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/sistema-constructivo</loc>
-    <lastmod>2026-11-18</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
@@ -37,7 +37,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/tiendaalma</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
@@ -47,7 +47,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/tiendaalma/micasita</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
     <image:image>
@@ -77,7 +77,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/tiendaalma/alma-18</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
     <image:image>
@@ -104,7 +104,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/tiendaalma/alma-27</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
     <image:image>
@@ -131,7 +131,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/tiendaalma/alma-loft-28</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
     <image:image>
@@ -154,7 +154,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/tiendaalma/alma-36</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
     <image:image>
@@ -189,7 +189,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/tiendaalma/alma-36-refugio</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
     <image:image>
@@ -231,7 +231,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/almita</loc>
-    <lastmod>2026-11-26</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
@@ -241,7 +241,7 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/cat</loc>
-    <lastmod>2026-11-18</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
     <image:image>
@@ -257,7 +257,7 @@
 
   <url>
     <loc>https://almamod.com.ar/cas</loc>
-    <lastmod>2026-11-18</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
     <image:image>
@@ -277,7 +277,7 @@
 
   <url>
     <loc>https://almamod.com.ar/edge</loc>
-    <lastmod>2026-11-18</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
     <image:image>
@@ -293,7 +293,7 @@
 
   <url>
     <loc>https://almamod.com.ar/cacmi</loc>
-    <lastmod>2026-11-18</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
     <image:image>
@@ -312,28 +312,28 @@
   <!-- ========================================== -->
   <url>
     <loc>https://almamod.com.ar/recursos/paneles-sip-neuquen.html</loc>
-    <lastmod>2026-11-29</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://almamod.com.ar/recursos/modulos-habitacionales-neuquen.html</loc>
-    <lastmod>2026-11-29</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://almamod.com.ar/recursos/contenedores-vs-modulos-neuquen.html</loc>
-    <lastmod>2026-11-29</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
 
   <url>
     <loc>https://almamod.com.ar/recursos/construccion-sustentable-argentina.html</loc>
-    <lastmod>2026-11-29</lastmod>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>

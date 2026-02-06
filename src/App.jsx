@@ -56,6 +56,31 @@ function HomePage() {
 }
 
 // ====================================================================
+// Componente para rutas que abren modales sobre la home
+// Cada ruta usa su propio SEO en lugar de heredar el de home
+// ====================================================================
+function ModalPage({ seoData }) {
+  return (
+    <>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        canonical={seoData.canonical}
+        image={seoData.image}
+        type={seoData.type}
+        noindex={seoData.noindex || false}
+      />
+      <section className="animation-section">
+        <div className="animation-content-wrapper">
+          <ServiciosCarousel />
+          <Certificaciones />
+        </div>
+      </section>
+    </>
+  );
+}
+
+// ====================================================================
 // Componente principal App
 // ====================================================================
 function App() {
@@ -148,12 +173,12 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
 
-          {/* ✅ RUTAS PARA LOS MODALES */}
-          <Route path="/sistema-constructivo" element={<HomePage />} />
+          {/* ✅ RUTAS PARA LOS MODALES - Cada una con su propio SEO */}
+          <Route path="/sistema-constructivo" element={<ModalPage seoData={PAGES.sistemaConstructivo} />} />
           <Route path="/tiendaalma" element={null} />
           <Route path="/tiendaalma/:slug" element={null} />
-          <Route path="/obras" element={<HomePage />} />
-          <Route path="/ubicacion" element={<HomePage />} />
+          <Route path="/obras" element={<ModalPage seoData={PAGES.obras} />} />
+          <Route path="/ubicacion" element={<ModalPage seoData={PAGES.ubicacion} />} />
 
           {/* ✅ RUTA PARA ALMITA */}
           <Route path="/almita" element={<AlmitaPage />} />
