@@ -9,7 +9,7 @@ import { PAGE_KEYWORDS } from './keywords';
 export const PAGES = {
   home: {
     title: 'Casas Modulares Neuquén | Paneles SIP PROPANEL',
-    description: 'Viviendas modulares certificadas EDGE. Entrega 30 días. Desde $15.3M. Paneles SIP PROPANEL. Construcción sustentable Neuquén, Patagonia.',
+    description: 'Viviendas modulares certificadas EDGE. Entrega 30 días. Desde $16.8M. Paneles SIP PROPANEL. Construcción sustentable Neuquén, Patagonia.',
     keywords: PAGE_KEYWORDS.home,
     canonical: '/',
     image: '/og-image.jpg',
