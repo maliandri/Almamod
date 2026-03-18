@@ -682,6 +682,26 @@ const modulosData = [
       }
     ]
   },
+  {
+    id: 'almatower',
+    nombre: 'Alma Tower',
+    slug: 'alma-tower',
+    superficie: 'Consultar',
+    dimensiones: 'Próximamente',
+    habitaciones: 'Consultar',
+    precio: 0,
+    incluye: [],
+    plazo: 'Consultar',
+    imagenPortada: null,
+    imagenesDetalle: [],
+    descripcion: 'Nuevo modelo de 3 plantas (planta baja + 2 pisos) en desarrollo. Una propuesta vertical única que maximiza el espacio habitable sin ampliar la huella en el terreno. Próximamente disponible.',
+    casosDeUso: [],
+    ventajas: [],
+    keywordsPrincipales: [],
+    especificacionesTecnicas: { construccion: [], equipamiento: [] },
+    faqProducto: [],
+    proximamente: true,
+  },
 ];
 
 // Función para formatear precio
@@ -820,6 +840,9 @@ function TiendaAlma() {
       modulo.habitaciones.toLowerCase().includes(searchTerm.toLowerCase());
 
     if (searchTerm && !matchSearch) return false;
+
+    // Los productos PRÓXIMAMENTE siempre se muestran, sin importar filtros
+    if (modulo.proximamente) return true;
 
     // Filtro de precio
     if (modulo.precio < priceRange[0] || modulo.precio > priceRange[1]) return false;
@@ -1278,7 +1301,64 @@ function TiendaAlma() {
                     key={modulo.id}
                     className="modulo-card"
                     whileHover={{ y: -5 }}
+                    style={modulo.proximamente ? { cursor: 'default' } : {}}
                   >
+                    {modulo.proximamente ? (
+                      <div style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                        <div className="modulo-image-container">
+                          {/* Placeholder image for PRÓXIMAMENTE */}
+                          <div style={{
+                            width: '100%',
+                            height: '100%',
+                            background: 'linear-gradient(135deg, #1a0a3c 0%, #2d1b69 50%, #1a0a3c 100%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
+                            <span style={{ fontSize: '3rem', opacity: 0.3 }}>🏢</span>
+                          </div>
+                          {/* Banda diagonal violeta estilo camiseta */}
+                          <div style={{
+                            position: 'absolute',
+                            top: 0, left: 0,
+                            width: '100%', height: '100%',
+                            overflow: 'hidden',
+                            pointerEvents: 'none',
+                            zIndex: 2
+                          }}>
+                            <div style={{
+                              position: 'absolute',
+                              top: '70%',
+                              left: '50%',
+                              width: '200%',
+                              height: '42px',
+                              background: 'linear-gradient(90deg, #6d28d9, #7c3aed, #8b5cf6)',
+                              transform: 'translate(-50%, -50%) rotate(-32deg)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'white',
+                              fontWeight: '800',
+                              fontSize: '0.8rem',
+                              letterSpacing: '4px',
+                              boxShadow: '0 3px 12px rgba(109,40,217,0.6)',
+                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
+                            }}>
+                              PRÓXIMAMENTE
+                            </div>
+                          </div>
+                        </div>
+                        <div className="modulo-info">
+                          <h3>{modulo.nombre}</h3>
+                          <div className="modulo-specs">
+                          </div>
+                          <p className="modulo-description">{modulo.descripcion}</p>
+                          <div className="modulo-price" style={{ color: '#a78bfa' }}>
+                            Próximamente
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
                     <Link to={`/tiendaalma/${modulo.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                       <div className="modulo-image-container">
                         <img
@@ -1290,8 +1370,8 @@ function TiendaAlma() {
                         <div className="modulo-overlay">
                           <span className="ver-detalles">Ver Detalles →</span>
                         </div>
-                        {/* ✅ Badge especial para Alma 36 (más vendido) */}
-                        {modulo.id === 'almamod36' && (
+                        {/* ✅ Badge especial para Alma 27 (más vendido) */}
+                        {modulo.id === 'almamod27' && (
                           <div style={{
                             position: 'absolute',
                             top: '10px',
@@ -1329,6 +1409,7 @@ function TiendaAlma() {
                         </div>
                       </div>
                     </Link>
+                    )}
                   </motion.div>
                 ))}
                 </div>
