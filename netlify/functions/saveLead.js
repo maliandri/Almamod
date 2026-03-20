@@ -33,11 +33,6 @@ export const handler = async (event) => {
     console.log('✅ Lead guardado en Supabase correctamente');
 
     // Intentar enviar email (no fallar si esto falla)
-    console.log('📧 Intentando enviar email...', {
-      from: process.env.RESEND_FROM,
-      to: process.env.RESEND_TO,
-      hasApiKey: !!process.env.RESEND_API_KEY
-    });
     try {
       const emailResult = await resend.emails.send({
         from: process.env.RESEND_FROM,
@@ -110,9 +105,9 @@ export const handler = async (event) => {
         `
       });
 
-      console.log('✅ Email enviado correctamente:', JSON.stringify(emailResult));
+      console.log('✅ Email enviado correctamente:', emailResult);
     } catch (emailError) {
-      console.error('❌ Error enviando email (pero lead guardado):', JSON.stringify(emailError), emailError?.message);
+      console.error('❌ Error enviando email (pero lead guardado):', emailError);
       // No retornar error porque el lead SÍ se guardó
     }
 
