@@ -9,7 +9,7 @@ import { PAGE_KEYWORDS } from './keywords';
 export const PAGES = {
   home: {
     title: 'Casas Modulares Neuquén | Paneles SIP PROPANEL',
-    description: 'Viviendas modulares certificadas EDGE. Entrega 30 días. Desde $16.8M. Paneles SIP PROPANEL. Construcción sustentable Neuquén, Patagonia.',
+    description: 'Viviendas modulares certificadas EDGE. Entrega 30 días. Desde $17.9M. Paneles SIP PROPANEL. Construcción sustentable Neuquén, Patagonia.',
     keywords: PAGE_KEYWORDS.home,
     canonical: '/',
     image: '/og-image.jpg',
@@ -18,7 +18,7 @@ export const PAGES = {
 
   tiendaalma: {
     title: 'Catálogo Viviendas Modulares | Precios 2026',
-    description: 'Casas modulares desde $15.3M. MiCasita 12m², Alma 18, 27, 36. Llave en mano. Certificación EDGE Advanced. Entrega 30 días Neuquén.',
+    description: 'Casas modulares desde $17.9M. MiCasita 12m², Alma 18, 27, 36. Llave en mano. Certificación EDGE Advanced. Entrega 30 días Neuquén.',
     keywords: PAGE_KEYWORDS.tiendaalma,
     canonical: '/tiendaalma',
     image: '/og-image.jpg',

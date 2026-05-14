@@ -8,7 +8,7 @@ import { PRODUCT_KEYWORDS } from './keywords';
 
 export const PRODUCTS = {
   micasita: {
-    title: 'MiCasita 12m² | Módulo desde $16.8M',
+    title: 'MiCasita 12m² | Módulo desde $17.9M',
     description: 'Módulo monoambiente 12m² compacto, funcional y accesible. Ideal persona sola o pareja joven. Baño completo, cocina equipada. Ampliable. Entrega 30 días.',
     keywords: PRODUCT_KEYWORDS.micasita,
     canonical: '/tiendaalma/micasita',
@@ -19,7 +19,7 @@ export const PRODUCTS = {
       name: 'MiCasita 12m²',
       sku: 'ALMAMOD-MICASITA-12',
       brand: 'AlmaMod',
-      price: '16800000',
+      price: '17900000',
       currency: 'ARS',
       availability: 'https://schema.org/InStock',
       condition: 'https://schema.org/NewCondition',
@@ -32,8 +32,8 @@ export const PRODUCTS = {
   },
 
   alma18: {
-    title: 'Alma 18 - 18m² con Dormitorio | $35.1M',
-    description: 'Casa modular 18m² con 1 dormitorio, baño y cocina. Ideal parejas. $35.150.000 llave en mano. Certificación EDGE. Neuquén.',
+    title: 'Alma 18 - 18m² con Dormitorio | $39.8M',
+    description: 'Casa modular 18m² con 1 dormitorio, baño y cocina. Ideal parejas. $39.850.000 llave en mano. Certificación EDGE. Neuquén.',
     keywords: PRODUCT_KEYWORDS.alma18,
     canonical: '/tiendaalma/alma-18',
     slug: 'alma-18',
@@ -42,7 +42,7 @@ export const PRODUCTS = {
       name: 'Alma 18',
       sku: 'ALMAMOD-ALMA18',
       brand: 'AlmaMod',
-      price: '35150000',
+      price: '39850000',
       currency: 'ARS',
       availability: 'https://schema.org/InStock',
       condition: 'https://schema.org/NewCondition',
@@ -55,8 +55,8 @@ export const PRODUCTS = {
   },
 
   alma27: {
-    title: 'Alma 27 - 27m² Ambientes Separados | $46.6M',
-    description: 'Vivienda 27m² con dormitorio, estar-comedor, baño y cocina. Familias pequeñas. $46.650.000 llave en mano. EDGE Advanced.',
+    title: 'Alma 27 - 27m² Ambientes Separados | $52M',
+    description: 'Vivienda 27m² con dormitorio, estar-comedor, baño y cocina. Familias pequeñas. $52.000.000 llave en mano. EDGE Advanced.',
     keywords: PRODUCT_KEYWORDS.alma27,
     canonical: '/tiendaalma/alma-27',
     slug: 'alma-27',
@@ -65,7 +65,7 @@ export const PRODUCTS = {
       name: 'Alma 27',
       sku: 'ALMAMOD-ALMA27',
       brand: 'AlmaMod',
-      price: '46650000',
+      price: '52000000',
       currency: 'ARS',
       availability: 'https://schema.org/InStock',
       condition: 'https://schema.org/NewCondition',
@@ -78,8 +78,8 @@ export const PRODUCTS = {
   },
 
   almaLoft28: {
-    title: 'Alma Loft 28 - Diseño Loft Entrepiso | $42.3M',
-    description: 'Vivienda tipo loft 28m² con entrepiso. Diseño moderno juvenil. $42.300.000 llave en mano. Doble altura. Neuquén Patagonia.',
+    title: 'Alma Loft 28 - Diseño Loft Entrepiso | $52M',
+    description: 'Vivienda tipo loft 28m² con entrepiso. Diseño moderno juvenil. $52.000.000 llave en mano. Doble altura. Neuquén Patagonia.',
     keywords: PRODUCT_KEYWORDS.almaLoft28,
     canonical: '/tiendaalma/alma-loft-28',
     slug: 'alma-loft-28',
@@ -88,7 +88,7 @@ export const PRODUCTS = {
       name: 'Alma Loft 28',
       sku: 'ALMAMOD-LOFT28',
       brand: 'AlmaMod',
-      price: '42300000',
+      price: '52000000',
       currency: 'ARS',
       availability: 'https://schema.org/InStock',
       condition: 'https://schema.org/NewCondition',
@@ -101,8 +101,8 @@ export const PRODUCTS = {
   },
 
   alma36: {
-    title: 'Alma 36 - 2 Dormitorios 36m² | $58.7M',
-    description: 'Casa modular 36m² con 2 dormitorios, living-comedor, cocina y baño. Familias 3-4 personas. $58.720.000 llave en mano. EDGE.',
+    title: 'Alma 36 - 2 Dormitorios 36m² | $65.6M',
+    description: 'Casa modular 36m² con 2 dormitorios, living-comedor, cocina y baño. Familias 3-4 personas. $65.600.000 llave en mano. EDGE.',
     keywords: PRODUCT_KEYWORDS.alma36,
     canonical: '/tiendaalma/alma-36',
     slug: 'alma-36',
@@ -111,7 +111,7 @@ export const PRODUCTS = {
       name: 'Alma 36',
       sku: 'ALMAMOD-ALMA36',
       brand: 'AlmaMod',
-      price: '58720000',
+      price: '65600000',
       currency: 'ARS',
       availability: 'https://schema.org/InStock',
       condition: 'https://schema.org/NewCondition',
@@ -124,8 +124,8 @@ export const PRODUCTS = {
   },
 
   alma36Refugio: {
-    title: 'Alma 36 Refugio - Cabaña Patagónica | $61.2M',
-    description: 'Cabaña estilo refugio 36m² con 2 dormitorios. Diseño patagónico rústico-moderno. $61.200.000. Ideal cordillera y bosque.',
+    title: 'Alma 36 Refugio - Cabaña Patagónica | $68.4M',
+    description: 'Cabaña estilo refugio 36m² con 2 dormitorios. Diseño patagónico rústico-moderno. $68.350.000. Ideal cordillera y bosque.',
     keywords: PRODUCT_KEYWORDS.alma36Refugio,
     canonical: '/tiendaalma/alma-36-refugio',
     slug: 'alma-36-refugio',
@@ -134,7 +134,7 @@ export const PRODUCTS = {
       name: 'Alma 36 Refugio',
       sku: 'ALMAMOD-REFUGIO36',
       brand: 'AlmaMod',
-      price: '61200000',
+      price: '68350000',
       currency: 'ARS',
       availability: 'https://schema.org/InStock',
       condition: 'https://schema.org/NewCondition',
