@@ -257,7 +257,7 @@ const modulosData = [
     habitaciones: '1 dormitorio',
     precio: 52000000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Un dormitorio'],
-    plazo: '30 días',
+    plazo: '40 días',
     imagenPortada: 'ALMAMOD_27_PORTADA.webp',
     imagenesDetalle: [
       'ALMAMOD_27_PORTADA.webp',
@@ -359,7 +359,7 @@ const modulosData = [
     habitaciones: 'Loft con entrepiso',
     precio: 52000000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dormitorio en entrepiso'],
-    plazo: '30 días',
+    plazo: '40 días',
     imagenPortada: 'ALMAMOD_28_LOFT_PORTADA.webp',
     imagenesDetalle: [
       'ALMAMOD_28_LOFT_PORTADA.webp',
@@ -464,7 +464,7 @@ const modulosData = [
     habitaciones: '2 dormitorios',
     precio: 65600000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
-    plazo: '30 días',
+    plazo: '60 días',
     imagenPortada: 'ALMAMOD_36_PORTADA.webp',
     imagenesDetalle: [
       'ALMAMOD_36_PORTADA.webp',
@@ -577,7 +577,7 @@ const modulosData = [
     habitaciones: '2 dormitorios',
     precio: 68350000,
     incluye: ['Baño completo', 'Cocina', 'Estar-comedor', 'Dos dormitorios'],
-    plazo: '30 días',
+    plazo: '60 días',
     imagenPortada: 'ALMAMOD_36_REFUGIO_PORTADA.webp',
     imagenesDetalle: [
       'ALMAMOD_36_REFUGIO_PORTADA.webp',
@@ -1010,7 +1010,7 @@ function TiendaAlma() {
                   Viviendas Modulares Llave en Mano desde $17.900.000
                 </h3>
                 <p style={{ margin: '10px 0', fontSize: '0.95rem' }}>
-                  ✅ <strong>Entrega garantizada en 30 días</strong> • 
+                  ✅ <strong>Entrega según modelo desde 30 días</strong> •
                   ✅ Construcción modular certificada EDGE • 
                   ✅ Paneles SIP PROPANEL •
                   ✅ Ahorro energético del 40%

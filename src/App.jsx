@@ -140,7 +140,7 @@ function App() {
           </div>
           <div className="hero-text-container">
             <h2>Construcción Modular en Neuquén | Paneles SIP</h2>
-            <p>Viviendas sustentables certificadas • Entrega en 30 días • Neuquén, Patagonia Argentina</p>
+            <p>Viviendas sustentables certificadas • Entrega a partir de 30 días • Neuquén, Patagonia Argentina</p>
           </div>
         </div>
       </header>}

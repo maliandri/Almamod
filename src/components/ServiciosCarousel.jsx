@@ -124,7 +124,7 @@ function ServiciosCarousel() {
     <div className="servicios-carousel-container">
       <div className="servicios-header">
         <h2>Construccion Sin Limites</h2>
-        <p>MODulos con ALMA, MODular MODerno</p>
+
       </div>
       
       <div className="carousel-main">

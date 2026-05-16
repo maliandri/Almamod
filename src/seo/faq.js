@@ -10,7 +10,7 @@ export const GENERAL_FAQ = [
   },
   {
     question: '¿Cuánto tiempo tarda la construcción?',
-    answer: 'El plazo de entrega es de 30 días desde el inicio de obra, incluyendo fabricación en taller y montaje en sitio. Es 5 veces más rápido que la construcción tradicional.'
+    answer: 'El plazo de entrega varía según el modelo: 30 días para MiCasita y Alma 18, 40 días para Alma 27 y Alma Loft 28, y 60 días para Alma 36 y Alma 36 Refugio. Incluye fabricación en taller y montaje en sitio. Es 5 veces más rápido que la construcción tradicional.'
   },
   {
     question: '¿Resisten el clima de la Patagonia?',
