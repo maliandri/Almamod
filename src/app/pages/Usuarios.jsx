@@ -2,22 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
-
-const ROL_LABEL = {
-  superadmin: 'Super Admin',
-  dueno: 'Dueño',
-  deposito: 'Depósito',
-  fabricacion: 'Fabricación',
-  cliente: 'Cliente',
-};
-
-const ROL_COLOR = {
-  superadmin: 'bg-purple-100 text-purple-700',
-  dueno: 'bg-blue-100 text-blue-700',
-  deposito: 'bg-orange-100 text-orange-700',
-  fabricacion: 'bg-green-100 text-green-700',
-  cliente: 'bg-gray-100 text-gray-600',
-};
+import { C, S, ROL_STYLE, ROL_LABEL, inputFocus, inputBlur } from '../styles';
 
 export default function Usuarios() {
   const { token } = useAuth();
@@ -27,6 +12,7 @@ export default function Usuarios() {
   const [invitando, setInvitando] = useState(false);
   const [invError, setInvError] = useState('');
   const [invSuccess, setInvSuccess] = useState('');
+  const [inviteLink, setInviteLink] = useState('');
 
   const cargarUsuarios = () => {
     api.users.list(token)
@@ -38,13 +24,15 @@ export default function Usuarios() {
 
   const handleInvitar = async (e) => {
     e.preventDefault();
-    setInvError('');
-    setInvSuccess('');
+    setInvError(''); setInvSuccess(''); setInviteLink('');
     setInvitando(true);
     try {
-      await api.auth.invite(token, { email: form.email, rol: form.rol });
-      setInvSuccess(`Invitación enviada a ${form.email}`);
+      const res = await api.auth.invite(token, { email: form.email, rol: form.rol });
+      const link = `${window.location.origin}/app/registro?token=${res.token}`;
+      setInvSuccess(`Invitación creada para ${form.email}`);
+      setInviteLink(link);
       setForm({ email: '', rol: 'cliente' });
+      cargarUsuarios();
     } catch (err) {
       setInvError(err.message);
     } finally {
@@ -54,26 +42,29 @@ export default function Usuarios() {
 
   return (
     <AppLayout>
-      <div className="p-6 max-w-2xl">
-        <h1 className="text-xl font-bold text-gray-900 mb-6">Usuarios</h1>
+      <div style={{ padding: '28px 32px', maxWidth: '760px' }}>
+
+        <h1 style={S.h1}>👥 Usuarios</h1>
 
         {/* Invite form */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
-          <h2 className="text-base font-semibold text-gray-900 mb-4">Invitar usuario</h2>
-          <form onSubmit={handleInvitar} className="space-y-3">
-            <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+        <div style={{ ...S.card, marginBottom: '24px' }}>
+          <h2 style={{ ...S.h2, color: C.gold }}>Invitar usuario</h2>
+          <form onSubmit={handleInvitar}>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '12px' }}>
               <input
                 type="email"
                 required
                 value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="flex-1 min-w-0 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={e => setForm({ ...form, email: e.target.value })}
                 placeholder="email@ejemplo.com"
+                style={{ ...S.input, flex: '1', minWidth: '200px' }}
+                onFocus={inputFocus}
+                onBlur={inputBlur}
               />
               <select
                 value={form.rol}
-                onChange={(e) => setForm({ ...form, rol: e.target.value })}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={e => setForm({ ...form, rol: e.target.value })}
+                style={{ ...S.select, minWidth: '140px' }}
               >
                 <option value="cliente">Cliente</option>
                 <option value="fabricacion">Fabricación</option>
@@ -83,50 +74,77 @@ export default function Usuarios() {
               <button
                 type="submit"
                 disabled={invitando}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg px-4 py-2 text-sm transition-colors disabled:opacity-50 whitespace-nowrap"
+                style={{ ...S.btnGold, opacity: invitando ? 0.6 : 1 }}
               >
-                {invitando ? 'Enviando...' : 'Invitar'}
+                {invitando ? 'Creando...' : '+ Invitar'}
               </button>
             </div>
 
-            {invError && (
-              <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-3 py-2 text-sm">{invError}</div>
-            )}
+            {invError && <div style={S.alertError}>{invError}</div>}
+
             {invSuccess && (
-              <div className="bg-green-50 border border-green-200 text-green-700 rounded-lg px-3 py-2 text-sm">
-                ✓ {invSuccess}
+              <div style={{ ...S.alertSuccess, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span>✓ {invSuccess}</span>
+                {inviteLink && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <input
+                      readOnly
+                      value={inviteLink}
+                      style={{ ...S.input, flex: 1, fontSize: '0.78rem', padding: '6px 10px', color: C.textMuted }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => { navigator.clipboard.writeText(inviteLink); }}
+                      style={{ ...S.btnGhost, fontSize: '0.78rem', padding: '6px 12px' }}
+                    >
+                      Copiar
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </form>
         </div>
 
         {/* Users list */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="px-5 py-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-            <h2 className="text-sm font-medium text-gray-600">Usuarios activos</h2>
-            <span className="text-xs text-gray-400">{usuarios.length}</span>
+        <div style={S.card}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h2 style={{ ...S.h2, margin: 0 }}>Usuarios activos</h2>
+            <span style={{ background: C.goldDim, color: C.gold, borderRadius: '20px', padding: '2px 10px', fontSize: '0.8rem', fontWeight: 700 }}>
+              {usuarios.length}
+            </span>
           </div>
 
           {loading ? (
-            <div className="text-center py-8 text-gray-400 text-sm">Cargando...</div>
+            <div style={{ textAlign: 'center', padding: '32px', color: C.textMuted, fontSize: '0.9rem' }}>Cargando...</div>
           ) : usuarios.length === 0 ? (
-            <div className="text-center py-8 text-gray-400 text-sm">No hay usuarios registrados</div>
+            <div style={{ textAlign: 'center', padding: '32px', color: C.textMuted, fontSize: '0.9rem' }}>No hay usuarios registrados</div>
           ) : (
-            <div className="divide-y divide-gray-50">
-              {usuarios.map(u => (
-                <div key={u.id} className="px-5 py-3 flex items-center justify-between gap-4">
-                  <div className="min-w-0">
-                    <div className="text-sm font-medium text-gray-900">{u.nombre}</div>
-                    <div className="text-xs text-gray-400 truncate">{u.email}</div>
-                    {u.telefono && (
-                      <div className="text-xs text-gray-400">{u.telefono}</div>
-                    )}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+              {usuarios.map((u, i) => {
+                const rolStyle = ROL_STYLE[u.rol] || ROL_STYLE.cliente;
+                return (
+                  <div key={u.id} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px',
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)',
+                    borderBottom: `1px solid ${C.border}`,
+                  }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ color: C.text, fontWeight: 600, fontSize: '0.9rem' }}>{u.nombre}</div>
+                      <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '2px' }}>{u.email}</div>
+                      {u.telefono && <div style={{ color: C.textMuted, fontSize: '0.78rem' }}>{u.telefono}</div>}
+                    </div>
+                    <span style={{ ...rolStyle, padding: '3px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em', flexShrink: 0 }}>
+                      {ROL_LABEL[u.rol] || u.rol}
+                    </span>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium flex-shrink-0 ${ROL_COLOR[u.rol] || 'bg-gray-100 text-gray-600'}`}>
-                    {ROL_LABEL[u.rol] || u.rol}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

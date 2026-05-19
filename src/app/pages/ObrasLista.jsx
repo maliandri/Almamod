@@ -3,18 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
-
-const ESTADO_COLOR = {
-  activa: 'bg-green-100 text-green-700',
-  finalizada: 'bg-gray-100 text-gray-600',
-  cancelada: 'bg-red-100 text-red-700',
-};
-
-const ETAPA_COLOR = {
-  pendiente: 'bg-gray-200',
-  cargada: 'bg-yellow-400',
-  firmada: 'bg-green-500',
-};
+import { C, S, ESTADO_STYLE, ETAPA_STYLE } from '../styles';
 
 export default function ObrasLista() {
   const { token } = useAuth();
@@ -32,71 +21,123 @@ export default function ObrasLista() {
 
   return (
     <AppLayout>
-      <div className="p-6">
-        <h1 className="text-xl font-bold text-gray-900 mb-6">Obras</h1>
+      <div style={{ padding: '28px 32px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h1 style={{ ...S.h1, margin: 0 }}>🏗️ Obras</h1>
+          {obras.length > 0 && (
+            <span style={{ background: C.goldDim, color: C.gold, borderRadius: '20px', padding: '4px 14px', fontSize: '0.85rem', fontWeight: 700 }}>
+              {obras.length} obra{obras.length !== 1 ? 's' : ''}
+            </span>
+          )}
+        </div>
 
         {loading && (
-          <div className="text-center py-16 text-gray-400 text-sm">Cargando obras...</div>
-        )}
-
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
-            {error}
+          <div style={{ textAlign: 'center', padding: '64px', color: C.textMuted, fontSize: '0.95rem' }}>
+            Cargando obras...
           </div>
         )}
+
+        {error && <div style={S.alertError}>{error}</div>}
 
         {!loading && !error && obras.length === 0 && (
-          <div className="text-center py-16 text-gray-400">
-            <div className="text-5xl mb-3">🏗️</div>
-            <p className="text-sm">No hay obras registradas</p>
+          <div style={{ textAlign: 'center', padding: '64px', color: C.textMuted }}>
+            <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🏗️</div>
+            <p style={{ fontSize: '0.95rem' }}>No hay obras registradas</p>
           </div>
         )}
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div style={{ display: 'grid', gap: '16px', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
           {obras.map(obra => {
             const etapas = [...(obra.etapas_obra || [])].sort((a, b) => a.numero - b.numero);
             const firmadas = etapas.filter(e => e.estado === 'firmada').length;
+            const estadoStyle = ESTADO_STYLE[obra.estado] || ESTADO_STYLE.finalizada;
 
             return (
               <button
                 key={obra.id}
                 onClick={() => navigate(`/app/obras/${obra.id}`)}
-                className="bg-white rounded-xl border border-gray-200 p-5 text-left hover:shadow-md hover:border-blue-200 transition-all"
+                style={{
+                  background: C.bgCard,
+                  border: `1px solid ${C.border}`,
+                  borderRadius: '12px',
+                  padding: '20px',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  width: '100%',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = C.bgCardHov;
+                  e.currentTarget.style.borderColor = C.gold;
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = `0 8px 24px rgba(212,165,116,0.15)`;
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = C.bgCard;
+                  e.currentTarget.style.borderColor = C.border;
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
               >
-                <div className="flex justify-between items-start mb-2">
+                {/* Header obra */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                   <div>
-                    <div className="font-semibold text-gray-900">Obra #{obra.numero_obra}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">
+                    <div style={{ color: C.gold, fontWeight: 700, fontSize: '1rem' }}>
+                      Obra #{obra.numero_obra}
+                    </div>
+                    <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '2px' }}>
                       {obra.modelos?.nombre} · {obra.modelos?.superficie}m²
                     </div>
                   </div>
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${ESTADO_COLOR[obra.estado] || 'bg-gray-100 text-gray-600'}`}>
+                  <span style={{
+                    background: estadoStyle.background,
+                    color: estadoStyle.color,
+                    border: `1px solid ${estadoStyle.border}`,
+                    padding: '3px 10px',
+                    borderRadius: '20px',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.04em',
+                    flexShrink: 0,
+                    textTransform: 'uppercase',
+                  }}>
                     {obra.estado}
                   </span>
                 </div>
 
-                <div className="mb-3">
-                  <div className="text-sm font-medium text-gray-700">{obra.cliente?.nombre}</div>
-                  <div className="text-xs text-gray-400">{obra.cliente?.email}</div>
+                {/* Cliente */}
+                <div style={{ marginBottom: '14px', padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+                  <div style={{ color: C.textSub, fontWeight: 600, fontSize: '0.88rem' }}>{obra.cliente?.nombre}</div>
+                  <div style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '2px' }}>{obra.cliente?.email}</div>
                 </div>
 
+                {/* Progreso de etapas */}
                 {etapas.length > 0 && (
-                  <>
-                    <div className="flex gap-1 mb-1">
+                  <div>
+                    <div style={{ display: 'flex', gap: '4px', marginBottom: '6px' }}>
                       {etapas.map(etapa => (
                         <div
                           key={etapa.id}
-                          className={`flex-1 h-2 rounded-full ${ETAPA_COLOR[etapa.estado] || 'bg-gray-200'}`}
                           title={`Etapa ${etapa.numero}: ${etapa.nombre} (${etapa.estado})`}
+                          style={{
+                            flex: 1,
+                            height: '6px',
+                            borderRadius: '3px',
+                            ...ETAPA_STYLE[etapa.estado] || ETAPA_STYLE.pendiente,
+                          }}
                         />
                       ))}
                     </div>
-                    <div className="text-xs text-gray-400">{firmadas}/{etapas.length} etapas firmadas</div>
-                  </>
+                    <div style={{ color: C.textMuted, fontSize: '0.75rem' }}>
+                      {firmadas}/{etapas.length} etapas firmadas
+                    </div>
+                  </div>
                 )}
 
                 {obra.direccion && (
-                  <div className="text-xs text-gray-400 mt-2 truncate">📍 {obra.direccion}</div>
+                  <div style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '10px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    📍 {obra.direccion}
+                  </div>
                 )}
               </button>
             );

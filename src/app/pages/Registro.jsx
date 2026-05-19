@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
-
-const ROL_LABEL = {
-  dueno: 'Dueño',
-  deposito: 'Depósito',
-  fabricacion: 'Fabricación',
-  cliente: 'Cliente',
-};
+import logoAlmamod from '../../assets/almamod.webp';
+import { C, S, ROL_STYLE, ROL_LABEL, inputFocus, inputBlur } from '../styles';
 
 export default function Registro() {
   const [params] = useSearchParams();
@@ -16,19 +11,13 @@ export default function Registro() {
 
   const [invitacion, setInvitacion] = useState(null);
   const [invError, setInvError] = useState('');
-  const [form, setForm] = useState({
-    nombre: '', password: '', confirm: '',
-    telefono: '', dni: '', direccion: '',
-  });
+  const [form, setForm] = useState({ nombre: '', password: '', confirm: '', telefono: '', dni: '', direccion: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (!invToken) {
-      setInvError('Token de invitación no encontrado en la URL');
-      return;
-    }
+    if (!invToken) { setInvError('Token de invitación no encontrado en la URL'); return; }
     api.auth.checkInvite(invToken)
       .then(data => setInvitacion(data))
       .catch(err => setInvError(err.message));
@@ -36,16 +25,9 @@ export default function Registro() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password !== form.confirm) {
-      setError('Las contraseñas no coinciden');
-      return;
-    }
-    if (form.password.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres');
-      return;
-    }
-    setError('');
-    setLoading(true);
+    if (form.password !== form.confirm) { setError('Las contraseñas no coinciden'); return; }
+    if (form.password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres'); return; }
+    setError(''); setLoading(true);
     try {
       await api.auth.register({
         token: invToken,
@@ -64,92 +46,125 @@ export default function Registro() {
     }
   };
 
-  const field = (key, label, type = 'text', required = false, placeholder = '') => (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        {label}{required && ' *'}
-      </label>
+  const Field = ({ k, label, type = 'text', required = false, placeholder = '' }) => (
+    <div style={{ marginBottom: '16px' }}>
+      <label style={S.label}>{label}{required && ' *'}</label>
       <input
         type={type}
         required={required}
-        value={form[key]}
-        onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        value={form[k]}
+        onChange={e => setForm({ ...form, [k]: e.target.value })}
         placeholder={placeholder}
+        style={S.input}
+        onFocus={inputFocus}
+        onBlur={inputBlur}
       />
     </div>
   );
 
-  if (success) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-sm text-center">
-          <div className="text-5xl mb-4">✅</div>
-          <h1 className="text-xl font-bold text-gray-900 mb-2">¡Registro completado!</h1>
-          <p className="text-gray-500 text-sm mb-6">Tu cuenta fue creada correctamente.</p>
+  const container = (
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px',
+    }}>
+      <div style={{ width: '100%', maxWidth: '400px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <img src={logoAlmamod} alt="AlmaMod" style={{ height: '44px', objectFit: 'contain', marginBottom: '10px' }} />
+          <p style={{ color: C.textMuted, fontSize: '0.8rem', letterSpacing: '0.08em' }}>REGISTRO DE USUARIO</p>
+        </div>
+  );
+
+  if (success) return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px',
+    }}>
+      <div style={{ width: '100%', maxWidth: '380px', textAlign: 'center' }}>
+        <img src={logoAlmamod} alt="AlmaMod" style={{ height: '44px', objectFit: 'contain', marginBottom: '24px' }} />
+        <div style={{ ...S.card, textAlign: 'center' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '16px' }}>✅</div>
+          <h1 style={{ color: C.gold, fontSize: '1.3rem', fontWeight: 700, margin: '0 0 8px 0' }}>¡Registro completado!</h1>
+          <p style={{ color: C.textMuted, fontSize: '0.9rem', marginBottom: '24px' }}>Tu cuenta fue creada correctamente.</p>
           <button
             onClick={() => navigate('/app/login')}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg py-2.5 px-6 text-sm transition-colors"
+            style={{ ...S.btnGold, width: '100%', padding: '12px', fontSize: '0.95rem' }}
           >
-            Ir al login
+            Ir al login →
           </button>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">AlmaMod</h1>
-          <p className="text-gray-500 text-sm mt-1">Completá tu registro</p>
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px',
+    }}>
+      <div style={{ width: '100%', maxWidth: '400px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+          <img src={logoAlmamod} alt="AlmaMod" style={{ height: '44px', objectFit: 'contain', marginBottom: '10px' }} />
+          <p style={{ color: C.textMuted, fontSize: '0.8rem', letterSpacing: '0.08em' }}>COMPLETÁ TU REGISTRO</p>
         </div>
 
         {invError ? (
-          <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-5 text-sm text-center">
-            <div className="text-3xl mb-2">❌</div>
-            {invError}
+          <div style={{ ...S.card, textAlign: 'center' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>❌</div>
+            <div style={{ color: C.red, fontSize: '0.9rem' }}>{invError}</div>
           </div>
         ) : !invitacion ? (
-          <div className="text-center text-gray-400 text-sm">Verificando invitación...</div>
+          <div style={{ textAlign: 'center', color: C.textMuted, fontSize: '0.9rem', padding: '32px' }}>
+            Verificando invitación...
+          </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2.5 mb-5 text-sm">
-              <span className="text-blue-600">Invitado como </span>
-              <span className="font-semibold text-blue-800">{ROL_LABEL[invitacion.rol] || invitacion.rol}</span>
-              <div className="text-blue-500 text-xs mt-0.5">{invitacion.email}</div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {field('nombre', 'Nombre completo', 'text', true, 'Juan García')}
-              {field('password', 'Contraseña', 'password', true, 'Mínimo 8 caracteres')}
-              {field('confirm', 'Confirmar contraseña', 'password', true, '••••••••')}
-              {field('telefono', 'Teléfono', 'text', false, '+54 299 ...')}
-
-              {invitacion.rol === 'cliente' && (
-                <>
-                  {field('dni', 'DNI', 'text', false, '12.345.678')}
-                  {field('direccion', 'Dirección', 'text', false, 'Calle 123, Neuquén')}
-                </>
-              )}
-
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-3 py-2 text-sm">
-                  {error}
+          <div style={S.card}>
+            {/* Badge de rol */}
+            {(() => {
+              const rolStyle = ROL_STYLE[invitacion.rol] || ROL_STYLE.cliente;
+              return (
+                <div style={{ ...rolStyle, border: `1px solid ${rolStyle.color}40`, borderRadius: '10px', padding: '10px 14px', marginBottom: '20px' }}>
+                  <div style={{ fontSize: '0.75rem', opacity: 0.8, marginBottom: '2px' }}>Invitado como</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{ROL_LABEL[invitacion.rol] || invitacion.rol}</div>
+                  <div style={{ fontSize: '0.8rem', opacity: 0.7, marginTop: '2px' }}>{invitacion.email}</div>
                 </div>
-              )}
+              );
+            })()}
+
+            <form onSubmit={handleSubmit}>
+              <Field k="nombre"   label="Nombre completo"    type="text"     required placeholder="Juan García" />
+              <Field k="password" label="Contraseña"         type="password" required placeholder="Mínimo 8 caracteres" />
+              <Field k="confirm"  label="Confirmar contraseña" type="password" required placeholder="••••••••" />
+              <Field k="telefono" label="Teléfono"           type="text"     placeholder="+54 299 ..." />
+
+              {invitacion.rol === 'cliente' && <>
+                <Field k="dni"      label="DNI"      type="text" placeholder="12.345.678" />
+                <Field k="direccion" label="Dirección" type="text" placeholder="Calle 123, Neuquén" />
+              </>}
+
+              {error && <div style={{ ...S.alertError, marginBottom: '16px' }}>{error}</div>}
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg py-2.5 text-sm transition-colors disabled:opacity-50"
+                style={{ ...S.btnGold, width: '100%', padding: '12px', fontSize: '0.95rem', opacity: loading ? 0.6 : 1, marginTop: '8px' }}
               >
                 {loading ? 'Creando cuenta...' : 'Crear cuenta'}
               </button>
             </form>
           </div>
         )}
+
+        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.85rem' }}>
+          <Link to="/app/login" style={{ color: C.textMuted, textDecoration: 'none' }}
+            onMouseEnter={e => e.target.style.color = C.gold}
+            onMouseLeave={e => e.target.style.color = C.textMuted}
+          >
+            ← Ya tengo cuenta
+          </Link>
+        </p>
       </div>
     </div>
   );
