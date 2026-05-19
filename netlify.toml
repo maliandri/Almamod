@@ -4,6 +4,9 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+[functions."pdf-export"]
+  node_bundler = "nft"
+
 [build]
   command = "npm run build"
   publish = "dist"
