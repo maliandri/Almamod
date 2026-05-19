@@ -1489,7 +1489,7 @@ function TiendaAlma() {
                             backdropFilter: 'blur(4px)',
                           }}
                         >
-                          <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.75)', letterSpacing: '0.06em', fontWeight: '600' }}>COLOR</span>
+                          <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.75)', letterSpacing: '0.06em', fontWeight: '600' }}>REVESTIMIENTO</span>
                           {[
                             { key: 'madera', label: 'Madera',      bg: '#c4956a', border: '#e8b98a' },
                             { key: 'negro',  label: 'Negro',       bg: '#1c1c1c', border: '#555' },
