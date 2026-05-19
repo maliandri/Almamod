@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
+import logoAlmamod from '../../assets/almamod.webp';
 
 export default function Login() {
   const { login } = useAuth();
@@ -26,45 +27,103 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">AlmaMod</h1>
-          <p className="text-gray-500 text-sm mt-1">Sistema de Gestión de Obras</p>
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '24px',
+    }}>
+      <div style={{ width: '100%', maxWidth: '380px' }}>
+
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <img src={logoAlmamod} alt="AlmaMod" style={{ height: '48px', objectFit: 'contain', marginBottom: '12px' }} />
+          <p style={{ color: '#94a3b8', fontSize: '0.8rem', letterSpacing: '0.08em' }}>
+            SISTEMA DE GESTIÓN DE OBRAS
+          </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-base font-semibold text-gray-900 mb-5">Iniciar sesión</h2>
+        {/* Card */}
+        <div style={{
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(212,165,116,0.2)',
+          borderRadius: '16px',
+          padding: '32px 28px',
+          backdropFilter: 'blur(12px)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+        }}>
+          <h2 style={{ color: '#d4a574', fontSize: '1.25rem', fontWeight: 700, marginBottom: '24px', margin: '0 0 24px 0' }}>
+            Iniciar sesión
+          </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label style={{ display: 'block', color: '#cbd5e1', fontSize: '0.85rem', fontWeight: 500, marginBottom: '6px' }}>
+                Email
+              </label>
               <input
                 type="email"
                 required
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="tu@email.com"
                 autoComplete="email"
+                style={{
+                  width: '100%',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(212,165,116,0.25)',
+                  borderRadius: '8px',
+                  padding: '10px 14px',
+                  color: '#e2e8f0',
+                  fontSize: '0.9rem',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  transition: 'border-color 0.2s',
+                }}
+                onFocus={e => e.target.style.borderColor = '#d4a574'}
+                onBlur={e => e.target.style.borderColor = 'rgba(212,165,116,0.25)'}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+              <label style={{ display: 'block', color: '#cbd5e1', fontSize: '0.85rem', fontWeight: 500, marginBottom: '6px' }}>
+                Contraseña
+              </label>
               <input
                 type="password"
                 required
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="••••••••"
                 autoComplete="current-password"
+                style={{
+                  width: '100%',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(212,165,116,0.25)',
+                  borderRadius: '8px',
+                  padding: '10px 14px',
+                  color: '#e2e8f0',
+                  fontSize: '0.9rem',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  transition: 'border-color 0.2s',
+                }}
+                onFocus={e => e.target.style.borderColor = '#d4a574'}
+                onBlur={e => e.target.style.borderColor = 'rgba(212,165,116,0.25)'}
               />
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-3 py-2 text-sm">
+              <div style={{
+                background: 'rgba(239,68,68,0.1)',
+                border: '1px solid rgba(239,68,68,0.3)',
+                color: '#fca5a5',
+                borderRadius: '8px',
+                padding: '10px 14px',
+                fontSize: '0.85rem',
+              }}>
                 {error}
               </div>
             )}
@@ -72,15 +131,34 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg py-2.5 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                width: '100%',
+                background: loading ? 'rgba(212,165,116,0.4)' : 'linear-gradient(135deg, #d4a574 0%, #8b6f47 100%)',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '12px',
+                color: '#1a1a2e',
+                fontWeight: 700,
+                fontSize: '0.95rem',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s ease',
+                marginTop: '4px',
+              }}
+              onMouseEnter={e => { if (!loading) e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; }}
             >
               {loading ? 'Ingresando...' : 'Ingresar'}
             </button>
           </form>
         </div>
 
-        <p className="text-center mt-4 text-sm text-gray-500">
-          <a href="/" className="hover:text-gray-700 transition-colors">← Volver al sitio</a>
+        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.85rem' }}>
+          <Link to="/" style={{ color: '#94a3b8', textDecoration: 'none', transition: 'color 0.2s' }}
+            onMouseEnter={e => e.target.style.color = '#d4a574'}
+            onMouseLeave={e => e.target.style.color = '#94a3b8'}
+          >
+            ← Volver al sitio
+          </Link>
         </p>
       </div>
     </div>

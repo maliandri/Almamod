@@ -1,30 +1,66 @@
 import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import ThemeToggle from '../../components/ThemeToggle';
+import logoAlmamod from '../../assets/almamod.webp';
 
 const ROL_LABEL = {
   superadmin: 'Super Admin',
-  dueno: 'Dueño',
-  deposito: 'Depósito',
-  fabricacion: 'Fabricación',
-  cliente: 'Cliente',
+  dueno:      'Dueño',
+  deposito:   'Depósito',
+  fabricacion:'Fabricación',
+  cliente:    'Cliente',
 };
+
+const ROL_COLOR = {
+  superadmin:  { bg: 'rgba(239,68,68,0.15)',   text: '#ef4444' },
+  dueno:       { bg: 'rgba(212,165,116,0.15)',  text: '#d4a574' },
+  deposito:    { bg: 'rgba(102,126,234,0.15)',  text: '#667eea' },
+  fabricacion: { bg: 'rgba(16,185,129,0.15)',   text: '#10b981' },
+  cliente:     { bg: 'rgba(148,163,184,0.15)',  text: '#94a3b8' },
+};
+
+const NAV_ITEMS = [
+  { to: '/app/obras',        icon: '🏗️', label: 'Obras',      end: true,  roles: null },
+  { to: '/app/obras/nueva',  icon: '➕', label: 'Nueva Obra', end: false, roles: ['superadmin','dueno','deposito'] },
+  { to: '/app/usuarios',     icon: '👥', label: 'Usuarios',   end: false, roles: ['superadmin','dueno'] },
+];
 
 function NavItem({ to, icon, label, end }) {
   return (
     <NavLink
       to={to}
       end={end}
-      className={({ isActive }) =>
-        `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-          isActive
-            ? 'bg-blue-600 text-white'
-            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-        }`
-      }
+      style={({ isActive }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        padding: '10px 14px',
+        borderRadius: '8px',
+        fontSize: '0.9rem',
+        fontWeight: 500,
+        textDecoration: 'none',
+        transition: 'all 0.2s ease',
+        borderLeft: isActive ? '3px solid #d4a574' : '3px solid transparent',
+        background: isActive ? 'rgba(212,165,116,0.12)' : 'transparent',
+        color: isActive ? '#d4a574' : '#94a3b8',
+      })}
+      onMouseEnter={(e) => {
+        if (!e.currentTarget.classList.contains('active')) {
+          e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+          e.currentTarget.style.color = '#e2e8f0';
+        }
+      }}
+      onMouseLeave={(e) => {
+        const isActive = e.currentTarget.getAttribute('aria-current') === 'page';
+        if (!isActive) {
+          e.currentTarget.style.background = 'transparent';
+          e.currentTarget.style.color = '#94a3b8';
+        }
+      }}
     >
-      <span className="text-base">{icon}</span>
-      {label}
+      <span style={{ fontSize: '1rem' }}>{icon}</span>
+      <span>{label}</span>
     </NavLink>
   );
 }
@@ -33,34 +69,80 @@ function SidebarContent({ onClose }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const rol = user?.rol;
-
-  const canCreateObra = ['superadmin', 'dueno', 'deposito'].includes(rol);
-  const canManageUsers = ['superadmin', 'dueno'].includes(rol);
+  const rolColor = ROL_COLOR[rol] || ROL_COLOR.cliente;
 
   const handleLogout = () => {
     logout();
     navigate('/app/login');
+    if (onClose) onClose();
   };
 
+  const visibleItems = NAV_ITEMS.filter(
+    item => !item.roles || item.roles.includes(rol)
+  );
+
   return (
-    <div className="w-60 bg-gray-900 flex flex-col h-full">
-      <div className="p-4 border-b border-gray-700">
-        <div className="font-bold text-white text-lg leading-tight">AlmaMod</div>
-        <div className="text-gray-400 text-xs mt-0.5">Sistema de Gestión</div>
+    <div style={{
+      width: '240px',
+      background: 'linear-gradient(to bottom, #1a1a2e 0%, #0f172a 100%)',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      borderRight: '1px solid rgba(212,165,116,0.15)',
+      flexShrink: 0,
+    }}>
+      {/* Logo */}
+      <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid rgba(212,165,116,0.15)' }}>
+        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img src={logoAlmamod} alt="AlmaMod" style={{ height: '32px', objectFit: 'contain' }} />
+        </Link>
+        <div style={{ color: '#94a3b8', fontSize: '0.72rem', marginTop: '6px', letterSpacing: '0.05em' }}>
+          SISTEMA DE GESTIÓN
+        </div>
       </div>
 
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto" onClick={onClose}>
-        <NavItem to="/app/obras" icon="🏗️" label="Obras" end />
-        {canCreateObra && <NavItem to="/app/obras/nueva" icon="➕" label="Nueva Obra" />}
-        {canManageUsers && <NavItem to="/app/usuarios" icon="👥" label="Usuarios" />}
+      {/* Nav */}
+      <nav style={{ flex: 1, padding: '12px 8px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '2px' }} onClick={onClose}>
+        {visibleItems.map(item => (
+          <NavItem key={item.to} {...item} />
+        ))}
       </nav>
 
-      <div className="p-3 border-t border-gray-700">
-        <div className="text-gray-200 text-sm font-medium truncate">{user?.nombre}</div>
-        <div className="text-gray-500 text-xs mb-3">{ROL_LABEL[rol] || rol}</div>
+      {/* User info + logout */}
+      <div style={{ padding: '12px 16px', borderTop: '1px solid rgba(212,165,116,0.15)' }}>
+        <div style={{ color: '#e2e8f0', fontSize: '0.875rem', fontWeight: 600, marginBottom: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {user?.nombre}
+        </div>
+        <div style={{
+          display: 'inline-block',
+          background: rolColor.bg,
+          color: rolColor.text,
+          fontSize: '0.7rem',
+          fontWeight: 700,
+          padding: '2px 8px',
+          borderRadius: '20px',
+          letterSpacing: '0.04em',
+          marginBottom: '12px',
+        }}>
+          {ROL_LABEL[rol] || rol}
+        </div>
         <button
           onClick={handleLogout}
-          className="w-full text-left text-gray-400 hover:text-white text-sm py-1.5 px-2 rounded hover:bg-gray-700 transition-colors"
+          style={{
+            display: 'block',
+            width: '100%',
+            textAlign: 'left',
+            background: 'transparent',
+            border: 'none',
+            color: '#94a3b8',
+            fontSize: '0.85rem',
+            padding: '8px 10px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#ef4444'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}
         >
           Cerrar sesión →
         </button>
@@ -73,38 +155,51 @@ export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div style={{ display: 'flex', height: '100vh', background: 'var(--bg-primary, #0f172a)', overflow: 'hidden' }}>
+      <ThemeToggle />
+
       {/* Desktop sidebar */}
-      <div className="hidden md:flex flex-shrink-0">
+      <div className="hidden md:flex" style={{ flexShrink: 0 }}>
         <SidebarContent />
       </div>
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div className="md:hidden fixed inset-0 z-40 flex">
+        <div className="md:hidden" style={{ position: 'fixed', inset: 0, zIndex: 40, display: 'flex' }}>
           <SidebarContent onClose={() => setSidebarOpen(false)} />
           <div
-            className="flex-1 bg-black/50"
+            style={{ flex: 1, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
             onClick={() => setSidebarOpen(false)}
           />
         </div>
       )}
 
-      {/* Main */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Mobile header */}
-        <div className="md:hidden bg-gray-900 text-white px-4 py-3 flex items-center gap-3 flex-shrink-0">
+      {/* Main content */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+        {/* Mobile topbar */}
+        <div
+          className="md:hidden"
+          style={{
+            background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+            borderBottom: '1px solid rgba(212,165,116,0.15)',
+            padding: '12px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            flexShrink: 0,
+          }}
+        >
           <button
             onClick={() => setSidebarOpen(true)}
-            className="text-gray-300 hover:text-white text-xl leading-none"
+            style={{ background: 'transparent', border: 'none', color: '#d4a574', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}
             aria-label="Abrir menú"
           >
             ☰
           </button>
-          <span className="font-semibold text-sm">AlmaMod</span>
+          <img src={logoAlmamod} alt="AlmaMod" style={{ height: '26px', objectFit: 'contain' }} />
         </div>
 
-        <main className="flex-1 overflow-auto">
+        <main style={{ flex: 1, overflowY: 'auto', background: 'var(--bg-primary, #0f172a)' }}>
           {children}
         </main>
       </div>

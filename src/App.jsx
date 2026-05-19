@@ -131,7 +131,7 @@ function App() {
 
   return (
     <div className="App">
-      {/* ✅ TOGGLE DE TEMA - Posición fija superior derecha */}
+      {/* ✅ TOGGLE DE TEMA - Solo en sitio público (el panel lo tiene en AppLayout) */}
       {!isAppRoute && <ThemeToggle />}
 
       {/* HEADER - SEO Optimizado - Ocultar en página de Almita y en panel interno */}
