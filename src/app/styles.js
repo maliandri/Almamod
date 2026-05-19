@@ -165,21 +165,5 @@ export const ETAPA_STYLE = {
   firmada:   { background: '#10b981' },
 };
 
-export function Badge({ text, style }) {
-  return (
-    <span style={{
-      display: 'inline-block',
-      padding: '3px 10px',
-      borderRadius: '20px',
-      fontSize: '0.72rem',
-      fontWeight: 700,
-      letterSpacing: '0.04em',
-      ...style,
-    }}>
-      {text}
-    </span>
-  );
-}
-
 export function inputFocus(e) { e.target.style.borderColor = '#d4a574'; }
 export function inputBlur(e)  { e.target.style.borderColor = 'rgba(212,165,116,0.25)'; }
