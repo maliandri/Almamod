@@ -129,18 +129,13 @@ function App() {
   // ✅ Verificar si estamos en el panel de gestión interno
   const isAppRoute = location.pathname.startsWith('/app');
 
-  // Panel de gestión — renderizar sin ningún elemento del sitio público
-  if (isAppRoute) {
-    return <AppRouter />;
-  }
-
   return (
     <div className="App">
       {/* ✅ TOGGLE DE TEMA - Posición fija superior derecha */}
-      <ThemeToggle />
+      {!isAppRoute && <ThemeToggle />}
 
-      {/* HEADER - SEO Optimizado - Ocultar en página de Almita */}
-      {!isAlmitaRoute && <header className="hero-section">
+      {/* HEADER - SEO Optimizado - Ocultar en página de Almita y en panel interno */}
+      {!isAlmitaRoute && !isAppRoute && <header className="hero-section">
         <div className="hero-content-wrapper">
           <div className="hero-branding">
             <Link to="/" aria-label="Ir a inicio de AlmaMod">
@@ -154,28 +149,22 @@ function App() {
         </div>
       </header>}
 
-      {/* ✅ MODALES CONTROLADOS POR RUTAS */}
-
-      {/* Sistema Constructivo */}
-      <SistemaConstructivo
-        isOpen={location.pathname === '/sistema-constructivo'}
-        onClose={() => navigate('/')}
-      />
-
-      {/* ✅ TiendaAlma - SOLO se renderiza si estamos en su ruta */}
-      {isTiendaAlmaRoute && <TiendaAlma />}
-
-      {/* ObrasCarousel */}
-      <ObrasCarousel
-        isOpen={location.pathname === '/obras'}
-        onClose={() => navigate('/')}
-      />
-
-      {/* Ubicacion */}
-      <Ubicacion
-        isOpen={location.pathname === '/ubicacion'}
-        onClose={() => navigate('/')}
-      />
+      {/* ✅ MODALES CONTROLADOS POR RUTAS - Solo en el sitio público */}
+      {!isAppRoute && <>
+        <SistemaConstructivo
+          isOpen={location.pathname === '/sistema-constructivo'}
+          onClose={() => navigate('/')}
+        />
+        {isTiendaAlmaRoute && <TiendaAlma />}
+        <ObrasCarousel
+          isOpen={location.pathname === '/obras'}
+          onClose={() => navigate('/')}
+        />
+        <Ubicacion
+          isOpen={location.pathname === '/ubicacion'}
+          onClose={() => navigate('/')}
+        />
+      </>}
 
       {/* CONTENIDO PRINCIPAL */}
       <main style={{ backgroundColor: 'var(--bg-primary)' }}>
@@ -195,13 +184,13 @@ function App() {
           {/* ✅ RUTAS PARA CERTIFICACIONES */}
           <Route path="/:slug" element={<CertificacionDetalle />} />
 
-          {/* Panel interno — AppRouter gestiona sus propias rutas */}
-          <Route path="/app/*" element={null} />
+          {/* Panel interno — correctamente anidado para que las rutas relativas funcionen */}
+          <Route path="/app/*" element={<AppRouter />} />
         </Routes>
       </main>
 
-      {/* BOTONES FLOTANTES - Ocultar en rutas de certificaciones y Almita */}
-      {!isCertificacionRoute && !isAlmitaRoute && <div className="floating-buttons-container">
+      {/* BOTONES FLOTANTES - Ocultar en rutas de certificaciones, Almita y panel interno */}
+      {!isCertificacionRoute && !isAlmitaRoute && !isAppRoute && <div className="floating-buttons-container">
         {/* Botón TiendaAlma */}
         <button
           className="floating-button tienda-button"
@@ -281,8 +270,8 @@ function App() {
         )}
       </div>}
 
-      {/* FOOTER - SEO Optimizado - Ocultar en rutas de certificaciones y Almita */}
-      {!isCertificacionRoute && !isAlmitaRoute && <footer
+      {/* FOOTER - SEO Optimizado - Ocultar en rutas de certificaciones, Almita y panel interno */}
+      {!isCertificacionRoute && !isAlmitaRoute && !isAppRoute && <footer
         className="main-footer"
         style={{
           backgroundColor: 'var(--bg-secondary)',
