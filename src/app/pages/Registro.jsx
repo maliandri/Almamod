@@ -62,19 +62,6 @@ export default function Registro() {
     </div>
   );
 
-  const container = (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px',
-    }}>
-      <div style={{ width: '100%', maxWidth: '400px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <img src={logoAlmamod} alt="AlmaMod" style={{ height: '44px', objectFit: 'contain', marginBottom: '10px' }} />
-          <p style={{ color: C.textMuted, fontSize: '0.8rem', letterSpacing: '0.08em' }}>REGISTRO DE USUARIO</p>
-        </div>
-  );
-
   if (success) return (
     <div style={{
       minHeight: '100vh',
