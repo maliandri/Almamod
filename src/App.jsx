@@ -18,6 +18,7 @@ import AIChatBot from './components/aichatbot';
 import AlmitaPage from './components/AlmitaPage.jsx';
 import ThemeToggle from './components/ThemeToggle.jsx';
 import SEO from './components/SEO.jsx';
+import AppRouter from './app/AppRouter.jsx';
 
 // --- SEO Imports ---
 import { PAGES, generateOrganizationSchema, generateWebSiteSchema, generateFAQSchema, GENERAL_FAQ } from './seo';
@@ -125,6 +126,14 @@ function App() {
   // ✅ Verificar si estamos en la página de Almita
   const isAlmitaRoute = location.pathname === '/almita';
 
+  // ✅ Verificar si estamos en el panel de gestión interno
+  const isAppRoute = location.pathname.startsWith('/app');
+
+  // Panel de gestión — renderizar sin ningún elemento del sitio público
+  if (isAppRoute) {
+    return <AppRouter />;
+  }
+
   return (
     <div className="App">
       {/* ✅ TOGGLE DE TEMA - Posición fija superior derecha */}
@@ -185,6 +194,9 @@ function App() {
 
           {/* ✅ RUTAS PARA CERTIFICACIONES */}
           <Route path="/:slug" element={<CertificacionDetalle />} />
+
+          {/* Panel interno — AppRouter gestiona sus propias rutas */}
+          <Route path="/app/*" element={null} />
         </Routes>
       </main>
 
