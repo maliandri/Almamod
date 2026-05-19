@@ -224,16 +224,15 @@
   font-size: 1rem;
 }
 
-/* Grid de módulos - Tamaño fijo */
+/* Grid de módulos */
 .tienda-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 280px);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 0 8px 20px 8px;
-  justify-content: start;
 }
 
-/* Card de módulo - Tamaño fijo */
+/* Card de módulo */
 .modulo-card {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
@@ -243,7 +242,7 @@
   border: 1px solid rgba(212, 165, 116, 0.2);
   display: flex;
   flex-direction: column;
-  width: 280px;
+  width: 100%;
   min-height: 420px;
 }
 
@@ -283,27 +282,6 @@
   transform: scale(1.1);
 }
 
-.modulo-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(26, 26, 46, 0.9) 0%, transparent 50%);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 15px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.modulo-card:hover .modulo-overlay {
-  opacity: 1;
-}
-
-.ver-detalles {
-  color: #d4a574;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
 
 .modulo-info {
   padding: 16px;
@@ -1112,6 +1090,10 @@
     grid-template-columns: 1fr;
   }
 
+  .modulo-card {
+    width: 100%;
+  }
+
   .modulo-image-container {
     height: 200px;
   }
@@ -1387,6 +1369,10 @@
 @media (max-width: 1024px) {
   .filters-sidebar {
     width: 240px;
+  }
+
+  .tienda-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

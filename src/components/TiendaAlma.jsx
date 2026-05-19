@@ -1457,9 +1457,6 @@ function TiendaAlma() {
                           className="modulo-image modulo-image-fade"
                           loading="lazy"
                         />
-                        <div className="modulo-overlay">
-                          <span className="ver-detalles">Ver Detalles →</span>
-                        </div>
                         {/* ✅ Badge especial para Alma 27 (más vendido) */}
                         {modulo.id === 'almamod27' && (
                           <div style={{
@@ -1478,23 +1475,25 @@ function TiendaAlma() {
                           </div>
                         )}
                       </div>
+                      {/* ✅ Color swatches debajo de la imagen */}
                       {modulo.coloresVariantes && (
                         <div
                           onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                           style={{
                             display: 'flex',
-                            gap: '8px',
+                            justifyContent: 'center',
                             alignItems: 'center',
+                            gap: '10px',
                             padding: '8px 12px',
                             background: 'rgba(0,0,0,0.25)',
                             backdropFilter: 'blur(4px)',
                           }}
                         >
-                          <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)', marginRight: '2px', letterSpacing: '0.04em' }}>COLOR</span>
+                          <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.75)', letterSpacing: '0.06em', fontWeight: '600' }}>COLOR</span>
                           {[
-                            { key: 'madera', label: 'Madera', bg: '#c4956a', border: '#e8b98a' },
-                            { key: 'negro', label: 'Negro',  bg: '#1c1c1c', border: '#555' },
-                            { key: 'gris',  label: 'Gris Revear', bg: '#7a8a99', border: '#a0b0be' },
+                            { key: 'madera', label: 'Madera',      bg: '#c4956a', border: '#e8b98a' },
+                            { key: 'negro',  label: 'Negro',       bg: '#1c1c1c', border: '#555' },
+                            { key: 'gris',   label: 'Gris Revear', bg: '#7a8a99', border: '#a0b0be' },
                           ].map(({ key, label, bg, border }) => {
                             const active = (coloresPortada[modulo.id] || 'madera') === key;
                             return (
