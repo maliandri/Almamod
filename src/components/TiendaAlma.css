@@ -270,6 +270,15 @@
   background: #0f172a;
 }
 
+@keyframes moduloFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modulo-image-fade {
+  animation: moduloFadeIn 0.3s ease;
+}
+
 .modulo-card:hover .modulo-image {
   transform: scale(1.1);
 }

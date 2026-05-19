@@ -48,6 +48,10 @@ const modulosData = [
     ],
     plazo: '30 días',
     imagenPortada: 'ALMAMOD_MICASITA_PORTADA.webp',
+    coloresVariantes: {
+      negro: 'MI_CASITA_NEGRO.webp',
+      gris:  'MI_CASITA_GRIS_REVEAR.webp',
+    },
     imagenesDetalle: [
       'ALMAMOD_MICASITA_PORTADA.webp',
       'ALMAMOD_MICASITA_1.webp',
@@ -174,6 +178,10 @@ const modulosData = [
     ],
     plazo: '30 días',
     imagenPortada: 'ALMAMOD_18_PORTADA.webp',
+    coloresVariantes: {
+      negro: 'ALMAMOD_18_NEGRO.webp',
+      gris:  'ALMAMOD_18_GRIS_REVEAR.webp',
+    },
     imagenesDetalle: [
       'ALMAMOD_18_PORTADA.webp',
       'ALMAMOD_18_RENDER_EXTERIOR.webp',
@@ -288,6 +296,10 @@ const modulosData = [
     ],
     plazo: '40 días',
     imagenPortada: 'ALMAMOD_27_PORTADA.webp',
+    coloresVariantes: {
+      negro: 'ALMAMOD_27_NEGRO.webp',
+      gris:  'ALMAMOD_27_GRIS_REVEAR.webp',
+    },
     imagenesDetalle: [
       'ALMAMOD_27_PORTADA.webp',
       'ALMAMOD_27_1.webp',
@@ -517,6 +529,10 @@ const modulosData = [
     ],
     plazo: '60 días',
     imagenPortada: 'ALMAMOD_36_PORTADA.webp',
+    coloresVariantes: {
+      negro: 'ALMAMOD_36_NEGRO.webp',
+      gris:  'ALMAMOD_36_REVEAR.webp',
+    },
     imagenesDetalle: [
       'ALMAMOD_36_PORTADA.webp',
       'ALMAMOD_36_1.webp',
@@ -641,6 +657,10 @@ const modulosData = [
     ],
     plazo: '60 días',
     imagenPortada: 'ALMAMOD_36_REFUGIO_PORTADA.webp',
+    coloresVariantes: {
+      negro: 'ALMA_36_REFUGIO_NEGRO.webp',
+      gris:  'ALMA_36_REFUGIO_GRIS.webp',
+    },
     imagenesDetalle: [
       'ALMAMOD_36_REFUGIO_PORTADA.webp',
       'ALMAMOD_36_REFUGIO_PLANIMETRIA_2D.webp',
@@ -795,6 +815,13 @@ function TiendaAlma() {
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [selectedUses, setSelectedUses] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [coloresPortada, setColoresPortada] = useState({});
+
+  const getImagenPortada = (modulo) => {
+    const color = coloresPortada[modulo.id];
+    if (!color || color === 'madera' || !modulo.coloresVariantes) return modulo.imagenPortada;
+    return modulo.coloresVariantes[color] || modulo.imagenPortada;
+  };
 
   // Detectar cambios de tamaño de pantalla
   useEffect(() => {
@@ -1424,9 +1451,10 @@ function TiendaAlma() {
                     <Link to={`/tiendaalma/${modulo.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                       <div className="modulo-image-container">
                         <img
-                          src={getCloudinaryUrl(modulo.imagenPortada, IMG_CARD)}
+                          key={getImagenPortada(modulo)}
+                          src={getCloudinaryUrl(getImagenPortada(modulo), IMG_CARD)}
                           alt={`${modulo.nombre} - ${modulo.superficie} - ${modulo.habitaciones} - Precio ${formatearPrecio(modulo.precio)}`}
-                          className="modulo-image"
+                          className="modulo-image modulo-image-fade"
                           loading="lazy"
                         />
                         <div className="modulo-overlay">
@@ -1450,6 +1478,53 @@ function TiendaAlma() {
                           </div>
                         )}
                       </div>
+                      {modulo.coloresVariantes && (
+                        <div
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          style={{
+                            display: 'flex',
+                            gap: '8px',
+                            alignItems: 'center',
+                            padding: '8px 12px',
+                            background: 'rgba(0,0,0,0.25)',
+                            backdropFilter: 'blur(4px)',
+                          }}
+                        >
+                          <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)', marginRight: '2px', letterSpacing: '0.04em' }}>COLOR</span>
+                          {[
+                            { key: 'madera', label: 'Madera', bg: '#c4956a', border: '#e8b98a' },
+                            { key: 'negro', label: 'Negro',  bg: '#1c1c1c', border: '#555' },
+                            { key: 'gris',  label: 'Gris Revear', bg: '#7a8a99', border: '#a0b0be' },
+                          ].map(({ key, label, bg, border }) => {
+                            const active = (coloresPortada[modulo.id] || 'madera') === key;
+                            return (
+                              <button
+                                key={key}
+                                title={label}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  setColoresPortada(prev => ({ ...prev, [modulo.id]: key }));
+                                }}
+                                style={{
+                                  width: '22px',
+                                  height: '22px',
+                                  borderRadius: '50%',
+                                  background: bg,
+                                  border: active ? `3px solid white` : `2px solid ${border}`,
+                                  boxShadow: active ? `0 0 0 2px ${bg}, 0 2px 6px rgba(0,0,0,0.4)` : '0 1px 3px rgba(0,0,0,0.3)',
+                                  cursor: 'pointer',
+                                  padding: 0,
+                                  transform: active ? 'scale(1.2)' : 'scale(1)',
+                                  transition: 'all 0.15s ease',
+                                  flexShrink: 0,
+                                }}
+                                aria-label={`Ver en ${label}`}
+                              />
+                            );
+                          })}
+                        </div>
+                      )}
                       <div className="modulo-info">
                         <h3>{modulo.nombre}</h3>
                         <div className="modulo-specs">
