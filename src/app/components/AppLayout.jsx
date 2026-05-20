@@ -21,7 +21,7 @@ const ROL_COLOR = {
 };
 
 const NAV_ITEMS = [
-  { to: '/app/obras',          icon: '🏗️', label: 'Obras',         end: true,  roles: null },
+  { to: '/app/obras',          icon: '🏗️', label: 'Gestión de Obra', end: true,  roles: null },
   { to: '/app/obras/nueva',    icon: '➕', label: 'Nueva Obra',    end: false, roles: ['superadmin','dueno','deposito'] },
   { to: '/app/partes',         icon: '🔩', label: 'Componentes',   end: false, roles: ['superadmin','dueno','deposito'] },
   { to: '/app/bom',            icon: '📋', label: 'BOM',           end: false, roles: ['superadmin','dueno','deposito','fabricacion'] },
