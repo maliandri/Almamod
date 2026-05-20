@@ -105,11 +105,17 @@ export default function ObrasLista() {
                   </span>
                 </div>
 
-                {/* Cliente */}
-                <div style={{ marginBottom: '14px', padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
-                  <div style={{ color: C.textSub, fontWeight: 600, fontSize: '0.88rem' }}>{obra.cliente?.nombre}</div>
-                  <div style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '2px' }}>{obra.cliente?.email}</div>
-                </div>
+                {/* Cliente / contacto */}
+                {(obra.nombre_contacto || obra.cliente?.nombre) && (
+                  <div style={{ marginBottom: '14px', padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+                    <div style={{ color: C.textSub, fontWeight: 600, fontSize: '0.88rem' }}>
+                      {obra.nombre_contacto || obra.cliente?.nombre}
+                    </div>
+                    {obra.cliente?.email && (
+                      <div style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '2px' }}>{obra.cliente.email}</div>
+                    )}
+                  </div>
+                )}
 
                 {/* Progreso de etapas */}
                 {etapas.length > 0 && (
