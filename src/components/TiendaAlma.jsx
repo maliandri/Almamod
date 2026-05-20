@@ -816,6 +816,31 @@ function TiendaAlma() {
   const [selectedUses, setSelectedUses] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [coloresPortada, setColoresPortada] = useState({});
+  const [cmsOverrides, setCmsOverrides] = useState({});
+
+  // Carga precios y descripciones editadas desde el CMS (sin bloquear render inicial)
+  useEffect(() => {
+    fetch('/.netlify/functions/cms-content')
+      .then(r => r.json())
+      .then(data => {
+        const map = {};
+        (data.modelos || []).forEach(m => { if (m.slug) map[m.slug] = m; });
+        setCmsOverrides(map);
+      })
+      .catch(() => {});
+  }, []);
+
+  const modulosConCms = modulosData.map(m => {
+    const cms = cmsOverrides[m.slug];
+    if (!cms) return m;
+    return {
+      ...m,
+      precio:      cms.precio      || m.precio,
+      descripcion: cms.descripcion || m.descripcion,
+      plazo:       cms.plazo       || m.plazo,
+      ventajas:    cms.ventajas?.length ? cms.ventajas : m.ventajas,
+    };
+  });
 
   const getImagenPortada = (modulo) => {
     const color = coloresPortada[modulo.id];
@@ -863,7 +888,7 @@ function TiendaAlma() {
     }
     else if (path.startsWith('/tiendaalma/')) {
       const slug = path.replace('/tiendaalma/', '');
-      const modulo = modulosData.find(m => m.slug === slug);
+      const modulo = modulosConCms.find(m => m.slug === slug);
       if (modulo) {
         setIsOpen(true);
         setSelectedModule(modulo);
@@ -921,7 +946,7 @@ function TiendaAlma() {
   };
 
   // Filtrado completo con todos los criterios
-  const filteredModules = modulosData.filter(modulo => {
+  const filteredModules = modulosConCms.filter(modulo => {
     // Filtro de búsqueda por texto
     const matchSearch =
       modulo.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||

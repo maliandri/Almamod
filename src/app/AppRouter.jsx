@@ -9,6 +9,8 @@ import RemitoCrear from './pages/RemitoCrear';
 import Usuarios from './pages/Usuarios';
 import Partes from './pages/Partes';
 import BOM from './pages/BOM';
+import CmsModelos from './pages/CmsModelos';
+import CmsObras from './pages/CmsObras';
 
 export default function AppRouter() {
   return (
@@ -61,6 +63,22 @@ export default function AppRouter() {
         element={
           <ProtectedRoute roles={['superadmin', 'dueno', 'deposito', 'fabricacion']}>
             <BOM />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="cms/modelos"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno']}>
+            <CmsModelos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="cms/obras"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno']}>
+            <CmsObras />
           </ProtectedRoute>
         }
       />

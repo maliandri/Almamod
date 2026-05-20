@@ -65,6 +65,18 @@ export const api = {
   modelos: {
     list: (token) => request('modelos-list', { token }),
   },
+  cms: {
+    modelos: {
+      list:   (token)       => request('cms-modelos', { token }),
+      update: (token, data) => request('cms-modelos', { method: 'PUT', body: data, token }),
+    },
+    obras: {
+      list:   (token)       => request('cms-obras', { token }),
+      create: (token, data) => request('cms-obras', { method: 'POST', body: data, token }),
+      update: (token, data) => request('cms-obras', { method: 'PUT', body: data, token }),
+      delete: (token, id)   => request(`cms-obras?id=${id}`, { method: 'DELETE', token }),
+    },
+  },
   users: {
     list:   (token, rol) => request(`users-list${rol ? `?rol=${rol}` : ''}`, { token }),
     update: (token, data) => request('users-list', { method: 'PUT', body: data, token }),

@@ -20,6 +20,7 @@ function ObrasCarousel({ isOpen: isOpenProp, onClose: onCloseProp }) {
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [videoPlayCount, setVideoPlayCount] = useState({});
   const [isAutoPlaying, setIsAutoPlaying] = useState({});
+  const [dbObras, setDbObras] = useState([]);
 
   // ✅ SI NO SE PASAN PROPS, USAR CONTROL INTERNO (RETROCOMPATIBILIDAD)
   const [isOpenInternal, setIsOpenInternal] = useState(false);
@@ -27,7 +28,30 @@ function ObrasCarousel({ isOpen: isOpenProp, onClose: onCloseProp }) {
   const isOpen = isOpenProp !== undefined ? isOpenProp : isOpenInternal;
   const onClose = onCloseProp || (() => setIsOpenInternal(false));
 
-  const obras = [
+  useEffect(() => {
+    fetch('/.netlify/functions/cms-content')
+      .then(r => r.json())
+      .then(data => {
+        const obras = (data.obras || []).filter(o => o.fotos?.length > 0 || o.imagen_portada);
+        if (obras.length > 0) {
+          setDbObras(obras.map(o => ({
+            id: o.id,
+            titulo: o.titulo,
+            ubicacion: o.ubicacion || '',
+            descripcion: o.descripcion || '',
+            imagenPortada: o.imagen_portada || o.fotos?.[0] || '',
+            media: (o.fotos || []).map((url, i) => ({
+              tipo: 'imagen',
+              nombre: url,
+              alt: `${o.titulo} - foto ${i + 1}`,
+            })),
+          })));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const staticObras = [
     {
       id: 1,
       titulo: 'Módulo Almamod 27 - Junín de los Andes',
@@ -66,6 +90,9 @@ function ObrasCarousel({ isOpen: isOpenProp, onClose: onCloseProp }) {
       ]
     }
   ];
+
+  // Usar obras de DB si hay; si no, mostrar las estáticas como fallback
+  const obras = dbObras.length > 0 ? dbObras : staticObras;
 
   const toggleObra = (obraId) => {
     const isExpanding = expandedObra !== obraId;
@@ -153,11 +180,12 @@ function ObrasCarousel({ isOpen: isOpenProp, onClose: onCloseProp }) {
   };
 
   const getMediaUrl = (nombreArchivo, esVideo = false) => {
+    if (!nombreArchivo) return '';
+    // Si ya es una URL completa (subida desde CMS), usarla directamente
+    if (nombreArchivo.startsWith('http')) return nombreArchivo;
     if (esVideo) {
-      // Para videos - estructura: /video/upload/v1763003722/nombreArchivo.mp4
       return `https://res.cloudinary.com/dlshym1te/video/upload/q_auto,f_auto/v1763003722/${nombreArchivo}.mp4`;
     }
-    // Para imágenes - estructura: /image/upload/v1763003722/nombreArchivo.webp
     return `https://res.cloudinary.com/dlshym1te/image/upload/q_auto,f_auto/v1763003722/${nombreArchivo}.webp`;
   };
 
