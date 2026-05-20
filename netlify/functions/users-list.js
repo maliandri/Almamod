@@ -16,6 +16,7 @@ export async function handler(event) {
     let query = supabase
       .from('users')
       .select('id, nombre, email, telefono, rol, activo')
+      .eq('activo', true)
       .order('nombre');
     if (rol) query = query.eq('rol', rol);
     const { data: users, error } = await query;
