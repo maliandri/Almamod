@@ -66,8 +66,9 @@ export const api = {
     list: (token) => request('modelos-list', { token }),
   },
   users: {
-    list: (token, rol) =>
-      request(`users-list${rol ? `?rol=${rol}` : ''}`, { token }),
+    list:   (token, rol) => request(`users-list${rol ? `?rol=${rol}` : ''}`, { token }),
+    update: (token, data) => request('users-list', { method: 'PUT', body: data, token }),
+    delete: (token, id)   => request(`users-list?id=${id}`, { method: 'DELETE', token }),
   },
   pdf: {
     download: async (token, obra_id, numero_obra) => {

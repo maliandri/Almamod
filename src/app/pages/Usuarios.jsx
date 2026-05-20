@@ -4,6 +4,73 @@ import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
 import { C, S, ROL_STYLE, ROL_LABEL, inputFocus, inputBlur } from '../styles';
 
+function EditModal({ usuario, onClose, onSave }) {
+  const [form, setForm] = useState({ nombre: usuario.nombre, rol: usuario.rol, telefono: usuario.telefono || '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(''); setLoading(true);
+    try {
+      await onSave(usuario.id, form);
+      onClose();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+      onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{ ...S.card, width: '100%', maxWidth: '400px' }}>
+        <h2 style={{ ...S.h2, marginBottom: '20px', color: C.gold }}>Editar usuario</h2>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '14px' }}>
+            <label style={S.label}>Email</label>
+            <div style={{ ...S.input, opacity: 0.5, cursor: 'not-allowed', color: C.textMuted }}>{usuario.email}</div>
+          </div>
+          <div style={{ marginBottom: '14px' }}>
+            <label style={S.label}>Nombre *</label>
+            <input
+              required value={form.nombre}
+              onChange={e => setForm(p => ({ ...p, nombre: e.target.value }))}
+              style={S.input} onFocus={inputFocus} onBlur={inputBlur}
+            />
+          </div>
+          <div style={{ marginBottom: '14px' }}>
+            <label style={S.label}>Teléfono</label>
+            <input
+              value={form.telefono}
+              onChange={e => setForm(p => ({ ...p, telefono: e.target.value }))}
+              placeholder="+54 299 ..."
+              style={S.input} onFocus={inputFocus} onBlur={inputBlur}
+            />
+          </div>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={S.label}>Rol *</label>
+            <select value={form.rol} onChange={e => setForm(p => ({ ...p, rol: e.target.value }))} style={S.select}>
+              <option value="cliente">Cliente</option>
+              <option value="fabricacion">Fabricación</option>
+              <option value="deposito">Depósito</option>
+              <option value="dueno">Dueño</option>
+            </select>
+          </div>
+          {error && <div style={{ ...S.alertError, marginBottom: '14px' }}>{error}</div>}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button type="submit" disabled={loading} style={{ ...S.btnGold, flex: 1, opacity: loading ? 0.6 : 1 }}>
+              {loading ? 'Guardando...' : 'Guardar cambios'}
+            </button>
+            <button type="button" onClick={onClose} style={S.btnGhost}>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export default function Usuarios() {
   const { token } = useAuth();
   const [usuarios, setUsuarios] = useState([]);
@@ -13,6 +80,8 @@ export default function Usuarios() {
   const [invError, setInvError] = useState('');
   const [invSuccess, setInvSuccess] = useState('');
   const [inviteLink, setInviteLink] = useState('');
+  const [editando, setEditando] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   const cargarUsuarios = () => {
     api.users.list(token)
@@ -40,6 +109,17 @@ export default function Usuarios() {
     }
   };
 
+  const handleSave = async (id, data) => {
+    await api.users.update(token, { id, ...data });
+    cargarUsuarios();
+  };
+
+  const handleDelete = async (id) => {
+    await api.users.delete(token, id);
+    setConfirmDelete(null);
+    cargarUsuarios();
+  };
+
   return (
     <AppLayout>
       <div style={{ padding: '28px 32px', maxWidth: '760px' }}>
@@ -52,51 +132,33 @@ export default function Usuarios() {
           <form onSubmit={handleInvitar}>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '12px' }}>
               <input
-                type="email"
-                required
-                value={form.email}
+                type="email" required value={form.email}
                 onChange={e => setForm({ ...form, email: e.target.value })}
                 placeholder="email@ejemplo.com"
                 style={{ ...S.input, flex: '1', minWidth: '200px' }}
-                onFocus={inputFocus}
-                onBlur={inputBlur}
+                onFocus={inputFocus} onBlur={inputBlur}
               />
-              <select
-                value={form.rol}
-                onChange={e => setForm({ ...form, rol: e.target.value })}
-                style={{ ...S.select, minWidth: '140px' }}
-              >
+              <select value={form.rol} onChange={e => setForm({ ...form, rol: e.target.value })} style={{ ...S.select, minWidth: '140px' }}>
                 <option value="cliente">Cliente</option>
                 <option value="fabricacion">Fabricación</option>
                 <option value="deposito">Depósito</option>
                 <option value="dueno">Dueño</option>
               </select>
-              <button
-                type="submit"
-                disabled={invitando}
-                style={{ ...S.btnGold, opacity: invitando ? 0.6 : 1 }}
-              >
+              <button type="submit" disabled={invitando} style={{ ...S.btnGold, opacity: invitando ? 0.6 : 1 }}>
                 {invitando ? 'Creando...' : '+ Invitar'}
               </button>
             </div>
-
             {invError && <div style={S.alertError}>{invError}</div>}
-
             {invSuccess && (
               <div style={{ ...S.alertSuccess, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span>✓ {invSuccess}</span>
                 {inviteLink && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <input
-                      readOnly
-                      value={inviteLink}
+                    <input readOnly value={inviteLink}
                       style={{ ...S.input, flex: 1, fontSize: '0.78rem', padding: '6px 10px', color: C.textMuted }}
                     />
-                    <button
-                      type="button"
-                      onClick={() => { navigator.clipboard.writeText(inviteLink); }}
-                      style={{ ...S.btnGhost, fontSize: '0.78rem', padding: '6px 12px' }}
-                    >
+                    <button type="button" onClick={() => navigator.clipboard.writeText(inviteLink)}
+                      style={{ ...S.btnGhost, fontSize: '0.78rem', padding: '6px 12px' }}>
                       Copiar
                     </button>
                   </div>
@@ -125,16 +187,12 @@ export default function Usuarios() {
                 const rolStyle = ROL_STYLE[u.rol] || ROL_STYLE.cliente;
                 return (
                   <div key={u.id} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '12px',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    gap: '12px', padding: '12px 16px', borderRadius: '8px',
                     background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)',
                     borderBottom: `1px solid ${C.border}`,
                   }}>
-                    <div style={{ minWidth: 0 }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
                       <div style={{ color: C.text, fontWeight: 600, fontSize: '0.9rem' }}>{u.nombre}</div>
                       <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '2px' }}>{u.email}</div>
                       {u.telefono && <div style={{ color: C.textMuted, fontSize: '0.78rem' }}>{u.telefono}</div>}
@@ -142,6 +200,20 @@ export default function Usuarios() {
                     <span style={{ ...rolStyle, padding: '3px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em', flexShrink: 0 }}>
                       {ROL_LABEL[u.rol] || u.rol}
                     </span>
+                    <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+                      <button onClick={() => setEditando(u)}
+                        style={{ background: C.goldDim, border: 'none', borderRadius: '6px', padding: '5px 10px', color: C.gold, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(212,165,116,0.3)'}
+                        onMouseLeave={e => e.currentTarget.style.background = C.goldDim}>
+                        Editar
+                      </button>
+                      <button onClick={() => setConfirmDelete(u)}
+                        style={{ background: C.redDim, border: 'none', borderRadius: '6px', padding: '5px 10px', color: C.red, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.2)'}
+                        onMouseLeave={e => e.currentTarget.style.background = C.redDim}>
+                        Eliminar
+                      </button>
+                    </div>
                   </div>
                 );
               })}
@@ -149,6 +221,32 @@ export default function Usuarios() {
           )}
         </div>
       </div>
+
+      {/* Edit modal */}
+      {editando && (
+        <EditModal usuario={editando} onClose={() => setEditando(null)} onSave={handleSave} />
+      )}
+
+      {/* Delete confirm modal */}
+      {confirmDelete && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+          onClick={e => e.target === e.currentTarget && setConfirmDelete(null)}>
+          <div style={{ ...S.card, width: '100%', maxWidth: '360px', textAlign: 'center' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>⚠️</div>
+            <h2 style={{ color: C.red, fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>Desactivar usuario</h2>
+            <p style={{ color: C.textSub, fontSize: '0.9rem', marginBottom: '4px' }}>{confirmDelete.nombre}</p>
+            <p style={{ color: C.textMuted, fontSize: '0.82rem', marginBottom: '24px' }}>{confirmDelete.email}</p>
+            <p style={{ color: C.textMuted, fontSize: '0.82rem', marginBottom: '24px' }}>El usuario no podrá acceder al sistema. Esta acción se puede revertir manualmente.</p>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={() => handleDelete(confirmDelete.id)}
+                style={{ ...S.btnDanger, flex: 1 }}>
+                Sí, desactivar
+              </button>
+              <button onClick={() => setConfirmDelete(null)} style={{ ...S.btnGhost, flex: 1 }}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 }
