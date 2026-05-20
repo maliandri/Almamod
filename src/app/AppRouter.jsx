@@ -7,6 +7,8 @@ import ObraDetalle from './pages/ObraDetalle';
 import ObraNueva from './pages/ObraNueva';
 import RemitoCrear from './pages/RemitoCrear';
 import Usuarios from './pages/Usuarios';
+import Partes from './pages/Partes';
+import BOM from './pages/BOM';
 
 export default function AppRouter() {
   return (
@@ -43,6 +45,22 @@ export default function AppRouter() {
         element={
           <ProtectedRoute roles={['superadmin', 'deposito']}>
             <RemitoCrear />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="partes"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']}>
+            <Partes />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="bom"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito', 'fabricacion']}>
+            <BOM />
           </ProtectedRoute>
         }
       />

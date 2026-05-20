@@ -42,8 +42,25 @@ export const api = {
     get: (token, obra_id) => request(`checklist-get?obra_id=${obra_id}`, { token }),
   },
   partes: {
-    list: (token, modelo_id) =>
-      request(`partes-list${modelo_id ? `?modelo_id=${modelo_id}` : ''}`, { token }),
+    list:   (token, modelo_id) => request(`partes-list${modelo_id ? `?modelo_id=${modelo_id}` : ''}`, { token }),
+    create: (token, data)      => request('partes-list', { method: 'POST', body: data, token }),
+    update: (token, data)      => request('partes-list', { method: 'PUT',  body: data, token }),
+  },
+  etapasProduccion: {
+    list:   (token, modelo_id) => request(`etapas-produccion?modelo_id=${modelo_id}`, { token }),
+    create: (token, data)      => request('etapas-produccion', { method: 'POST', body: data, token }),
+    update: (token, data)      => request('etapas-produccion', { method: 'PUT',  body: data, token }),
+    delete: (token, id)        => request(`etapas-produccion?id=${id}`, { method: 'DELETE', token }),
+  },
+  bom: {
+    list:   (token, modelo_id) => request(`modelo-partes?modelo_id=${modelo_id}`, { token }),
+    save:   (token, data)      => request('modelo-partes', { method: 'POST', body: data, token }),
+    update: (token, data)      => request('modelo-partes', { method: 'PUT',  body: data, token }),
+    delete: (token, id)        => request(`modelo-partes?id=${id}`, { method: 'DELETE', token }),
+  },
+  stock: {
+    movimientos: (token, parte_id) => request(`stock-movimiento?parte_id=${parte_id}`, { token }),
+    registrar:   (token, data)     => request('stock-movimiento', { method: 'POST', body: data, token }),
   },
   modelos: {
     list: (token) => request('modelos-list', { token }),
