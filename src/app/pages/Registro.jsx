@@ -4,6 +4,24 @@ import { api } from '../lib/api';
 import logoAlmamod from '../../assets/almamod.webp';
 import { C, S, ROL_STYLE, ROL_LABEL, inputFocus, inputBlur } from '../styles';
 
+function Field({ k, label, type = 'text', required = false, placeholder = '', form, setForm }) {
+  return (
+    <div style={{ marginBottom: '16px' }}>
+      <label style={S.label}>{label}{required && ' *'}</label>
+      <input
+        type={type}
+        required={required}
+        value={form[k]}
+        onChange={e => setForm(prev => ({ ...prev, [k]: e.target.value }))}
+        placeholder={placeholder}
+        style={S.input}
+        onFocus={inputFocus}
+        onBlur={inputBlur}
+      />
+    </div>
+  );
+}
+
 export default function Registro() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -45,22 +63,6 @@ export default function Registro() {
       setLoading(false);
     }
   };
-
-  const Field = ({ k, label, type = 'text', required = false, placeholder = '' }) => (
-    <div style={{ marginBottom: '16px' }}>
-      <label style={S.label}>{label}{required && ' *'}</label>
-      <input
-        type={type}
-        required={required}
-        value={form[k]}
-        onChange={e => setForm({ ...form, [k]: e.target.value })}
-        placeholder={placeholder}
-        style={S.input}
-        onFocus={inputFocus}
-        onBlur={inputBlur}
-      />
-    </div>
-  );
 
   if (success) return (
     <div style={{
@@ -121,14 +123,14 @@ export default function Registro() {
             })()}
 
             <form onSubmit={handleSubmit}>
-              <Field k="nombre"   label="Nombre completo"    type="text"     required placeholder="Juan García" />
-              <Field k="password" label="Contraseña"         type="password" required placeholder="Mínimo 8 caracteres" />
-              <Field k="confirm"  label="Confirmar contraseña" type="password" required placeholder="••••••••" />
-              <Field k="telefono" label="Teléfono"           type="text"     placeholder="+54 299 ..." />
+              <Field k="nombre"   label="Nombre completo"      type="text"     required placeholder="Juan García"          form={form} setForm={setForm} />
+              <Field k="password" label="Contraseña"           type="password" required placeholder="Mínimo 8 caracteres"  form={form} setForm={setForm} />
+              <Field k="confirm"  label="Confirmar contraseña" type="password" required placeholder="••••••••"             form={form} setForm={setForm} />
+              <Field k="telefono" label="Teléfono"             type="text"            placeholder="+54 299 ..."            form={form} setForm={setForm} />
 
               {invitacion.rol === 'cliente' && <>
-                <Field k="dni"      label="DNI"      type="text" placeholder="12.345.678" />
-                <Field k="direccion" label="Dirección" type="text" placeholder="Calle 123, Neuquén" />
+                <Field k="dni"      label="DNI"       type="text" placeholder="12.345.678"         form={form} setForm={setForm} />
+                <Field k="direccion" label="Dirección" type="text" placeholder="Calle 123, Neuquén" form={form} setForm={setForm} />
               </>}
 
               {error && <div style={{ ...S.alertError, marginBottom: '16px' }}>{error}</div>}
