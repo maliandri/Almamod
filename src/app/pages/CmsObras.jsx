@@ -11,7 +11,7 @@ async function uploadToCloudinary(file) {
   const fd = new FormData();
   fd.append('file', file);
   fd.append('upload_preset', UPLOAD_PRESET);
-  fd.append('folder', 'almamod/obras');
+  fd.append('folder', 'obras');
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
   const data = await res.json();
   if (data.error) throw new Error(data.error.message);
