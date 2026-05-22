@@ -11,6 +11,10 @@ import Partes from './pages/Partes';
 import BOM from './pages/BOM';
 import CmsModelos from './pages/CmsModelos';
 import CmsObras from './pages/CmsObras';
+import MarketingReels from './pages/MarketingReels';
+import MarketingPublicaciones from './pages/MarketingPublicaciones';
+import MarketingLibre from './pages/MarketingLibre';
+import MakeConfig from './pages/MakeConfig';
 
 export default function AppRouter() {
   return (
@@ -79,6 +83,38 @@ export default function AppRouter() {
         element={
           <ProtectedRoute roles={['superadmin', 'dueno']}>
             <CmsObras />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="marketing/reels"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno']}>
+            <MarketingReels />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="marketing/publicaciones"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno']}>
+            <MarketingPublicaciones />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="marketing/libre"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno']}>
+            <MarketingLibre />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="marketing/make"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno']}>
+            <MakeConfig />
           </ProtectedRoute>
         }
       />
