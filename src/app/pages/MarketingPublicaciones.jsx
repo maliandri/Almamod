@@ -1,16 +1,15 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import AppLayout from '../components/AppLayout';
 import { C, S, inputFocus, inputBlur } from '../styles';
 import { uploadImagen, generarContenido, publicarEnMake } from '../lib/marketing';
+import SelectorImagenModelo from '../components/SelectorImagenModelo';
 
 const MODELOS = ['MiCasita', 'Alma 18', 'Alma 27', 'Alma Loft 28', 'Alma 36', 'Alma 36 Refugio', 'AlmaMod en general'];
 const TONOS = ['Inspirador', 'Informativo', 'Urgencia', 'Emocional', 'Educativo'];
 const FORMATOS = ['Imagen única', 'Carrusel', 'Comparativa', 'Testimonio', 'Precio/Oferta'];
 
 export default function MarketingPublicaciones() {
-  const fileRef = useRef();
   const [form, setForm] = useState({ tema: '', modelo: 'AlmaMod en general', tono: 'Informativo', formato: 'Imagen única' });
-  const [imagen, setImagen] = useState(null);
   const [imagenUrl, setImagenUrl] = useState('');
   const [uploadingImg, setUploadingImg] = useState(false);
   const [generando, setGenerando] = useState(false);
@@ -20,7 +19,6 @@ export default function MarketingPublicaciones() {
   const [publishOk, setPublishOk] = useState(false);
 
   const handleImagen = async (file) => {
-    setImagen(URL.createObjectURL(file));
     setUploadingImg(true);
     try {
       const url = await uploadImagen(file);
@@ -80,7 +78,7 @@ export default function MarketingPublicaciones() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                 <div>
                   <label style={S.label}>Modelo</label>
-                  <select value={form.modelo} onChange={e => setForm(p => ({ ...p, modelo: e.target.value }))} style={S.select}>
+                  <select value={form.modelo} onChange={e => { setForm(p => ({ ...p, modelo: e.target.value })); setImagenUrl(''); }} style={S.select}>
                     {MODELOS.map(m => <option key={m}>{m}</option>)}
                   </select>
                 </div>
@@ -101,20 +99,16 @@ export default function MarketingPublicaciones() {
 
               <div style={{ marginBottom: '20px' }}>
                 <label style={S.label}>Imagen del post</label>
-                <div onClick={() => fileRef.current?.click()}
-                  style={{ border: `2px dashed ${C.goldBorder}`, borderRadius: '8px', padding: '16px', textAlign: 'center', cursor: 'pointer', background: C.goldDim, minHeight: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                  {imagen
-                    ? <img src={imagen} alt="" style={{ maxHeight: '120px', maxWidth: '100%', borderRadius: '6px' }} />
-                    : <div>
-                        <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>🖼️</div>
-                        <div style={{ color: C.textMuted, fontSize: '0.82rem' }}>{uploadingImg ? 'Subiendo...' : 'Clic para subir imagen'}</div>
-                      </div>
-                  }
-                  {uploadingImg && <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.gold }}>Subiendo...</div>}
-                </div>
-                <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
-                  onChange={e => { if (e.target.files?.[0]) handleImagen(e.target.files[0]); e.target.value = ''; }} />
-                {imagenUrl && <div style={{ color: C.green, fontSize: '0.75rem', marginTop: '4px' }}>✓ Subida a Cloudinary</div>}
+                <SelectorImagenModelo
+                  modelo={form.modelo}
+                  selectedUrl={imagenUrl}
+                  onSelectUrl={url => setImagenUrl(url)}
+                  onUploadFile={handleImagen}
+                  uploading={uploadingImg}
+                />
+                {imagenUrl && !uploadingImg && (
+                  <div style={{ color: C.green, fontSize: '0.75rem', marginTop: '4px' }}>✓ Imagen seleccionada</div>
+                )}
               </div>
 
               {error && <div style={{ ...S.alertError, marginBottom: '14px', fontSize: '0.85rem' }}>{error}</div>}
