@@ -19,7 +19,7 @@ export async function generarContenido(tipo, datos) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ tipo, ...datos }),
   });
-  const data = await res.json();
+  const data = await res.json().catch(() => ({ error: 'Sin respuesta del servidor (timeout)' }));
   if (!res.ok) throw new Error(data.error || 'Error generando contenido');
   return data;
 }

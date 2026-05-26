@@ -91,9 +91,19 @@ export async function handler(event) {
     });
 
     const data = await res.json();
+
+    if (!res.ok) {
+      const msg = data.error?.message || `Gemini error ${res.status}`;
+      return { statusCode: 502, headers: corsHeaders, body: JSON.stringify({ error: msg }) };
+    }
+
     const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-    // Limpiar markdown si Gemini lo agrega
+    if (!raw) {
+      const razon = data.promptFeedback?.blockReason || data.candidates?.[0]?.finishReason || 'Gemini no devolvió contenido';
+      return { statusCode: 502, headers: corsHeaders, body: JSON.stringify({ error: `Sin respuesta de Gemini: ${razon}` }) };
+    }
+
     const clean = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
     const resultado = JSON.parse(clean);
 
