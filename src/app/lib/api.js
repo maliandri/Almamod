@@ -10,6 +10,12 @@ async function request(path, options = {}) {
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/app/login';
+    throw new Error('Sesión expirada');
+  }
   if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
   return data;
 }
