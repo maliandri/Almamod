@@ -6,6 +6,9 @@ import { C, S, inputFocus, inputBlur } from '../styles';
 
 const CLOUD_NAME = 'dlshym1te';
 const UPLOAD_PRESET = 'almamod_cms';
+const fotoThumb = url => url?.startsWith('http')
+  ? url
+  : `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_120,h_120,c_fill,q_70,f_auto/${url}`;
 
 async function uploadToCloudinary(file) {
   const fd = new FormData();
@@ -54,7 +57,7 @@ function FotosManager({ fotos, onAdd, onDelete, uploading }) {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
         {fotos.map((url, i) => (
           <div key={i} style={{ position: 'relative', width: '90px', height: '90px', borderRadius: '8px', overflow: 'hidden', border: `1px solid ${C.border}` }}>
-            <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={fotoThumb(url)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <button type="button" onClick={() => onDelete(i)}
               style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', width: '20px', height: '20px', color: '#fff', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
           </div>
@@ -119,9 +122,9 @@ function EditModal({ modelo, onClose, onSaved }) {
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', zIndex: 50, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '24px 16px', overflowY: 'auto' }}
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 50, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '24px 16px', overflowY: 'auto' }}
       onClick={e => e.target === e.currentTarget && onClose()}>
-      <div style={{ ...S.card, width: '100%', maxWidth: '580px', marginTop: '24px' }}>
+      <div style={{ ...S.card, background: '#1a2035', width: '100%', maxWidth: '580px', marginTop: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h2 style={{ ...S.h2, margin: 0, color: C.gold }}>{modelo.nombre}</h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.textMuted, fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
