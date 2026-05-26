@@ -1382,6 +1382,10 @@
     padding: 0 10px;
   }
 
+  .tienda-grid {
+    grid-template-columns: 1fr;
+  }
+
   /* En móvil, el sidebar se convierte en un bottom sheet fijo */
   .filters-sidebar {
     position: fixed;
