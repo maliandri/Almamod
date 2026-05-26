@@ -116,7 +116,7 @@ export default function BOM() {
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap' }}>
           <select value={modeloId} onChange={e => setModeloId(e.target.value)} style={{ ...S.select, minWidth: '220px' }}>
             <option value="">Seleccioná un modelo</option>
-            {modelos.map(m => <option key={m.id} value={m.id}>{m.nombre} ({m.superficie}m²)</option>)}
+            {modelos.map(m => <option key={m.id} value={m.id}>{m.nombre}</option>)}
           </select>
           {modeloId && canWrite && (
             <>

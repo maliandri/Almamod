@@ -15,8 +15,9 @@ export async function handler(event) {
   if (!user) return response(401, { error: 'Usuario no encontrado' });
 
   const { data: modelos, error } = await supabase
-    .from('modelos')
-    .select('id, nombre, superficie, slug')
+    .from('modelos_fabricacion')
+    .select('id, nombre, descripcion, activo')
+    .eq('activo', true)
     .order('nombre');
 
   if (error) return response(500, { error: error.message });
