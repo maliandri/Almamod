@@ -1,0 +1,121 @@
+{
+  "name": "AlmaMod → Redes Sociales",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": "",
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": -183, "y": 0 },
+        "restore": {
+          "parameters": {
+            "hook": {
+              "label": "AlmaMod Webhook",
+              "data": { "editable": "true" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:BasicRouter",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": { "designer": { "x": 150, "y": 0 } },
+      "routes": [
+        {
+          "flow": [
+            {
+              "id": 3,
+              "module": "instagram-business:CreateAPhotoPost",
+              "version": 2,
+              "parameters": { "account": "" },
+              "filter": {
+                "name": "Reel → Instagram",
+                "conditions": [
+                  [{ "a": "{{1.tipo}}", "b": "reel", "o": "text:equal" }]
+                ]
+              },
+              "mapper": {
+                "pageId": "",
+                "imageUrl": "{{1.imagen_url}}",
+                "caption": "{{1.hook}}\n\n{{1.caption}}\n\n{{1.hashtags}}"
+              },
+              "metadata": { "designer": { "x": 450, "y": -300 } }
+            },
+            {
+              "id": 5,
+              "module": "facebook-pages:CreateAPost",
+              "version": 3,
+              "parameters": { "account": "" },
+              "mapper": {
+                "pageId": "",
+                "message": "{{1.hook}}\n\n{{1.caption}}\n\n{{1.hashtags}}",
+                "attachmentUrl": "{{1.imagen_url}}"
+              },
+              "metadata": { "designer": { "x": 750, "y": -300 } }
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 4,
+              "module": "instagram-business:CreateAPhotoPost",
+              "version": 2,
+              "parameters": { "account": "" },
+              "filter": {
+                "name": "Post/Libre → Instagram",
+                "conditions": [
+                  [{ "a": "{{1.tipo}}", "b": "reel", "o": "text:notEqual" }]
+                ]
+              },
+              "mapper": {
+                "pageId": "",
+                "imageUrl": "{{1.imagen_url}}",
+                "caption": "{{1.caption}}\n\n{{1.hashtags}}"
+              },
+              "metadata": { "designer": { "x": 450, "y": 100 } }
+            },
+            {
+              "id": 6,
+              "module": "facebook-pages:CreateAPost",
+              "version": 3,
+              "parameters": { "account": "" },
+              "mapper": {
+                "pageId": "",
+                "message": "{{1.caption}}\n\n{{1.hashtags}}",
+                "attachmentUrl": "{{1.imagen_url}}"
+              },
+              "metadata": { "designer": { "x": 750, "y": 100 } }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false
+    },
+    "designer": { "orphans": [] },
+    "zone": "eu1.make.com"
+  }
+}

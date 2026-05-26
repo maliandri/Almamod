@@ -27,8 +27,7 @@ export async function generarContenido(tipo, datos) {
 export async function publicarEnMake(tipo, contenido, imagen_url) {
   const stored = localStorage.getItem(WEBHOOKS_KEY);
   const webhooks = stored ? JSON.parse(stored) : {};
-  const keyMap = { reel: 'reels', post: 'posts', libre: 'libre' };
-  const url = webhooks[keyMap[tipo] || tipo];
+  const url = webhooks.url;
   if (!url) throw new Error('Webhook de Make no configurado. Andá a Configurar Make.');
 
   const res = await fetch(url, {

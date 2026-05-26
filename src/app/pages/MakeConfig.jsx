@@ -44,14 +44,22 @@ const PASOS = [
 ];
 
 export default function MakeConfig() {
-  const [webhooks, setWebhooks] = useState({ reels: '', posts: '', libre: '' });
+  const [webhooks, setWebhooks] = useState({ url: '' });
   const [saved, setSaved] = useState(false);
-  const [testing, setTesting] = useState('');
+  const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState('');
 
   useEffect(() => {
     const stored = localStorage.getItem(WEBHOOKS_KEY);
-    if (stored) setWebhooks(JSON.parse(stored));
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      // migrar formato anterior (reels/posts/libre) al nuevo (url)
+      if (!parsed.url && (parsed.reels || parsed.posts || parsed.libre)) {
+        setWebhooks({ url: parsed.reels || parsed.posts || parsed.libre || '' });
+      } else {
+        setWebhooks({ url: parsed.url || '' });
+      }
+    }
   }, []);
 
   const handleSave = () => {
@@ -60,28 +68,28 @@ export default function MakeConfig() {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const handleTest = async (tipo) => {
-    const url = webhooks[tipo === 'reels' ? 'reels' : tipo === 'posts' ? 'posts' : 'libre'];
-    if (!url) { setTestResult('Primero ingresá la URL del webhook'); return; }
-    setTesting(tipo); setTestResult('');
+  const handleTest = async () => {
+    if (!webhooks.url) { setTestResult('Primero ingresá la URL del webhook'); return; }
+    setTesting(true); setTestResult('');
     try {
-      await fetch(url, {
+      await fetch(webhooks.url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          tipo,
+          tipo: 'post',
           caption: 'TEST desde AlmaMod — Ignorar',
           hashtags: '#almamod #test',
           cta: 'Test de conexión',
           imagen_url: '',
+          redes: ['instagram', 'facebook'],
           timestamp: new Date().toISOString(),
         }),
       });
-      setTestResult(`✓ Webhook de ${tipo} enviado correctamente`);
+      setTestResult('✓ Webhook enviado correctamente');
     } catch (err) {
       setTestResult(`Error: ${err.message}`);
     } finally {
-      setTesting('');
+      setTesting(false);
     }
   };
 
@@ -117,48 +125,40 @@ export default function MakeConfig() {
           </div>
         </div>
 
-        {/* Webhook URLs */}
+        {/* Webhook URL */}
         <div style={S.card}>
-          <h2 style={{ ...S.h2, color: C.gold, marginBottom: '20px' }}>URLs de Webhooks</h2>
+          <h2 style={{ ...S.h2, color: C.gold, marginBottom: '8px' }}>URL del Webhook</h2>
           <p style={{ color: C.textMuted, fontSize: '0.82rem', marginBottom: '20px' }}>
-            Podés tener un webhook distinto por tipo de contenido, o usar el mismo para todo.
+            Un solo webhook para todos los tipos de contenido. Make filtra internamente por el campo <code style={{ color: C.gold, fontSize: '0.8rem' }}>tipo</code> (reel / post / libre).
           </p>
 
-          {[
-            { key: 'reels', label: '🎬 Webhook para Reels', tipo: 'reels' },
-            { key: 'posts', label: '📱 Webhook para Publicaciones', tipo: 'posts' },
-            { key: 'libre', label: '✍️ Webhook para Publicación libre', tipo: 'libre' },
-          ].map(({ key, label, tipo }) => (
-            <div key={key} style={{ marginBottom: '18px' }}>
-              <label style={S.label}>{label}</label>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <input
-                  value={webhooks[key]}
-                  onChange={e => setWebhooks(p => ({ ...p, [key]: e.target.value }))}
-                  placeholder="https://hook.eu1.make.com/..."
-                  style={{ ...S.input, flex: 1, fontSize: '0.85rem' }}
-                  onFocus={inputFocus} onBlur={inputBlur}
-                />
-                <button type="button" onClick={() => handleTest(tipo)} disabled={!!testing}
-                  style={{ ...S.btnGhost, fontSize: '0.8rem', padding: '8px 12px', opacity: testing ? 0.6 : 1, whiteSpace: 'nowrap' }}>
-                  {testing === tipo ? 'Enviando...' : 'Probar'}
-                </button>
-              </div>
-            </div>
-          ))}
+          <label style={S.label}>Webhook URL</label>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+            <input
+              value={webhooks.url}
+              onChange={e => setWebhooks({ url: e.target.value })}
+              placeholder="https://hook.eu1.make.com/..."
+              style={{ ...S.input, flex: 1, fontSize: '0.85rem' }}
+              onFocus={inputFocus} onBlur={inputBlur}
+            />
+            <button type="button" onClick={handleTest} disabled={testing}
+              style={{ ...S.btnGhost, fontSize: '0.8rem', padding: '8px 14px', opacity: testing ? 0.6 : 1, whiteSpace: 'nowrap' }}>
+              {testing ? 'Enviando...' : 'Probar'}
+            </button>
+          </div>
 
           {testResult && (
-            <div style={{ ...testResult.startsWith('✓') ? S.alertSuccess : S.alertError, marginBottom: '16px', fontSize: '0.85rem' }}>
+            <div style={{ ...(testResult.startsWith('✓') ? S.alertSuccess : S.alertError), marginBottom: '16px', fontSize: '0.85rem' }}>
               {testResult}
             </div>
           )}
 
           <button onClick={handleSave} style={{ ...S.btnGold, padding: '10px 24px' }}>
-            {saved ? '✓ Guardado' : 'Guardar webhooks'}
+            {saved ? '✓ Guardado' : 'Guardar webhook'}
           </button>
 
           <p style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '12px' }}>
-            Las URLs se guardan en este navegador. Si accedés desde otro dispositivo tenés que volver a configurarlas.
+            La URL se guarda en este navegador. Si accedés desde otro dispositivo tenés que volver a configurarla.
           </p>
         </div>
 
