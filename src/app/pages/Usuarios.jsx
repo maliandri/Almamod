@@ -74,19 +74,25 @@ function EditModal({ usuario, onClose, onSave }) {
 export default function Usuarios() {
   const { token } = useAuth();
   const [usuarios, setUsuarios] = useState([]);
+  const [pendientes, setPendientes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ email: '', rol: 'cliente' });
   const [invitando, setInvitando] = useState(false);
   const [invError, setInvError] = useState('');
   const [invSuccess, setInvSuccess] = useState('');
   const [inviteLink, setInviteLink] = useState('');
+  const [reenviando, setReenviando] = useState(null); // email que se está reenviando
   const [editando, setEditando] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   const cargarUsuarios = () => {
-    api.users.list(token)
-      .then(data => setUsuarios(data.users || []))
-      .finally(() => setLoading(false));
+    Promise.all([
+      api.users.list(token),
+      api.auth.invitacionesPendientes(token),
+    ]).then(([uData, iData]) => {
+      setUsuarios(uData.users || []);
+      setPendientes(iData.pendientes || []);
+    }).finally(() => setLoading(false));
   };
 
   useEffect(() => { cargarUsuarios(); }, [token]);
@@ -106,6 +112,22 @@ export default function Usuarios() {
       setInvError(err.message);
     } finally {
       setInvitando(false);
+    }
+  };
+
+  const handleReenviar = async (inv) => {
+    setReenviando(inv.email);
+    setInvError(''); setInvSuccess(''); setInviteLink('');
+    try {
+      const res = await api.auth.reenviarInvite(token, inv.email, inv.rol);
+      const link = `${window.location.origin}/app/registro?token=${res.token}`;
+      setInvSuccess(`Invitación reenviada a ${inv.email}`);
+      setInviteLink(link);
+      cargarUsuarios();
+    } catch (err) {
+      setInvError(err.message);
+    } finally {
+      setReenviando(null);
     }
   };
 
@@ -167,6 +189,50 @@ export default function Usuarios() {
             )}
           </form>
         </div>
+
+        {/* Invitaciones pendientes */}
+        {pendientes.length > 0 && (
+          <div style={{ ...S.card, marginBottom: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h2 style={{ ...S.h2, margin: 0 }}>Invitaciones pendientes</h2>
+              <span style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b', borderRadius: '20px', padding: '2px 10px', fontSize: '0.8rem', fontWeight: 700 }}>
+                {pendientes.length}
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+              {pendientes.map((inv, i) => {
+                const expira = new Date(inv.expires_at);
+                const diasRestantes = Math.ceil((expira - Date.now()) / 86400000);
+                return (
+                  <div key={inv.id} style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    gap: '12px', padding: '12px 16px', borderRadius: '8px',
+                    background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)',
+                    borderBottom: `1px solid ${C.border}`,
+                  }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{ color: C.text, fontWeight: 600, fontSize: '0.9rem' }}>{inv.email}</div>
+                      <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '2px' }}>
+                        Expira en {diasRestantes} día{diasRestantes !== 1 ? 's' : ''}
+                      </div>
+                    </div>
+                    <span style={{ background: 'rgba(245,158,11,0.12)', color: '#f59e0b', padding: '3px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700, flexShrink: 0 }}>
+                      {ROL_LABEL[inv.rol] || inv.rol}
+                    </span>
+                    <button
+                      onClick={() => handleReenviar(inv)}
+                      disabled={reenviando === inv.email}
+                      style={{ background: C.goldDim, border: 'none', borderRadius: '6px', padding: '5px 12px', color: C.gold, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, flexShrink: 0, opacity: reenviando === inv.email ? 0.6 : 1 }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(212,165,116,0.3)'}
+                      onMouseLeave={e => e.currentTarget.style.background = C.goldDim}>
+                      {reenviando === inv.email ? 'Reenviando...' : 'Reenviar'}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Users list */}
         <div style={S.card}>

@@ -30,6 +30,10 @@ export const api = {
       request(`auth-check-invite?token=${encodeURIComponent(token)}`),
     invite: (token, data) =>
       request('auth-invite', { method: 'POST', body: data, token }),
+    invitacionesPendientes: (token) =>
+      request('auth-invite', { token }),
+    reenviarInvite: (token, email, rol) =>
+      request('auth-invite', { method: 'POST', body: { email, rol, reenviar: true }, token }),
   },
   obras: {
     list: (token) => request('obras-list', { token }),

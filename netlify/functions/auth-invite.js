@@ -7,9 +7,6 @@ export async function handler(event) {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers: corsHeaders, body: '' };
   }
-  if (event.httpMethod !== 'POST') {
-    return response(405, { error: 'Método no permitido' });
-  }
 
   const token = getUserFromToken(event.headers.authorization);
   if (!token) return response(401, { error: 'No autorizado' });
@@ -19,7 +16,23 @@ export async function handler(event) {
     return response(403, { error: 'Sin permisos para invitar usuarios' });
   }
 
-  const { email, rol, obra_id } = JSON.parse(event.body || '{}');
+  // GET — listar invitaciones pendientes
+  if (event.httpMethod === 'GET') {
+    const { data: pendientes, error } = await supabase
+      .from('invitaciones')
+      .select('id, email, rol, created_at, expires_at')
+      .is('usado_en', null)
+      .gt('expires_at', new Date().toISOString())
+      .order('created_at', { ascending: false });
+    if (error) return response(500, { error: error.message });
+    return response(200, { pendientes });
+  }
+
+  if (event.httpMethod !== 'POST') {
+    return response(405, { error: 'Método no permitido' });
+  }
+
+  const { email, rol, obra_id, reenviar } = JSON.parse(event.body || '{}');
 
   if (!email || !rol) {
     return response(400, { error: 'Email y rol son requeridos' });
@@ -30,7 +43,7 @@ export async function handler(event) {
     return response(400, { error: 'Rol inválido' });
   }
 
-  // Verificar que no exista una invitación pendiente para este email
+  // Verificar si existe invitación pendiente
   const { data: existente } = await supabase
     .from('invitaciones')
     .select('id')
@@ -39,8 +52,13 @@ export async function handler(event) {
     .gt('expires_at', new Date().toISOString())
     .single();
 
-  if (existente) {
+  if (existente && !reenviar) {
     return response(409, { error: 'Ya existe una invitación pendiente para este email' });
+  }
+
+  // Si reenviar=true, eliminar la invitación pendiente anterior
+  if (existente && reenviar) {
+    await supabase.from('invitaciones').delete().eq('id', existente.id);
   }
 
   // Crear invitación
@@ -82,5 +100,5 @@ export async function handler(event) {
     `,
   });
 
-  return response(201, { message: 'Invitación enviada', invitacion_id: invitacion.id });
+  return response(201, { message: 'Invitación enviada', invitacion_id: invitacion.id, token: invitacion.token });
 }
