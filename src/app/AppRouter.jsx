@@ -19,6 +19,9 @@ import FirmarRemito from './pages/FirmarRemito';
 import RemitoScan from './pages/RemitoScan';
 import Familias from './pages/Familias';
 import CrmAlmita from './pages/CrmAlmita';
+import PIC from './pages/PIC';
+import OT from './pages/OT';
+import REI from './pages/REI';
 
 export default function AppRouter() {
   return (
@@ -160,6 +163,30 @@ export default function AppRouter() {
       {/* Ruta pública — sin auth */}
       <Route path="firmar/:token" element={<FirmarRemito />} />
 
+      <Route
+        path="pic"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="pic" mode="read">
+            <PIC />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="ot"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito', 'fabricacion']} module="ot" mode="read">
+            <OT />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="rei"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="rei" mode="read">
+            <REI />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="crm-almita"
         element={

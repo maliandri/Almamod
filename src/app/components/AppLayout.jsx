@@ -50,6 +50,9 @@ const NAV_SECTIONS = [
       { to: '/app/familias',    module: 'familias',    icon: '🏷️', label: 'Familias',        roles: ['superadmin','dueno','deposito'] },
       { to: '/app/bom',         module: 'bom',         icon: '📋', label: 'BOM',             roles: ['superadmin','dueno','deposito','fabricacion'] },
       { to: '/app/remito-scan', module: 'remito_scan', icon: '📷', label: 'Escanear Remito', roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/pic',        module: 'pic',         icon: '🛒', label: 'PIC',              roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/ot',         module: 'ot',          icon: '🔧', label: 'OT',               roles: ['superadmin','dueno','deposito','fabricacion'] },
+      { to: '/app/rei',        module: 'rei',         icon: '📦', label: 'REI',              roles: ['superadmin','dueno','deposito'] },
     ],
   },
   {

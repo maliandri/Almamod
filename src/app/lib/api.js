@@ -138,6 +138,28 @@ export const api = {
   modelos: {
     list: (token) => request('modelos-list', { token }),
   },
+  pic: {
+    list:   (token)       => request('pic', { token }),
+    get:    (token, id)   => request(`pic?id=${id}`, { token }),
+    create: (token, data) => request('pic', { method: 'POST', body: data, token }),
+    update: (token, data) => request('pic', { method: 'PUT', body: data, token }),
+    delete: (token, id)   => request(`pic?id=${id}`, { method: 'DELETE', token }),
+  },
+  ot: {
+    list:   (token)       => request('ot', { token }),
+    get:    (token, id)   => request(`ot?id=${id}`, { token }),
+    create: (token, data) => request('ot', { method: 'POST', body: data, token }),
+    update: (token, data) => request('ot', { method: 'PUT', body: data, token }),
+    delete: (token, id)   => request(`ot?id=${id}`, { method: 'DELETE', token }),
+  },
+  rei: {
+    list:           (token)              => request('rei', { token }),
+    get:            (token, id)          => request(`rei?id=${id}`, { token }),
+    create:         (token, data)        => request('rei', { method: 'POST', body: data, token }),
+    entregar:       (token, id)          => request('rei', { method: 'PUT', body: { id, estado: 'entregado' }, token }),
+    itemsFromEtapa: (token, etapaId, modeloId) => request(`rei?action=items_from_etapa&etapa_id=${etapaId}&modelo_id=${modeloId}`, { token }),
+    delete:         (token, id)          => request(`rei?id=${id}`, { method: 'DELETE', token }),
+  },
   cms: {
     modelos: {
       list:   (token)       => request('cms-modelos', { token }),
