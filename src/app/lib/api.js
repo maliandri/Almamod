@@ -156,6 +156,10 @@ export const api = {
     delete:  (token, id)   => request(`users-list?id=${id}`, { method: 'DELETE', token }),
     signout: (token, id)   => request('users-list', { method: 'PUT', body: { id, signout: true }, token }),
   },
+  crm: {
+    list:   (token, qs)  => request(`crm-almita${qs ? `?${qs}` : ''}`, { token }),
+    delete: (token, id)  => request(`crm-almita?id=${id}`, { method: 'DELETE', token }),
+  },
   pdf: {
     download: async (token, obra_id, numero_obra) => {
       const res = await fetch(`${BASE}/pdf-export?obra_id=${obra_id}`, {

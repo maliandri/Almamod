@@ -4,6 +4,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import './AIChatbot.css';
 import { sendMessageToGemini, initializeChat } from '../utils/geminiHelper';
 
+function getOrCreateSessionId() {
+  const key = 'almamod_session_id';
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
 function AIChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -12,7 +24,9 @@ function AIChatBot() {
   const [showQuickReplies, setShowQuickReplies] = useState(false);
   const [userData, setUserData] = useState({ name: '', email: '', phone: '', interestedProduct: '' });
   const [hasGreeted, setHasGreeted] = useState(false);
+  const [sessionId] = useState(getOrCreateSessionId);
   const messagesEndRef = useRef(null);
+  const saveTimerRef = useRef(null);
 
   const quickReplies = [
     { text: "🏠 Ver Modelos y Precios", key: "modelos" },
@@ -33,7 +47,7 @@ function AIChatBot() {
     if (isOpen && !hasGreeted && messages.length === 0) {
       setHasGreeted(true);
       simulateTyping(1000).then(() => {
-        const greeting = userData.name 
+        const greeting = userData.name
           ? `¡Hola de nuevo ${userData.name}! 👋 ¿Seguimos viendo tu futura casa?`
           : "¡Hola! Soy Almita de AlmaMod 🏠\n\nEstoy acá para ayudarte a encontrar tu módulo ideal. ¿Buscás algo para vivienda permanente, inversión o vacaciones?";
         addBotMessage(greeting, false);
@@ -42,9 +56,48 @@ function AIChatBot() {
     }
   }, [isOpen]);
 
+  // Auto-guardado en Supabase después de cada respuesta del bot
+  useEffect(() => {
+    if (messages.length < 2) return;
+    const lastMsg = messages[messages.length - 1];
+    if (!lastMsg.isBot) return;
+
+    clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      saveConversacion(messages, userData);
+    }, 2000);
+
+    return () => clearTimeout(saveTimerRef.current);
+  }, [messages, userData]);
+
+  const saveConversacion = async (msgs, uData) => {
+    if (msgs.length < 2) return;
+    try {
+      const mensajes = msgs.map(m => ({
+        role: m.isBot ? 'bot' : 'user',
+        text: m.text,
+        ts: m.timestamp instanceof Date
+          ? m.timestamp.toISOString()
+          : new Date(m.timestamp || Date.now()).toISOString(),
+      }));
+      await fetch('/.netlify/functions/save-conversacion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: sessionId,
+          mensajes,
+          nombre: uData.name || '',
+          email: uData.email || '',
+          telefono: uData.phone || '',
+          producto_interes: uData.interestedProduct || '',
+        }),
+      });
+    } catch { /* silencioso */ }
+  };
+
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-  const addBotMessage = (text, useTypingEffect = true) => {
+  const addBotMessage = (text) => {
     setMessages(prev => [...prev, { id: Date.now(), text, isBot: true, timestamp: new Date() }]);
   };
 
@@ -66,9 +119,9 @@ function AIChatBot() {
     if (captured) {
       setUserData(newData);
       localStorage.setItem('almamod_user_data', JSON.stringify(newData));
-      return true;
+      return newData;
     }
-    return false;
+    return null;
   };
 
   const detectProductInterest = (text) => {
@@ -80,7 +133,6 @@ function AIChatBot() {
       'Alma 36': ['alma 36', 'alma36', '36m²', '50m', 'dos dormitorios', '2 dormitorios'],
       'Alma 36 Refugio': ['refugio', 'alma 36 refugio', 'premium', '54.8m']
     };
-
     const lowerText = text.toLowerCase();
     for (const [product, keywords] of Object.entries(productKeywords)) {
       if (keywords.some(keyword => lowerText.includes(keyword))) {
@@ -97,7 +149,7 @@ function AIChatBot() {
 
   const sendLeadToServer = async () => {
     try {
-      const response = await fetch('/.netlify/functions/saveLead', {
+      await fetch('/.netlify/functions/saveLead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -107,13 +159,7 @@ function AIChatBot() {
           interestedProduct: userData.interestedProduct
         })
       });
-
-      if (response.ok) {
-        console.log('✅ Lead enviado correctamente a info@almamod.com.ar');
-      }
-    } catch (error) {
-      console.error('❌ Error enviando lead:', error);
-    }
+    } catch { /* silencioso */ }
   };
 
   const detectContactRequest = (text) => {
@@ -122,8 +168,7 @@ function AIChatBot() {
       'escribir', 'enviar', 'comunicar', 'asesor', 'humano',
       'whatsapp', 'telefono', 'teléfono', 'mail', 'email'
     ];
-    const lowerText = text.toLowerCase();
-    return contactKeywords.some(keyword => lowerText.includes(keyword));
+    return contactKeywords.some(keyword => text.toLowerCase().includes(keyword));
   };
 
   const handleSendMessage = async (textOverride = null) => {
@@ -133,14 +178,11 @@ function AIChatBot() {
     setInputValue('');
     setShowQuickReplies(false);
     setIsTyping(true);
-    detectContactInfo(text);
+    const newData = detectContactInfo(text);
     detectProductInterest(text);
-
-    // Detectar si el usuario pide ser contactado
     const wantsContact = detectContactRequest(text);
 
     try {
-      // ✅ FIX: Pasar el historial de mensajes formateado correctamente
       const history = messages.map(msg => ({
         sender: msg.isBot ? 'model' : 'user',
         text: msg.text
@@ -149,11 +191,10 @@ function AIChatBot() {
       setIsTyping(false);
       addBotMessage(response);
 
-      // Si el usuario pide contacto y tenemos al menos un dato, enviar lead
       if (wantsContact && (userData.name || userData.email || userData.phone)) {
         setTimeout(() => sendLeadToServer(), 500);
       }
-    } catch (error) {
+    } catch {
       setIsTyping(false);
       addBotMessage("Tuve un pequeño lapsus. ¿Me lo repetís?");
     }
@@ -168,10 +209,18 @@ function AIChatBot() {
   };
 
   const handleClearChat = () => {
+    // Guardar la conversación antes de borrarla
+    if (messages.length >= 2) saveConversacion(messages, userData);
+
     setMessages([]);
     setUserData({ name: '', email: '', phone: '', interestedProduct: '' });
     setHasGreeted(false);
     localStorage.removeItem('almamod_user_data');
+    // Nueva sesión
+    const newId = crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem('almamod_session_id', newId);
     setShowQuickReplies(false);
   };
 
@@ -181,18 +230,15 @@ function AIChatBot() {
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           className={`almamod-chat-button almamod-chat-button-icon`}
-          style={{
-            position: 'fixed',
-            bottom: '490px',
-            right: '20px',
-            zIndex: 2147483647
-          }}
+          style={{ position: 'fixed', bottom: '490px', right: '20px', zIndex: 2147483647 }}
           whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
         >
-          <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+          <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
         </motion.button>
       )}
 
@@ -200,12 +246,7 @@ function AIChatBot() {
         {isOpen && (
           <motion.div
             className="almamod-chat-window"
-            style={{
-              position: 'fixed',
-              bottom: '80px',
-              right: '20px',
-              zIndex: 2147483647
-            }}
+            style={{ position: 'fixed', bottom: '80px', right: '20px', zIndex: 2147483647 }}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -221,68 +262,41 @@ function AIChatBot() {
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <button
-                  onClick={handleClearChat}
-                  className="almamod-clear-btn"
-                  title="Borrar conversación"
-                >
-                  🗑️
-                </button>
+                <button onClick={handleClearChat} className="almamod-clear-btn" title="Borrar conversación">🗑️</button>
                 <button onClick={() => handleSendMessage("Quiero contactar a un humano")} className="almamod-human-btn">
                   📞 Asesor Humano
                 </button>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="almamod-close-btn"
-                  title="Cerrar chat"
-                  style={{
-                    background: 'rgba(255,255,255,0.2)',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '32px',
-                    height: '32px',
-                    color: 'white',
-                    fontSize: '20px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'background 0.2s ease',
-                    fontWeight: 'bold',
-                    marginLeft: '4px'
-                  }}
-                  onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.35)'}
-                  onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
-                >
+                <button onClick={() => setIsOpen(false)} className="almamod-close-btn" title="Cerrar chat"
+                  style={{ background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', width: '32px', height: '32px', color: 'white', fontSize: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s ease', fontWeight: 'bold', marginLeft: '4px' }}
+                  onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.35)'}
+                  onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.2)'}>
                   ✕
                 </button>
               </div>
             </div>
 
-            {/* BODY (MENSAJES) - Clases nuevas aquí */}
+            {/* MENSAJES */}
             <div className="almamod-chat-body">
               {messages.map((msg) => (
-                <motion.div key={msg.id} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} 
+                <motion.div key={msg.id} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
                   style={{ alignSelf: msg.isBot ? 'flex-start' : 'flex-end', maxWidth: '85%' }}>
-                  <div className={msg.isBot ? 'almamod-message-bot' : 'almamod-message-user'}>
-                    {msg.text}
-                  </div>
+                  <div className={msg.isBot ? 'almamod-message-bot' : 'almamod-message-user'}>{msg.text}</div>
                   {msg.isBot && <div style={{ fontSize: '10px', opacity: 0.6, marginTop: '4px', marginLeft: '8px' }}>Almita</div>}
                 </motion.div>
               ))}
               {isTyping && (
-                 <div className="almamod-message-bot" style={{ alignSelf: 'flex-start', width: 'fit-content' }}>
-                   <div className="almamod-typing-indicator">
-                     <div className="almamod-typing-dot" style={{animationDelay: '0s'}}></div>
-                     <div className="almamod-typing-dot" style={{animationDelay: '0.2s'}}></div>
-                     <div className="almamod-typing-dot" style={{animationDelay: '0.4s'}}></div>
-                   </div>
-                 </div>
+                <div className="almamod-message-bot" style={{ alignSelf: 'flex-start', width: 'fit-content' }}>
+                  <div className="almamod-typing-indicator">
+                    <div className="almamod-typing-dot" style={{ animationDelay: '0s' }}></div>
+                    <div className="almamod-typing-dot" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="almamod-typing-dot" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
+                </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* FOOTER (INPUT) - Clases nuevas aquí */}
+            {/* INPUT */}
             <div className="almamod-chat-footer">
               <AnimatePresence>
                 {showQuickReplies && !isTyping && (
@@ -297,11 +311,9 @@ function AIChatBot() {
                 )}
               </AnimatePresence>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={handleKeyPress}
+                <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)} onKeyDown={handleKeyPress}
                   placeholder="Escribe tu consulta..." className="almamod-chat-input" />
-                <button onClick={() => handleSendMessage()} disabled={!inputValue.trim()} className="almamod-chat-send-btn">
-                  ➤
-                </button>
+                <button onClick={() => handleSendMessage()} disabled={!inputValue.trim()} className="almamod-chat-send-btn">➤</button>
               </div>
             </div>
           </motion.div>

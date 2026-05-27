@@ -18,6 +18,7 @@ import MakeConfig from './pages/MakeConfig';
 import FirmarRemito from './pages/FirmarRemito';
 import RemitoScan from './pages/RemitoScan';
 import Familias from './pages/Familias';
+import CrmAlmita from './pages/CrmAlmita';
 
 export default function AppRouter() {
   return (
@@ -158,6 +159,15 @@ export default function AppRouter() {
 
       {/* Ruta pública — sin auth */}
       <Route path="firmar/:token" element={<FirmarRemito />} />
+
+      <Route
+        path="crm-almita"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno']}>
+            <CrmAlmita />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="*" element={<Navigate to="obras" replace />} />
     </Routes>
