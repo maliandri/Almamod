@@ -16,8 +16,8 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      const { token, user } = await api.auth.login(form.email, form.password);
-      login(user, token);
+      const { token, refresh_token, user } = await api.auth.login(form.email, form.password);
+      login(user, token, refresh_token);
       navigate('/app/obras');
     } catch (err) {
       setError(err.message);
