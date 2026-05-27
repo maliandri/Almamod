@@ -54,6 +54,24 @@ export default function BOM() {
     setBom(prev => prev.filter(b => b.etapas_produccion?.id !== id));
   };
 
+  const moverEtapa = async (id, dir) => {
+    const sorted = [...etapas].sort((a, b) => a.orden - b.orden);
+    const idx = sorted.findIndex(e => e.id === id);
+    const swapIdx = dir === 'up' ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
+    const a = sorted[idx];
+    const b = sorted[swapIdx];
+    await Promise.all([
+      api.etapasProduccion.update(token, { id: a.id, orden: b.orden }),
+      api.etapasProduccion.update(token, { id: b.id, orden: a.orden }),
+    ]);
+    setEtapas(prev => prev.map(e => {
+      if (e.id === a.id) return { ...e, orden: b.orden };
+      if (e.id === b.id) return { ...e, orden: a.orden };
+      return e;
+    }));
+  };
+
   const agregarParte = async (parte, etapa_id) => {
     await api.bom.save(token, { modelo_id: Number(modeloId), parte_id: parte.id, cantidad_necesaria: 1, etapa_produccion_id: etapa_id });
     const { partes } = await api.bom.list(token, modeloId);
@@ -162,21 +180,40 @@ export default function BOM() {
             )}
 
             {/* Etapas con sus partes */}
-            {[...etapas, { id: null, nombre: 'Sin etapa asignada', color: '#94a3b8' }].map(etapa => {
+            {[...[...etapas].sort((a, b) => a.orden - b.orden), { id: null, nombre: 'Sin etapa asignada', color: '#94a3b8' }].map((etapa, etapaIdx, arr) => {
               const items = etapa.id ? bomPorEtapa(etapa.id) : bomSinEtapa;
               if (!etapa.id && items.length === 0) return null;
+              const etapasReales = arr.filter(e => e.id);
+              const posicion = etapa.id ? etapasReales.findIndex(e => e.id === etapa.id) : -1;
               return (
                 <div key={etapa.id || 'none'} style={{ ...S.card, padding: 0, marginBottom: '16px', overflow: 'hidden' }}>
                   {/* Header etapa */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: `${etapa.color}18`, borderBottom: `1px solid ${etapa.color}30`, borderLeft: `4px solid ${etapa.color}` }}>
-                    <span style={{ color: etapa.color, fontWeight: 700, fontSize: '0.9rem' }}>{etapa.nombre}</span>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      {etapa.id && (
+                        <span style={{ background: `${etapa.color}30`, color: etapa.color, fontWeight: 700, fontSize: '0.75rem', width: '22px', height: '22px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          {posicion + 1}
+                        </span>
+                      )}
+                      <span style={{ color: etapa.color, fontWeight: 700, fontSize: '0.9rem' }}>{etapa.nombre}</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                       <span style={{ color: C.textMuted, fontSize: '0.75rem' }}>{items.length} parte{items.length !== 1 ? 's' : ''}</span>
                       {canWrite && etapa.id && (
-                        <button onClick={() => eliminarEtapa(etapa.id)}
-                          style={{ background: 'rgba(239,68,68,0.1)', border: 'none', borderRadius: '4px', padding: '2px 8px', color: '#ef4444', cursor: 'pointer', fontSize: '0.75rem' }}>
-                          Eliminar etapa
-                        </button>
+                        <>
+                          <button onClick={() => moverEtapa(etapa.id, 'up')} disabled={posicion === 0}
+                            style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '4px', padding: '2px 7px', color: posicion === 0 ? C.textMuted : C.textSub, cursor: posicion === 0 ? 'default' : 'pointer', fontSize: '0.8rem', opacity: posicion === 0 ? 0.3 : 1 }}>
+                            ↑
+                          </button>
+                          <button onClick={() => moverEtapa(etapa.id, 'down')} disabled={posicion === etapasReales.length - 1}
+                            style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '4px', padding: '2px 7px', color: posicion === etapasReales.length - 1 ? C.textMuted : C.textSub, cursor: posicion === etapasReales.length - 1 ? 'default' : 'pointer', fontSize: '0.8rem', opacity: posicion === etapasReales.length - 1 ? 0.3 : 1 }}>
+                            ↓
+                          </button>
+                          <button onClick={() => eliminarEtapa(etapa.id)}
+                            style={{ background: 'rgba(239,68,68,0.1)', border: 'none', borderRadius: '4px', padding: '2px 8px', color: '#ef4444', cursor: 'pointer', fontSize: '0.75rem' }}>
+                            Eliminar
+                          </button>
+                        </>
                       )}
                     </div>
                   </div>
