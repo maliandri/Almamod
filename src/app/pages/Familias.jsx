@@ -124,17 +124,22 @@ export default function Familias() {
       const buf = await file.arrayBuffer();
       const wb  = XLSX.read(buf);
       const ws  = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws);
+      // Leer como arrays crudos — independiente del nombre de columna
+      const raw = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      const filas = raw.filter(r => Array.isArray(r) && String(r[0] || '').trim());
+      // Saltar primera fila si es encabezado (contiene "nombre", "familia", "name"...)
+      const palabrasHeader = ['nombre', 'familia', 'name', 'family', 'color'];
+      const inicio = filas.length > 0 && palabrasHeader.some(w => String(filas[0][0] || '').toLowerCase().includes(w)) ? 1 : 0;
       let ok = 0;
-      for (const row of rows) {
-        const nombre = String(row.nombre || row.Nombre || row.NOMBRE || '').trim();
+      for (let i = inicio; i < filas.length; i++) {
+        const nombre = String(filas[i][0] || '').trim();
         if (!nombre) continue;
-        const color = String(row.color || row.Color || '').trim();
-        const colorFinal = COLORES.includes(color) ? color : COLORES[ok % COLORES.length];
+        const colorCelda = String(filas[i][1] || '').trim();
+        const colorFinal = /^#[0-9a-fA-F]{6}$/.test(colorCelda) ? colorCelda : COLORES[ok % COLORES.length];
         await api.familias.create(token, { nombre, color: colorFinal }).catch(() => null);
         ok++;
       }
-      setMsg(`✓ ${ok} familia${ok !== 1 ? 's' : ''} importada${ok !== 1 ? 's' : ''}`);
+      setMsg(ok > 0 ? `✓ ${ok} familia${ok !== 1 ? 's' : ''} importada${ok !== 1 ? 's' : ''}` : '⚠️ No se encontraron familias en el archivo');
       cargar();
       setTimeout(() => setMsg(''), 3000);
     } catch (err) {
