@@ -6,25 +6,27 @@ import logoAlmamod from '../../assets/almamod.webp';
 
 const ROL_LABEL = {
   superadmin: 'Super Admin', dueno: 'Dueño', deposito: 'Depósito',
-  fabricacion: 'Fabricación', cliente: 'Cliente',
+  fabricacion: 'Fabricación', marketing: 'Marketing', arquitectura: 'Arquitectura', cliente: 'Cliente',
 };
 
 const ROL_COLOR = {
-  superadmin:  { bg: 'rgba(239,68,68,0.15)',   text: '#ef4444' },
-  dueno:       { bg: 'rgba(212,165,116,0.15)',  text: '#d4a574' },
-  deposito:    { bg: 'rgba(102,126,234,0.15)',  text: '#667eea' },
-  fabricacion: { bg: 'rgba(16,185,129,0.15)',   text: '#10b981' },
-  cliente:     { bg: 'rgba(148,163,184,0.15)',  text: '#94a3b8' },
+  superadmin:   { bg: 'rgba(239,68,68,0.15)',   text: '#ef4444' },
+  dueno:        { bg: 'rgba(212,165,116,0.15)',  text: '#d4a574' },
+  deposito:     { bg: 'rgba(102,126,234,0.15)',  text: '#667eea' },
+  fabricacion:  { bg: 'rgba(16,185,129,0.15)',   text: '#10b981' },
+  marketing:    { bg: 'rgba(249,115,22,0.15)',   text: '#f97316' },
+  arquitectura: { bg: 'rgba(139,92,246,0.15)',   text: '#8b5cf6' },
+  cliente:      { bg: 'rgba(148,163,184,0.15)',  text: '#94a3b8' },
 };
 
 const NAV_SECTIONS = [
   {
     label: 'Marketing',
     items: [
-      { to: '/app/marketing/reels',         icon: '🎬', label: 'Reels',             roles: ['superadmin','dueno'] },
-      { to: '/app/marketing/publicaciones', icon: '📱', label: 'Publicaciones',     roles: ['superadmin','dueno'] },
-      { to: '/app/marketing/libre',         icon: '✍️', label: 'Publicación libre', roles: ['superadmin','dueno'] },
-      { to: '/app/marketing/make',          icon: '⚙️', label: 'Configurar Make',   roles: ['superadmin','dueno'] },
+      { to: '/app/marketing/reels',         icon: '🎬', label: 'Reels',             roles: ['superadmin','dueno','marketing'] },
+      { to: '/app/marketing/publicaciones', icon: '📱', label: 'Publicaciones',     roles: ['superadmin','dueno','marketing'] },
+      { to: '/app/marketing/libre',         icon: '✍️', label: 'Publicación libre', roles: ['superadmin','dueno','marketing'] },
+      { to: '/app/marketing/make',          icon: '⚙️', label: 'Configurar Make',   roles: ['superadmin','dueno','marketing'] },
     ],
   },
   {
@@ -37,15 +39,16 @@ const NAV_SECTIONS = [
   {
     label: 'Productos',
     items: [
-      { to: '/app/cms/modelos', icon: '🌐', label: 'Gestión de Modelos', roles: ['superadmin','dueno'] },
-      { to: '/app/cms/obras',   icon: '📷', label: 'Galería Obras',      roles: ['superadmin','dueno'] },
+      { to: '/app/cms/modelos', icon: '🌐', label: 'Gestión de Modelos', roles: ['superadmin','dueno','arquitectura'] },
+      { to: '/app/cms/obras',   icon: '📷', label: 'Galería Obras',      roles: ['superadmin','dueno','arquitectura'] },
     ],
   },
   {
     label: 'Producción',
     items: [
-      { to: '/app/partes', icon: '🔩', label: 'Componentes', roles: ['superadmin','dueno','deposito'] },
-      { to: '/app/bom',    icon: '📋', label: 'BOM',         roles: ['superadmin','dueno','deposito','fabricacion'] },
+      { to: '/app/partes',       icon: '🔩', label: 'Componentes',      roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/bom',          icon: '📋', label: 'BOM',              roles: ['superadmin','dueno','deposito','fabricacion'] },
+      { to: '/app/remito-scan',  icon: '📷', label: 'Escanear Remito',  roles: ['superadmin','dueno','deposito'] },
     ],
   },
   {
