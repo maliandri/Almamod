@@ -2,7 +2,151 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
+import { MODULOS, rolDefaultLabel } from '../lib/modulos';
 import { C, S, ROL_STYLE, ROL_LABEL, inputFocus, inputBlur } from '../styles';
+
+const PERM_OPTS = [
+  { value: 'default', label: 'Rol', color: '#64748b', bg: 'rgba(100,116,139,0.15)' },
+  { value: 'none',    label: 'Sin acceso', color: '#ef4444', bg: 'rgba(239,68,68,0.12)' },
+  { value: 'read',    label: 'Solo lectura', color: '#667eea', bg: 'rgba(102,126,234,0.12)' },
+  { value: 'write',   label: 'Escritura', color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
+];
+
+function PermisosModal({ usuario, onClose, onSave }) {
+  const [permisos, setPermisos] = useState(() => ({ ...(usuario.permisos || {}) }));
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const setValue = (key, value) => {
+    setPermisos(prev => {
+      const next = { ...prev };
+      if (value === 'default') {
+        delete next[key];
+      } else {
+        next[key] = value;
+      }
+      return next;
+    });
+  };
+
+  const handleSave = async () => {
+    setError('');
+    setSaving(true);
+    try {
+      await onSave(usuario.id, { permisos });
+      onClose();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const rolColor = ROL_STYLE[usuario.rol] || ROL_STYLE.cliente;
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+      onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{ ...S.card, width: '100%', maxWidth: '620px', maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div>
+            <h2 style={{ color: C.gold, fontSize: '1.1rem', fontWeight: 700, margin: '0 0 4px 0' }}>
+              Permisos por módulo
+            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: C.textSub, fontSize: '0.88rem' }}>{usuario.nombre}</span>
+              <span style={{ ...rolColor, padding: '2px 8px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 700 }}>
+                {ROL_LABEL[usuario.rol] || usuario.rol}
+              </span>
+            </div>
+          </div>
+          <button onClick={onClose}
+            style={{ background: 'transparent', border: 'none', color: C.textMuted, fontSize: '1.3rem', cursor: 'pointer', lineHeight: 1, padding: '0 4px' }}>
+            ×
+          </button>
+        </div>
+
+        {/* Legend */}
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+          {PERM_OPTS.map(opt => (
+            <span key={opt.value} style={{ background: opt.bg, color: opt.color, fontSize: '0.72rem', fontWeight: 700, padding: '2px 8px', borderRadius: '12px', border: `1px solid ${opt.color}22` }}>
+              {opt.label}
+            </span>
+          ))}
+          <span style={{ color: C.textMuted, fontSize: '0.72rem', alignSelf: 'center', marginLeft: '4px' }}>
+            — "Rol" usa el acceso predeterminado según el rol del usuario
+          </span>
+        </div>
+
+        {/* Module list */}
+        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          {MODULOS.map(mod => {
+            const current = permisos[mod.key] ?? 'default';
+            const defaultLabel = rolDefaultLabel(usuario.rol, mod.key);
+            return (
+              <div key={mod.key} style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                gap: '12px', padding: '12px 4px',
+                borderBottom: `1px solid ${C.border}`,
+              }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '1rem' }}>{mod.icon}</span>
+                    <span style={{ color: C.text, fontWeight: 600, fontSize: '0.88rem' }}>{mod.label}</span>
+                  </div>
+                  <div style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '2px', paddingLeft: '22px' }}>
+                    {mod.desc}
+                  </div>
+                </div>
+
+                {/* Segmented control */}
+                <div style={{ display: 'flex', gap: '3px', flexShrink: 0 }}>
+                  {PERM_OPTS.map(opt => {
+                    const isActive = current === opt.value;
+                    const label = opt.value === 'default' ? `Rol (${defaultLabel})` : opt.label;
+                    return (
+                      <button key={opt.value} onClick={() => setValue(mod.key, opt.value)}
+                        title={label}
+                        style={{
+                          background: isActive ? opt.bg : 'transparent',
+                          border: `1px solid ${isActive ? opt.color + '55' : C.border}`,
+                          borderRadius: '6px',
+                          padding: '4px 8px',
+                          color: isActive ? opt.color : C.textMuted,
+                          fontSize: '0.7rem',
+                          fontWeight: isActive ? 700 : 500,
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          transition: 'all 0.15s',
+                        }}
+                        onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = opt.bg; e.currentTarget.style.color = opt.color; } }}
+                        onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.textMuted; } }}
+                      >
+                        {opt.value === 'default' ? `Rol` : opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {error && <div style={{ ...S.alertError, marginTop: '14px' }}>{error}</div>}
+
+        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+          <button onClick={handleSave} disabled={saving}
+            style={{ ...S.btnGold, flex: 1, opacity: saving ? 0.6 : 1 }}>
+            {saving ? 'Guardando...' : 'Guardar permisos'}
+          </button>
+          <button onClick={onClose} style={{ ...S.btnGhost }}>Cancelar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function EditModal({ usuario, onClose, onSave }) {
   const [form, setForm] = useState({ nombre: usuario.nombre, rol: usuario.rol, telefono: usuario.telefono || '' });
@@ -85,6 +229,7 @@ export default function Usuarios() {
   const [inviteLink, setInviteLink] = useState('');
   const [reenviando, setReenviando] = useState(null);
   const [editando, setEditando] = useState(null);
+  const [permisosUsuario, setPermisosUsuario] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [confirmSignout, setConfirmSignout] = useState(null);
 
@@ -152,7 +297,7 @@ export default function Usuarios() {
 
   return (
     <AppLayout>
-      <div style={{ padding: '28px 32px', maxWidth: '760px' }}>
+      <div style={{ padding: '28px 32px', maxWidth: '820px' }}>
 
         <h1 style={S.h1}>👥 Usuarios</h1>
 
@@ -261,6 +406,7 @@ export default function Usuarios() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
               {usuarios.map((u, i) => {
                 const rolStyle = ROL_STYLE[u.rol] || ROL_STYLE.cliente;
+                const overrideCount = Object.keys(u.permisos || {}).length;
                 return (
                   <div key={u.id} style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -273,15 +419,29 @@ export default function Usuarios() {
                       <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '2px' }}>{u.email}</div>
                       {u.telefono && <div style={{ color: C.textMuted, fontSize: '0.78rem' }}>{u.telefono}</div>}
                     </div>
-                    <span style={{ ...rolStyle, padding: '3px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em', flexShrink: 0 }}>
-                      {ROL_LABEL[u.rol] || u.rol}
-                    </span>
-                    <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                      <span style={{ ...rolStyle, padding: '3px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em' }}>
+                        {ROL_LABEL[u.rol] || u.rol}
+                      </span>
+                      {overrideCount > 0 && (
+                        <span title={`${overrideCount} permiso${overrideCount !== 1 ? 's' : ''} personalizado${overrideCount !== 1 ? 's' : ''}`}
+                          style={{ background: 'rgba(139,92,246,0.15)', color: '#8b5cf6', padding: '2px 7px', borderRadius: '20px', fontSize: '0.68rem', fontWeight: 700 }}>
+                          {overrideCount} perm.
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', gap: '5px', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                       <button onClick={() => setEditando(u)}
                         style={{ background: C.goldDim, border: 'none', borderRadius: '6px', padding: '5px 10px', color: C.gold, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}
                         onMouseEnter={e => e.currentTarget.style.background = 'rgba(212,165,116,0.3)'}
                         onMouseLeave={e => e.currentTarget.style.background = C.goldDim}>
                         Editar
+                      </button>
+                      <button onClick={() => setPermisosUsuario(u)}
+                        style={{ background: 'rgba(139,92,246,0.12)', border: 'none', borderRadius: '6px', padding: '5px 10px', color: '#8b5cf6', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,92,246,0.25)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(139,92,246,0.12)'}>
+                        Permisos
                       </button>
                       <button onClick={() => setConfirmSignout(u)} title="Forzar cierre de sesión"
                         style={{ background: 'rgba(102,126,234,0.12)', border: 'none', borderRadius: '6px', padding: '5px 10px', color: '#667eea', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}
@@ -303,6 +463,15 @@ export default function Usuarios() {
           )}
         </div>
       </div>
+
+      {/* Permisos modal */}
+      {permisosUsuario && (
+        <PermisosModal
+          usuario={permisosUsuario}
+          onClose={() => setPermisosUsuario(null)}
+          onSave={handleSave}
+        />
+      )}
 
       {/* Edit modal */}
       {editando && (

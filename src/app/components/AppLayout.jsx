@@ -23,39 +23,39 @@ const NAV_SECTIONS = [
   {
     label: 'Marketing',
     items: [
-      { to: '/app/marketing/reels',         icon: '🎬', label: 'Reels',             roles: ['superadmin','dueno','marketing'] },
-      { to: '/app/marketing/publicaciones', icon: '📱', label: 'Publicaciones',     roles: ['superadmin','dueno','marketing'] },
-      { to: '/app/marketing/libre',         icon: '✍️', label: 'Publicación libre', roles: ['superadmin','dueno','marketing'] },
-      { to: '/app/marketing/make',          icon: '⚙️', label: 'Configurar Make',   roles: ['superadmin','dueno','marketing'] },
+      { to: '/app/marketing/reels',         module: 'marketing', icon: '🎬', label: 'Reels',             roles: ['superadmin','dueno','marketing'] },
+      { to: '/app/marketing/publicaciones', module: 'marketing', icon: '📱', label: 'Publicaciones',     roles: ['superadmin','dueno','marketing'] },
+      { to: '/app/marketing/libre',         module: 'marketing', icon: '✍️', label: 'Publicación libre', roles: ['superadmin','dueno','marketing'] },
+      { to: '/app/marketing/make',          module: 'marketing', icon: '⚙️', label: 'Configurar Make',   roles: ['superadmin','dueno','marketing'] },
     ],
   },
   {
     label: 'Obra',
     items: [
-      { to: '/app/obras',       icon: '🏗️', label: 'Gestión de Obra', end: true,  roles: null },
-      { to: '/app/obras/nueva', icon: '➕', label: 'Nueva Obra',       end: false, roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/obras',       module: 'obras', icon: '🏗️', label: 'Gestión de Obra', end: true,  roles: null },
+      { to: '/app/obras/nueva', module: 'obras', icon: '➕', label: 'Nueva Obra',       end: false, roles: ['superadmin','dueno','deposito'], mode: 'write' },
     ],
   },
   {
     label: 'Productos',
     items: [
-      { to: '/app/cms/modelos', icon: '🌐', label: 'Gestión de Modelos', roles: ['superadmin','dueno','arquitectura'] },
-      { to: '/app/cms/obras',   icon: '📷', label: 'Galería Obras',      roles: ['superadmin','dueno','arquitectura'] },
+      { to: '/app/cms/modelos', module: 'cms', icon: '🌐', label: 'Gestión de Modelos', roles: ['superadmin','dueno','arquitectura'] },
+      { to: '/app/cms/obras',   module: 'cms', icon: '📷', label: 'Galería Obras',      roles: ['superadmin','dueno','arquitectura'] },
     ],
   },
   {
     label: 'Producción',
     items: [
-      { to: '/app/partes',      icon: '🔩', label: 'Componentes',     roles: ['superadmin','dueno','deposito'] },
-      { to: '/app/familias',    icon: '🏷️', label: 'Familias',        roles: ['superadmin','dueno','deposito'] },
-      { to: '/app/bom',         icon: '📋', label: 'BOM',             roles: ['superadmin','dueno','deposito','fabricacion'] },
-      { to: '/app/remito-scan', icon: '📷', label: 'Escanear Remito', roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/partes',      module: 'partes',      icon: '🔩', label: 'Componentes',     roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/familias',    module: 'familias',    icon: '🏷️', label: 'Familias',        roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/bom',         module: 'bom',         icon: '📋', label: 'BOM',             roles: ['superadmin','dueno','deposito','fabricacion'] },
+      { to: '/app/remito-scan', module: 'remito_scan', icon: '📷', label: 'Escanear Remito', roles: ['superadmin','dueno','deposito'] },
     ],
   },
   {
     label: 'Administración',
     items: [
-      { to: '/app/usuarios', icon: '👥', label: 'Usuarios', roles: ['superadmin','dueno'] },
+      { to: '/app/usuarios', module: 'usuarios', icon: '👥', label: 'Usuarios', roles: ['superadmin','dueno'] },
     ],
   },
 ];
@@ -120,7 +120,15 @@ function SidebarContent({ onClose }) {
 
       <nav style={{ flex: 1, padding: '10px 6px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '2px' }}>
         {NAV_SECTIONS.map(section => {
-          const visibles = section.items.filter(item => !item.roles || item.roles.includes(rol));
+          const visibles = section.items.filter(item => {
+            const perm = user?.permisos?.[item.module];
+            if (perm !== undefined) {
+              if (perm === 'none') return false;
+              if (item.mode === 'write' && perm !== 'write') return false;
+              return true;
+            }
+            return !item.roles || item.roles.includes(rol);
+          });
           if (visibles.length === 0) return null;
           return (
             <div key={section.label} style={{ marginBottom: '4px' }}>

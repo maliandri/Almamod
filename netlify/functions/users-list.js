@@ -15,7 +15,7 @@ export async function handler(event) {
     const rol = event.queryStringParameters?.rol;
     let query = supabase
       .from('users')
-      .select('id, nombre, email, telefono, rol, activo')
+      .select('id, nombre, email, telefono, rol, activo, permisos')
       .eq('activo', true)
       .order('nombre');
     if (rol) query = query.eq('rol', rol);
@@ -40,9 +40,11 @@ export async function handler(event) {
       return response(200, { ok: true });
     }
 
-    const { nombre, rol, telefono, activo } = body;
+    const { nombre, rol, telefono, activo, permisos } = body;
 
     const allowed = ['dueno', 'deposito', 'fabricacion', 'marketing', 'arquitectura', 'cliente'];
+    const validModules = ['obras', 'partes', 'familias', 'bom', 'remito_scan', 'cms', 'marketing', 'usuarios'];
+    const validPerms = ['none', 'read', 'write'];
     const update = {};
     if (nombre !== undefined) update.nombre = nombre;
     if (telefono !== undefined) update.telefono = telefono;
@@ -50,6 +52,13 @@ export async function handler(event) {
     if (rol !== undefined) {
       if (!allowed.includes(rol)) return response(400, { error: 'Rol inválido' });
       update.rol = rol;
+    }
+    if (permisos !== undefined) {
+      if (typeof permisos !== 'object' || Array.isArray(permisos)) return response(400, { error: 'permisos inválido' });
+      for (const [k, v] of Object.entries(permisos)) {
+        if (!validModules.includes(k) || !validPerms.includes(v)) return response(400, { error: `Permiso inválido: ${k}=${v}` });
+      }
+      update.permisos = permisos;
     }
 
     const { data, error } = await supabase.from('users').update(update).eq('id', id).select().single();

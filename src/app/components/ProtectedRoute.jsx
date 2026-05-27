@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
-export default function ProtectedRoute({ children, roles }) {
+export default function ProtectedRoute({ children, roles, module, mode = 'read' }) {
   const { isAuthenticated, loading, user } = useAuth();
 
   if (loading) {
@@ -12,13 +12,18 @@ export default function ProtectedRoute({ children, roles }) {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/app/login" replace />;
+  if (!isAuthenticated) return <Navigate to="/app/login" replace />;
+
+  if (module) {
+    const perm = user?.permisos?.[module];
+    if (perm !== undefined && perm !== null) {
+      if (perm === 'none') return <Navigate to="/app/obras" replace />;
+      if (mode === 'write' && perm !== 'write') return <Navigate to="/app/obras" replace />;
+      return children;
+    }
   }
 
-  if (roles && !roles.includes(user?.rol)) {
-    return <Navigate to="/app/obras" replace />;
-  }
+  if (roles && !roles.includes(user?.rol)) return <Navigate to="/app/obras" replace />;
 
   return children;
 }

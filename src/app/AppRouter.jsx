@@ -28,7 +28,7 @@ export default function AppRouter() {
       <Route
         path="obras"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute module="obras" mode="read">
             <ObrasLista />
           </ProtectedRoute>
         }
@@ -36,7 +36,7 @@ export default function AppRouter() {
       <Route
         path="obras/nueva"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="obras" mode="write">
             <ObraNueva />
           </ProtectedRoute>
         }
@@ -44,7 +44,7 @@ export default function AppRouter() {
       <Route
         path="obras/:id"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute module="obras" mode="read">
             <ObraDetalle />
           </ProtectedRoute>
         }
@@ -52,7 +52,7 @@ export default function AppRouter() {
       <Route
         path="obras/:id/remito/nuevo"
         element={
-          <ProtectedRoute roles={['superadmin', 'deposito']}>
+          <ProtectedRoute roles={['superadmin', 'deposito']} module="obras" mode="write">
             <RemitoCrear />
           </ProtectedRoute>
         }
@@ -60,7 +60,7 @@ export default function AppRouter() {
       <Route
         path="partes"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="partes" mode="read">
             <Partes />
           </ProtectedRoute>
         }
@@ -68,7 +68,7 @@ export default function AppRouter() {
       <Route
         path="bom"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito', 'fabricacion']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito', 'fabricacion']} module="bom" mode="read">
             <BOM />
           </ProtectedRoute>
         }
@@ -76,7 +76,7 @@ export default function AppRouter() {
       <Route
         path="cms/modelos"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'arquitectura']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'arquitectura']} module="cms" mode="read">
             <CmsModelos />
           </ProtectedRoute>
         }
@@ -84,7 +84,7 @@ export default function AppRouter() {
       <Route
         path="cms/obras"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'arquitectura']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'arquitectura']} module="cms" mode="read">
             <CmsObras />
           </ProtectedRoute>
         }
@@ -92,7 +92,7 @@ export default function AppRouter() {
       <Route
         path="marketing/reels"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']} module="marketing" mode="read">
             <MarketingReels />
           </ProtectedRoute>
         }
@@ -100,7 +100,7 @@ export default function AppRouter() {
       <Route
         path="marketing/publicaciones"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']} module="marketing" mode="read">
             <MarketingPublicaciones />
           </ProtectedRoute>
         }
@@ -108,7 +108,7 @@ export default function AppRouter() {
       <Route
         path="marketing/libre"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']} module="marketing" mode="read">
             <MarketingLibre />
           </ProtectedRoute>
         }
@@ -116,7 +116,7 @@ export default function AppRouter() {
       <Route
         path="marketing/make"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']} module="marketing" mode="read">
             <MakeConfig />
           </ProtectedRoute>
         }
@@ -124,17 +124,16 @@ export default function AppRouter() {
       <Route
         path="usuarios"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno']}>
+          <ProtectedRoute roles={['superadmin', 'dueno']} module="usuarios" mode="read">
             <Usuarios />
           </ProtectedRoute>
         }
       />
 
-      {/* Alias para clientes que llegan desde el email */}
       <Route
         path="mis-obras"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute module="obras" mode="read">
             <ObrasLista />
           </ProtectedRoute>
         }
@@ -143,7 +142,7 @@ export default function AppRouter() {
       <Route
         path="remito-scan"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="remito_scan" mode="read">
             <RemitoScan />
           </ProtectedRoute>
         }
@@ -151,7 +150,7 @@ export default function AppRouter() {
       <Route
         path="familias"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="familias" mode="read">
             <Familias />
           </ProtectedRoute>
         }

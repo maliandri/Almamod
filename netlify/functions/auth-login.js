@@ -20,7 +20,7 @@ export async function handler(event) {
 
   const { data: profile } = await supabase
     .from('users')
-    .select('id, nombre, email, rol, activo')
+    .select('id, nombre, email, rol, activo, permisos')
     .eq('id', data.user.id)
     .single();
 
