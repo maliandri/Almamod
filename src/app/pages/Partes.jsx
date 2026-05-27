@@ -182,6 +182,16 @@ export default function Partes() {
     cargar();
   };
 
+  const actualizarFamilia = async (parteId, familiaId) => {
+    const fid = familiaId ? Number(familiaId) : null;
+    setPartes(prev => prev.map(p => {
+      if (p.id !== parteId) return p;
+      const fam = familias.find(f => f.id === fid) || null;
+      return { ...p, familia_id: fid, familias: fam };
+    }));
+    await api.partes.update(token, { id: parteId, familia_id: fid }).catch(() => cargar());
+  };
+
   const handleExcel = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -278,8 +288,8 @@ export default function Partes() {
           <div style={{ ...S.card, padding: 0, overflow: 'hidden' }}>
             <div style={{ overflowX: 'auto' }}>
             {/* Header tabla */}
-            <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '640px' }}>
-              {['Código','Nombre','Unidad','Costo','Stock','Mínimo',''].map((h, i) => (
+            <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 150px 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '780px' }}>
+              {['Código','Nombre','Familia','Unidad','Costo','Stock','Mínimo',''].map((h, i) => (
                 <div key={i} style={{ color: C.textMuted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em', textAlign: i >= 3 ? 'center' : 'left' }}>{h}</div>
               ))}
             </div>
@@ -289,14 +299,33 @@ export default function Partes() {
                 {busqueda ? 'Sin resultados' : 'No hay partes cargadas'}
               </div>
             ) : filtradas.map((p, i) => (
-              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '640px' }}>
+              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 150px 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '780px' }}>
                 <div style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 700 }}>{p.codigo}</div>
                 <div>
-                  <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 500 }}>
-                    {p.nombre}
-                    <FamiliaBadge familia={p.familias} />
-                  </div>
+                  <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 500 }}>{p.nombre}</div>
                   {p.descripcion && <div style={{ color: C.textMuted, fontSize: '0.75rem' }}>{p.descripcion}</div>}
+                </div>
+                <div>
+                  <select
+                    value={p.familia_id || ''}
+                    onChange={e => actualizarFamilia(p.id, e.target.value)}
+                    style={{
+                      background: p.familias ? `${p.familias.color}18` : 'rgba(255,255,255,0.04)',
+                      border: `1px solid ${p.familias ? `${p.familias.color}40` : C.border}`,
+                      borderRadius: '6px',
+                      padding: '3px 6px',
+                      color: p.familias ? p.familias.color : C.textMuted,
+                      fontSize: '0.75rem',
+                      fontWeight: p.familias ? 700 : 400,
+                      cursor: 'pointer',
+                      outline: 'none',
+                      width: '100%',
+                      maxWidth: '140px',
+                    }}
+                  >
+                    <option value="">— Sin familia —</option>
+                    {familias.map(f => <option key={f.id} value={f.id}>{f.nombre}</option>)}
+                  </select>
                 </div>
                 <div style={{ color: C.textMuted, fontSize: '0.8rem', textAlign: 'center' }}>{p.unidad}</div>
                 <div style={{ color: C.textSub, fontSize: '0.85rem', textAlign: 'center' }}>${Number(p.costo || 0).toLocaleString('es-AR')}</div>
