@@ -44,9 +44,12 @@ export const api = {
     firmar: (token, data) => request('etapas-firmar', { method: 'POST', body: data, token }),
   },
   remitos: {
-    list: (token, obra_id) => request(`remitos-list?obra_id=${obra_id}`, { token }),
-    create: (token, data) => request('remitos-create', { method: 'POST', body: data, token }),
-    firmar: (token, data) => request('remitos-firmar', { method: 'POST', body: data, token }),
+    list:        (token, obra_id) => request(`remitos-list?obra_id=${obra_id}`, { token }),
+    create:      (token, data)    => request('remitos-create', { method: 'POST', body: data, token }),
+    firmar:      (token, data)    => request('remitos-firmar', { method: 'POST', body: data, token }),
+    getByToken:  (t)              => request(`remito-token?token=${t}`),
+    firmarToken: (t, data)        => request(`remito-token?token=${t}`, { method: 'POST', body: data }),
+    scan:        (token, data)    => request('remito-scan', { method: 'POST', body: data, token }),
   },
   checklist: {
     get: (token, obra_id) => request(`checklist-get?obra_id=${obra_id}`, { token }),

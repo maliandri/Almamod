@@ -34,10 +34,11 @@ export async function handler(event) {
     return response(400, { error: 'Solo se pueden crear remitos para obras activas' });
   }
 
-  // Crear remito
+  // Crear remito con token único para firma QR
+  const token_firma = crypto.randomUUID();
   const { data: remito, error: remitoError } = await supabase
     .from('remitos')
-    .insert({ obra_id, creado_por: user.id, notas: notas || null })
+    .insert({ obra_id, creado_por: user.id, notas: notas || null, token_firma })
     .select()
     .single();
 
@@ -53,5 +54,5 @@ export async function handler(event) {
   const { error: itemsError } = await supabase.from('remito_items').insert(itemsData);
   if (itemsError) return response(500, { error: itemsError.message });
 
-  return response(201, { remito_id: remito.id, numero: remito.numero });
+  return response(201, { remito_id: remito.id, numero: remito.numero, token_firma: remito.token_firma });
 }

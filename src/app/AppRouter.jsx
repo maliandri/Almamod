@@ -15,6 +15,8 @@ import MarketingReels from './pages/MarketingReels';
 import MarketingPublicaciones from './pages/MarketingPublicaciones';
 import MarketingLibre from './pages/MarketingLibre';
 import MakeConfig from './pages/MakeConfig';
+import FirmarRemito from './pages/FirmarRemito';
+import RemitoScan from './pages/RemitoScan';
 
 export default function AppRouter() {
   return (
@@ -136,6 +138,18 @@ export default function AppRouter() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="remito-scan"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']}>
+            <RemitoScan />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Ruta pública — sin auth */}
+      <Route path="firmar/:token" element={<FirmarRemito />} />
 
       <Route path="*" element={<Navigate to="obras" replace />} />
     </Routes>

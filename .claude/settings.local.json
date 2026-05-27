@@ -5,7 +5,8 @@
       "Bash(git commit:*)",
       "Bash(npm run build:*)",
       "Bash(git push:*)",
-      "Bash(node check-seo.cjs:*)"
+      "Bash(node check-seo.cjs:*)",
+      "Bash(du:*)"
     ],
     "deny": [],
     "ask": []

@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
 import { C, S, inputFocus, inputBlur } from '../styles';
+import { QRCodeSVG } from 'qrcode.react';
 
 export default function RemitoCrear() {
   const { id: obra_id } = useParams();
@@ -16,6 +17,7 @@ export default function RemitoCrear() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [creado, setCreado] = useState(null); // { numero, token_firma }
 
   useEffect(() => {
     api.checklist.get(token, obra_id)
@@ -47,8 +49,8 @@ export default function RemitoCrear() {
     if (items.length === 0) { setError('Seleccioná al menos un material'); return; }
     setSubmitting(true); setError('');
     try {
-      await api.remitos.create(token, { obra_id, items, notas: notas || undefined });
-      navigate(`/app/obras/${obra_id}?tab=remitos`);
+      const res = await api.remitos.create(token, { obra_id, items, notas: notas || undefined });
+      setCreado({ numero: res.numero, token_firma: res.token_firma });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -83,6 +85,36 @@ export default function RemitoCrear() {
       </div>
     </AppLayout>
   );
+
+  if (creado) {
+    const firmarUrl = `${window.location.origin}/app/firmar/${creado.token_firma}`;
+    return (
+      <AppLayout>
+        <div style={{ padding: '28px 32px', maxWidth: '480px' }}>
+          <div style={{ ...S.card, textAlign: 'center' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📦</div>
+            <h2 style={{ ...S.h2, color: C.gold, marginBottom: '4px' }}>Remito #{creado.numero} creado</h2>
+            <p style={{ color: C.textMuted, fontSize: '0.85rem', marginBottom: '24px' }}>
+              Escaneá el QR o compartí el link para que Fabricación firme la recepción.
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', padding: '16px', background: '#fff', borderRadius: '12px', display: 'inline-block' }}>
+              <QRCodeSVG value={firmarUrl} size={200} level="M" />
+            </div>
+            <div style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '8px', padding: '10px 14px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: C.textMuted, fontSize: '0.75rem', flex: 1, wordBreak: 'break-all', textAlign: 'left' }}>{firmarUrl}</span>
+              <button onClick={() => navigator.clipboard.writeText(firmarUrl)}
+                style={{ ...S.btnGhost, fontSize: '0.75rem', padding: '4px 10px', flexShrink: 0 }}>
+                Copiar
+              </button>
+            </div>
+            <button onClick={() => navigate(`/app/obras/${obra_id}?tab=remitos`)} style={{ ...S.btnGold, width: '100%', padding: '12px' }}>
+              Ver obra →
+            </button>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   const numSeleccionados = Object.keys(seleccion).length;
 
