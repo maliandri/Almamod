@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import ThemeToggle from '../../components/ThemeToggle';
@@ -46,9 +46,9 @@ const NAV_SECTIONS = [
   {
     label: 'Producción',
     items: [
-      { to: '/app/partes',       icon: '🔩', label: 'Componentes',      roles: ['superadmin','dueno','deposito'] },
-      { to: '/app/bom',          icon: '📋', label: 'BOM',              roles: ['superadmin','dueno','deposito','fabricacion'] },
-      { to: '/app/remito-scan',  icon: '📷', label: 'Escanear Remito',  roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/partes',      icon: '🔩', label: 'Componentes',     roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/bom',         icon: '📋', label: 'BOM',             roles: ['superadmin','dueno','deposito','fabricacion'] },
+      { to: '/app/remito-scan', icon: '📷', label: 'Escanear Remito', roles: ['superadmin','dueno','deposito'] },
     ],
   },
   {
@@ -59,9 +59,9 @@ const NAV_SECTIONS = [
   },
 ];
 
-function NavItem({ to, icon, label, end }) {
+function NavItem({ to, icon, label, end, onClose }) {
   return (
-    <NavLink to={to} end={end}
+    <NavLink to={to} end={end} onClick={onClose}
       style={({ isActive }) => ({
         display: 'flex', alignItems: 'center', gap: '10px',
         padding: '8px 12px', borderRadius: '7px',
@@ -108,7 +108,6 @@ function SidebarContent({ onClose }) {
       display: 'flex', flexDirection: 'column', height: '100%',
       borderRight: '1px solid rgba(212,165,116,0.15)', flexShrink: 0,
     }}>
-      {/* Logo */}
       <div style={{ padding: '18px 14px 14px', borderBottom: '1px solid rgba(212,165,116,0.15)' }}>
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <img src={logoAlmamod} alt="AlmaMod" style={{ height: '30px', objectFit: 'contain' }} />
@@ -118,9 +117,7 @@ function SidebarContent({ onClose }) {
         </div>
       </div>
 
-      {/* Nav con secciones */}
-      <nav style={{ flex: 1, padding: '10px 6px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '2px' }}
-        onClick={onClose}>
+      <nav style={{ flex: 1, padding: '10px 6px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '2px' }}>
         {NAV_SECTIONS.map(section => {
           const visibles = section.items.filter(item => !item.roles || item.roles.includes(rol));
           if (visibles.length === 0) return null;
@@ -129,13 +126,12 @@ function SidebarContent({ onClose }) {
               <div style={{ color: 'rgba(148,163,184,0.5)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.08em', padding: '8px 12px 4px', textTransform: 'uppercase' }}>
                 {section.label}
               </div>
-              {visibles.map(item => <NavItem key={item.to} {...item} />)}
+              {visibles.map(item => <NavItem key={item.to} {...item} onClose={onClose} />)}
             </div>
           );
         })}
       </nav>
 
-      {/* Usuario */}
       <div style={{ padding: '10px 14px', borderTop: '1px solid rgba(212,165,116,0.15)' }}>
         <div style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 600, marginBottom: '3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {user?.nombre}
@@ -157,33 +153,58 @@ function SidebarContent({ onClose }) {
 
 export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  // Cierra sidebar al navegar en móvil
+  const closeSidebar = () => setSidebarOpen(false);
 
   return (
     <div style={{ display: 'flex', height: '100vh', background: 'var(--bg-primary, #0f172a)', overflow: 'hidden' }}>
       <ThemeToggle />
 
-      <div className="hidden md:flex" style={{ flexShrink: 0 }}>
-        <SidebarContent />
-      </div>
+      {/* Sidebar desktop — siempre visible */}
+      {!isMobile && <SidebarContent />}
 
-      {sidebarOpen && (
-        <div className="md:hidden" style={{ position: 'fixed', inset: 0, zIndex: 40, display: 'flex' }}>
-          <SidebarContent onClose={() => setSidebarOpen(false)} />
+      {/* Sidebar móvil — overlay */}
+      {isMobile && sidebarOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 40, display: 'flex' }}>
+          <SidebarContent onClose={closeSidebar} />
           <div style={{ flex: 1, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
-            onClick={() => setSidebarOpen(false)} />
+            onClick={closeSidebar} />
         </div>
       )}
 
+      {/* Contenido principal */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-        <div className="md:hidden" style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)', borderBottom: '1px solid rgba(212,165,116,0.15)', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-          <button onClick={() => setSidebarOpen(true)}
-            style={{ background: 'transparent', border: 'none', color: '#d4a574', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>
-            ☰
-          </button>
-          <img src={logoAlmamod} alt="AlmaMod" style={{ height: '26px', objectFit: 'contain' }} />
-        </div>
 
-        <main style={{ flex: 1, overflowY: 'auto', background: 'var(--bg-primary, #0f172a)' }}>
+        {/* Header móvil */}
+        {isMobile && (
+          <div style={{
+            background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+            borderBottom: '1px solid rgba(212,165,116,0.15)',
+            padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0,
+          }}>
+            <button onClick={() => setSidebarOpen(true)}
+              style={{ background: 'transparent', border: 'none', color: '#d4a574', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>
+              ☰
+            </button>
+            <img src={logoAlmamod} alt="AlmaMod" style={{ height: '26px', objectFit: 'contain' }} />
+          </div>
+        )}
+
+        <main style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', background: 'var(--bg-primary, #0f172a)' }}>
+          <style>{`
+            @media (max-width: 767px) {
+              .admin-page { padding: 16px 14px !important; }
+              .admin-page > * { max-width: 100% !important; }
+            }
+          `}</style>
           {children}
         </main>
       </div>

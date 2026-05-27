@@ -244,8 +244,9 @@ export default function Partes() {
           <div style={{ textAlign: 'center', padding: '48px', color: C.textMuted }}>Cargando...</div>
         ) : (
           <div style={{ ...S.card, padding: 0, overflow: 'hidden' }}>
+            <div style={{ overflowX: 'auto' }}>
             {/* Header tabla */}
-            <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}` }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '640px' }}>
               {['Código','Nombre','Unidad','Costo','Stock','Mínimo',''].map((h, i) => (
                 <div key={i} style={{ color: C.textMuted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em', textAlign: i >= 3 ? 'center' : 'left' }}>{h}</div>
               ))}
@@ -256,7 +257,7 @@ export default function Partes() {
                 {busqueda ? 'Sin resultados' : 'No hay partes cargadas'}
               </div>
             ) : filtradas.map((p, i) => (
-              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s' }}>
+              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '640px' }}>
                 <div style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 700 }}>{p.codigo}</div>
                 <div>
                   <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 500 }}>{p.nombre}</div>
@@ -282,6 +283,7 @@ export default function Partes() {
                 </div>
               </div>
             ))}
+            </div>{/* fin overflowX */}
           </div>
         )}
 

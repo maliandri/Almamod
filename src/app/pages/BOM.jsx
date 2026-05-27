@@ -182,8 +182,9 @@ export default function BOM() {
                   </div>
 
                   {/* Partes de la etapa */}
+                  <div style={{ overflowX: 'auto' }}>
                   {items.map((item, i) => (
-                    <div key={item.id} style={{ display: 'grid', gridTemplateColumns: '90px 1fr 80px 80px 80px', gap: '0', padding: '10px 16px', borderBottom: `1px solid ${C.border}`, alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)' }}>
+                    <div key={item.id} style={{ display: 'grid', gridTemplateColumns: '90px 1fr 80px 80px 80px', gap: '0', padding: '10px 16px', borderBottom: `1px solid ${C.border}`, alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', minWidth: '420px' }}>
                       <div style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.78rem' }}>{item.partes?.codigo}</div>
                       <div style={{ color: C.text, fontSize: '0.88rem' }}>{item.partes?.nombre}</div>
                       <div style={{ textAlign: 'center' }}>
@@ -204,6 +205,8 @@ export default function BOM() {
                       </div>
                     </div>
                   ))}
+
+                  </div>{/* fin overflowX */}
 
                   {/* Agregar parte a esta etapa */}
                   {canWrite && etapa.id && (
