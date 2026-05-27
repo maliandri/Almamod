@@ -30,7 +30,7 @@ function matchPartes(items, partes) {
   return items.map(item => {
     const codigo = (item.codigo || '').trim().toUpperCase();
     const matched = codigo ? partes.find(p => p.codigo.toUpperCase() === codigo) : null;
-    return { ...item, parte_id: matched?.id || null, _parte: matched || null };
+    return { ...item, parte_id: matched?.id || null, _parte: matched || null, _familia_filtro: matched?.familia_id ? String(matched.familia_id) : '' };
   });
 }
 
@@ -41,6 +41,7 @@ export default function RemitoScan() {
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState(null);
   const [partes, setPartes] = useState([]);
+  const [familias, setFamilias] = useState([]);
   const [analizando, setAnalizando] = useState(false);
   const [resultado, setResultado] = useState(null);
   const [guardando, setGuardando] = useState(false);
@@ -48,7 +49,13 @@ export default function RemitoScan() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    api.partes.list(token).then(d => setPartes(d.partes || []));
+    Promise.all([
+      api.partes.list(token),
+      api.familias.list(token),
+    ]).then(([p, f]) => {
+      setPartes(p.partes || []);
+      setFamilias(f.familias || []);
+    });
   }, [token]);
 
   const handleFile = (e) => {
@@ -199,39 +206,60 @@ export default function RemitoScan() {
             {/* Tabla ítems */}
             <div style={{ overflowX: 'auto', marginBottom: '16px' }}>
               <div style={{ ...S.card, padding: 0, overflow: 'hidden', minWidth: '580px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px 70px 190px 36px', gap: 0, padding: '8px 14px', background: 'rgba(255,255,255,0.03)', borderBottom: `1px solid ${C.border}` }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 72px 60px 200px 36px', gap: 0, padding: '8px 14px', background: 'rgba(255,255,255,0.03)', borderBottom: `1px solid ${C.border}` }}>
                   {['Descripción del remito', 'Cantidad', 'Unidad', 'Parte del catálogo', ''].map((h, i) => (
                     <div key={i} style={{ color: C.textMuted, fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>{h}</div>
                   ))}
                 </div>
-                {resultado.items?.map((item, i) => (
-                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 80px 70px 190px 36px', gap: '6px', padding: '8px 14px', borderBottom: `1px solid ${C.border}`, alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)' }}>
-                    <input value={item.descripcion} onChange={e => updateItem(i, 'descripcion', e.target.value)}
-                      style={{ ...S.input, padding: '5px 8px', fontSize: '0.82rem' }} onFocus={inputFocus} onBlur={inputBlur} />
-                    <input type="number" value={item.cantidad} onChange={e => updateItem(i, 'cantidad', e.target.value)}
-                      style={{ ...S.input, padding: '5px 8px', fontSize: '0.82rem', textAlign: 'center' }} onFocus={inputFocus} onBlur={inputBlur} />
-                    <input value={item.unidad || ''} onChange={e => updateItem(i, 'unidad', e.target.value)}
-                      style={{ ...S.input, padding: '5px 8px', fontSize: '0.82rem' }} onFocus={inputFocus} onBlur={inputBlur} />
-                    <select
-                      value={item.parte_id || ''}
-                      onChange={e => updateItem(i, 'parte_id', e.target.value)}
-                      style={{
-                        ...S.select,
-                        padding: '5px 8px',
-                        fontSize: '0.78rem',
-                        borderColor: item.parte_id ? 'rgba(16,185,129,0.5)' : 'rgba(249,115,22,0.5)',
-                        color: item.parte_id ? '#10b981' : '#f97316',
-                      }}
-                    >
-                      <option value="">— Sin vincular</option>
-                      {partes.map(p => (
-                        <option key={p.id} value={p.id}>{p.codigo} — {p.nombre}</option>
-                      ))}
-                    </select>
-                    <button onClick={() => removeItem(i)}
-                      style={{ background: 'rgba(239,68,68,0.1)', border: 'none', borderRadius: '6px', color: '#ef4444', cursor: 'pointer', fontSize: '0.85rem', padding: '4px', width: '28px', height: '28px' }}>×</button>
-                  </div>
-                ))}
+                {resultado.items?.map((item, i) => {
+                  const partesFiltradas = partes.filter(p =>
+                    !item._familia_filtro || String(p.familia_id) === item._familia_filtro
+                  );
+                  return (
+                    <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 72px 60px 200px 36px', gap: '6px', padding: '8px 14px', borderBottom: `1px solid ${C.border}`, alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)' }}>
+                      <input value={item.descripcion} onChange={e => updateItem(i, 'descripcion', e.target.value)}
+                        style={{ ...S.input, padding: '5px 8px', fontSize: '0.82rem' }} onFocus={inputFocus} onBlur={inputBlur} />
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={item.cantidad}
+                        onChange={e => updateItem(i, 'cantidad', e.target.value.replace(/[^0-9.]/g, ''))}
+                        style={{ ...S.input, padding: '5px 8px', fontSize: '0.88rem', textAlign: 'center' }}
+                        onFocus={inputFocus} onBlur={inputBlur}
+                      />
+                      <input value={item.unidad || ''} onChange={e => updateItem(i, 'unidad', e.target.value)}
+                        style={{ ...S.input, padding: '5px 8px', fontSize: '0.82rem' }} onFocus={inputFocus} onBlur={inputBlur} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                        <select
+                          value={item._familia_filtro || ''}
+                          onChange={e => updateItem(i, '_familia_filtro', e.target.value)}
+                          style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid rgba(212,165,116,0.15)`, borderRadius: '4px', padding: '2px 5px', color: C.textMuted, fontSize: '0.68rem', outline: 'none', cursor: 'pointer' }}
+                        >
+                          <option value="">— Filtrar familia —</option>
+                          {familias.map(f => <option key={f.id} value={String(f.id)}>{f.nombre}</option>)}
+                        </select>
+                        <select
+                          value={item.parte_id || ''}
+                          onChange={e => updateItem(i, 'parte_id', e.target.value)}
+                          style={{
+                            ...S.select,
+                            padding: '4px 7px',
+                            fontSize: '0.78rem',
+                            borderColor: item.parte_id ? 'rgba(16,185,129,0.5)' : 'rgba(249,115,22,0.5)',
+                            color: item.parte_id ? '#10b981' : '#f97316',
+                          }}
+                        >
+                          <option value="">— Sin vincular</option>
+                          {partesFiltradas.map(p => (
+                            <option key={p.id} value={p.id}>{p.codigo} — {p.nombre}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <button onClick={() => removeItem(i)}
+                        style={{ background: 'rgba(239,68,68,0.1)', border: 'none', borderRadius: '6px', color: '#ef4444', cursor: 'pointer', fontSize: '0.85rem', padding: '4px', width: '28px', height: '28px', alignSelf: 'center' }}>×</button>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
