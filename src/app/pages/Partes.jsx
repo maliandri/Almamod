@@ -5,7 +5,16 @@ import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
 import { C, S, inputFocus, inputBlur } from '../styles';
 
-const EMPTY = { codigo: '', nombre: '', descripcion: '', unidad: 'unidad', costo: '', stock_actual: '', stock_minimo: '' };
+const EMPTY = { codigo: '', nombre: '', descripcion: '', unidad: 'unidad', costo: '', stock_actual: '', stock_minimo: '', familia_id: '' };
+
+function FamiliaBadge({ familia }) {
+  if (!familia) return null;
+  return (
+    <span style={{ background: `${familia.color}22`, color: familia.color, fontSize: '0.68rem', fontWeight: 700, padding: '1px 7px', borderRadius: '10px', marginLeft: '7px', verticalAlign: 'middle', whiteSpace: 'nowrap' }}>
+      {familia.nombre}
+    </span>
+  );
+}
 
 function StockBadge({ actual, minimo }) {
   const num = Number(actual || 0);
@@ -23,7 +32,7 @@ function StockBadge({ actual, minimo }) {
   );
 }
 
-function ModalParte({ parte, onClose, onSave }) {
+function ModalParte({ parte, familias, onClose, onSave }) {
   const [form, setForm] = useState(parte || EMPTY);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -32,7 +41,7 @@ function ModalParte({ parte, onClose, onSave }) {
   const handleSave = async () => {
     if (!form.codigo || !form.nombre) { setError('Código y nombre son requeridos'); return; }
     setLoading(true); setError('');
-    try { await onSave(form); onClose(); }
+    try { await onSave({ ...form, familia_id: form.familia_id || null }); onClose(); }
     catch (e) { setError(e.message); }
     finally { setLoading(false); }
   };
@@ -50,6 +59,13 @@ function ModalParte({ parte, onClose, onSave }) {
             <input value={form[k]} onChange={e => f(k, e.target.value)} style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
           </div>
         ))}
+        <div style={{ marginBottom: '14px' }}>
+          <label style={S.label}>Familia</label>
+          <select value={form.familia_id || ''} onChange={e => f('familia_id', e.target.value || null)} style={S.select}>
+            <option value="">— Sin familia —</option>
+            {familias.map(fam => <option key={fam.id} value={fam.id}>{fam.nombre}</option>)}
+          </select>
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '20px' }}>
           {[['costo','Costo $'],['stock_actual','Stock actual'],['stock_minimo','Stock mínimo']].map(([k, label]) => (
             <div key={k}>
@@ -130,8 +146,10 @@ function ModalStock({ parte, onClose, onSave }) {
 export default function Partes() {
   const { token, user } = useAuth();
   const [partes, setPartes] = useState([]);
+  const [familias, setFamilias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busqueda, setBusqueda] = useState('');
+  const [familiaFiltro, setFamiliaFiltro] = useState('');
   const [modalParte, setModalParte] = useState(null); // null | 'nueva' | parte
   const [modalStock, setModalStock] = useState(null);
   const [importando, setImportando] = useState(false);
@@ -142,7 +160,13 @@ export default function Partes() {
 
   const cargar = () => {
     setLoading(true);
-    api.partes.list(token).then(d => setPartes(d.partes || [])).finally(() => setLoading(false));
+    Promise.all([
+      api.partes.list(token),
+      api.familias.list(token),
+    ]).then(([p, f]) => {
+      setPartes(p.partes || []);
+      setFamilias(f.familias || []);
+    }).finally(() => setLoading(false));
   };
 
   useEffect(() => { cargar(); }, [token]);
@@ -193,7 +217,8 @@ export default function Partes() {
   };
 
   const filtradas = partes.filter(p =>
-    !busqueda || p.nombre.toLowerCase().includes(busqueda.toLowerCase()) || p.codigo.toLowerCase().includes(busqueda.toLowerCase())
+    (!busqueda || p.nombre.toLowerCase().includes(busqueda.toLowerCase()) || p.codigo.toLowerCase().includes(busqueda.toLowerCase())) &&
+    (!familiaFiltro || String(p.familia_id) === familiaFiltro)
   );
 
   const sinStock = partes.filter(p => Number(p.stock_actual) === 0).length;
@@ -228,15 +253,22 @@ export default function Partes() {
 
         {importMsg && <div style={{ ...S.alertSuccess, marginBottom: '16px' }}>{importMsg}</div>}
 
-        {/* Búsqueda */}
-        <div style={{ marginBottom: '16px' }}>
+        {/* Búsqueda y filtros */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
           <input
             placeholder="🔍 Buscar por código o nombre..."
             value={busqueda}
             onChange={e => setBusqueda(e.target.value)}
-            style={{ ...S.input, maxWidth: '400px' }}
+            style={{ ...S.input, maxWidth: '340px' }}
             onFocus={inputFocus} onBlur={inputBlur}
           />
+          <select value={familiaFiltro} onChange={e => setFamiliaFiltro(e.target.value)} style={{ ...S.select, minWidth: '160px' }}>
+            <option value="">Todas las familias</option>
+            {familias.map(f => <option key={f.id} value={String(f.id)}>{f.nombre}</option>)}
+          </select>
+          {familiaFiltro && (
+            <button onClick={() => setFamiliaFiltro('')} style={{ ...S.btnGhost, padding: '6px 12px', fontSize: '0.8rem' }}>× Limpiar</button>
+          )}
         </div>
 
         {/* Tabla */}
@@ -260,7 +292,10 @@ export default function Partes() {
               <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '640px' }}>
                 <div style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 700 }}>{p.codigo}</div>
                 <div>
-                  <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 500 }}>{p.nombre}</div>
+                  <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 500 }}>
+                    {p.nombre}
+                    <FamiliaBadge familia={p.familias} />
+                  </div>
                   {p.descripcion && <div style={{ color: C.textMuted, fontSize: '0.75rem' }}>{p.descripcion}</div>}
                 </div>
                 <div style={{ color: C.textMuted, fontSize: '0.8rem', textAlign: 'center' }}>{p.unidad}</div>
@@ -295,6 +330,7 @@ export default function Partes() {
       {modalParte && (
         <ModalParte
           parte={modalParte === 'nueva' ? null : modalParte}
+          familias={familias}
           onClose={() => setModalParte(null)}
           onSave={handleSaveParte}
         />

@@ -20,7 +20,7 @@ export async function handler(event) {
       .from('modelo_partes')
       .select(`
         id, cantidad_necesaria, notas,
-        partes(id, codigo, nombre, unidad, costo, stock_actual, stock_minimo),
+        partes(id, codigo, nombre, unidad, costo, stock_actual, stock_minimo, familias(id, nombre, color)),
         etapas_produccion(id, nombre, color, orden)
       `)
       .eq('modelo_id', modelo_id)

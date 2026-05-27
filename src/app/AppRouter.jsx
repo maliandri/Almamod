@@ -17,6 +17,7 @@ import MarketingLibre from './pages/MarketingLibre';
 import MakeConfig from './pages/MakeConfig';
 import FirmarRemito from './pages/FirmarRemito';
 import RemitoScan from './pages/RemitoScan';
+import Familias from './pages/Familias';
 
 export default function AppRouter() {
   return (
@@ -144,6 +145,14 @@ export default function AppRouter() {
         element={
           <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']}>
             <RemitoScan />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="familias"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']}>
+            <Familias />
           </ProtectedRoute>
         }
       />

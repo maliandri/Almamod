@@ -47,6 +47,7 @@ const NAV_SECTIONS = [
     label: 'Producción',
     items: [
       { to: '/app/partes',      icon: '🔩', label: 'Componentes',     roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/familias',    icon: '🏷️', label: 'Familias',        roles: ['superadmin','dueno','deposito'] },
       { to: '/app/bom',         icon: '📋', label: 'BOM',             roles: ['superadmin','dueno','deposito','fabricacion'] },
       { to: '/app/remito-scan', icon: '📷', label: 'Escanear Remito', roles: ['superadmin','dueno','deposito'] },
     ],

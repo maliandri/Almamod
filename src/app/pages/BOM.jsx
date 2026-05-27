@@ -19,6 +19,7 @@ export default function BOM() {
   const [nuevaEtapa, setNuevaEtapa] = useState('');
   const [addingParte, setAddingParte] = useState(null); // etapa_id
   const [parteSearch, setParteSearch] = useState('');
+  const [addingLoading, setAddingLoading] = useState(false);
   const fileRef = useRef();
 
   const canWrite = ['superadmin', 'dueno', 'deposito'].includes(user?.rol);
@@ -73,11 +74,19 @@ export default function BOM() {
   };
 
   const agregarParte = async (parte, etapa_id) => {
-    await api.bom.save(token, { modelo_id: Number(modeloId), parte_id: parte.id, cantidad_necesaria: 1, etapa_produccion_id: etapa_id });
-    const { partes } = await api.bom.list(token, modeloId);
-    setBom(partes || []);
-    setAddingParte(null);
-    setParteSearch('');
+    if (addingLoading) return;
+    setAddingLoading(true);
+    try {
+      await api.bom.save(token, { modelo_id: Number(modeloId), parte_id: parte.id, cantidad_necesaria: 1, etapa_produccion_id: etapa_id });
+      const { partes } = await api.bom.list(token, modeloId);
+      setBom(partes || []);
+      setAddingParte(null);
+      setParteSearch('');
+    } catch (err) {
+      setImportMsg(`Error al agregar parte: ${err.message}`);
+    } finally {
+      setAddingLoading(false);
+    }
   };
 
   const actualizarCantidad = async (id, cantidad) => {
@@ -223,7 +232,10 @@ export default function BOM() {
                   {items.map((item, i) => (
                     <div key={item.id} style={{ display: 'grid', gridTemplateColumns: '90px 1fr 80px 80px 80px', gap: '0', padding: '10px 16px', borderBottom: `1px solid ${C.border}`, alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', minWidth: '420px' }}>
                       <div style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.78rem' }}>{item.partes?.codigo}</div>
-                      <div style={{ color: C.text, fontSize: '0.88rem' }}>{item.partes?.nombre}</div>
+                      <div style={{ color: C.text, fontSize: '0.88rem' }}>
+                        {item.partes?.nombre}
+                        {item.partes?.familias && <span style={{ background: `${item.partes.familias.color}22`, color: item.partes.familias.color, fontSize: '0.68rem', fontWeight: 700, padding: '1px 6px', borderRadius: '10px', marginLeft: '6px', verticalAlign: 'middle' }}>{item.partes.familias.nombre}</span>}
+                      </div>
                       <div style={{ textAlign: 'center' }}>
                         <input type="number" min="0.01" step="0.01" defaultValue={item.cantidad_necesaria}
                           onBlur={e => actualizarCantidad(item.id, e.target.value)}
@@ -259,13 +271,17 @@ export default function BOM() {
                         />
                         <div style={{ maxHeight: '160px', overflowY: 'auto' }}>
                           {partesFiltradas.slice(0, 20).map(p => (
-                            <button key={p.id} onClick={() => agregarParte(p, etapa.id)}
-                              style={{ display: 'flex', width: '100%', padding: '6px 10px', background: 'transparent', border: 'none', borderBottom: `1px solid ${C.border}`, color: C.textSub, cursor: 'pointer', textAlign: 'left', fontSize: '0.85rem', gap: '8px' }}
-                              onMouseEnter={e => e.currentTarget.style.background = C.goldDim}
-                              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                            <button key={p.id}
+                              onMouseDown={e => e.preventDefault()}
+                              onClick={() => agregarParte(p, etapa.id)}
+                              disabled={addingLoading}
+                              style={{ display: 'flex', width: '100%', padding: '6px 10px', background: 'transparent', border: 'none', borderBottom: `1px solid ${C.border}`, color: C.textSub, cursor: addingLoading ? 'wait' : 'pointer', textAlign: 'left', fontSize: '0.85rem', gap: '8px', opacity: addingLoading ? 0.6 : 1, alignItems: 'center' }}
+                              onMouseEnter={e => { if (!addingLoading) e.currentTarget.style.background = C.goldDim; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
                             >
                               <span style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.78rem', minWidth: '80px' }}>{p.codigo}</span>
-                              <span>{p.nombre}</span>
+                              <span style={{ flex: 1 }}>{p.nombre}</span>
+                              {p.familias && <span style={{ background: `${p.familias.color}22`, color: p.familias.color, fontSize: '0.68rem', fontWeight: 700, padding: '1px 7px', borderRadius: '10px', flexShrink: 0 }}>{p.familias.nombre}</span>}
                             </button>
                           ))}
                           {partesFiltradas.length === 0 && <div style={{ color: C.textMuted, fontSize: '0.85rem', padding: '8px' }}>Sin resultados</div>}
