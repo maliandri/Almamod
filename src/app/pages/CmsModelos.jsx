@@ -131,7 +131,6 @@ function EditModal({ modelo, onClose, onSaved }) {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Precio */}
           <div style={{ marginBottom: '16px' }}>
             <label style={S.label}>Precio ($) *</label>
             <input type="number" required value={form.precio}
@@ -139,14 +138,12 @@ function EditModal({ modelo, onClose, onSaved }) {
               placeholder="58720000" style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
           </div>
 
-          {/* Plazo */}
           <div style={{ marginBottom: '16px' }}>
             <label style={S.label}>Plazo de entrega</label>
             <input value={form.plazo} onChange={e => setForm(p => ({ ...p, plazo: e.target.value }))}
               placeholder="45 días" style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
           </div>
 
-          {/* Descripción */}
           <div style={{ marginBottom: '16px' }}>
             <label style={S.label}>Descripción</label>
             <textarea value={form.descripcion}
@@ -156,7 +153,6 @@ function EditModal({ modelo, onClose, onSaved }) {
               onFocus={inputFocus} onBlur={inputBlur} />
           </div>
 
-          {/* Imagen portada */}
           <div style={{ marginBottom: '16px' }}>
             <label style={S.label}>Imagen portada (nombre Cloudinary o URL)</label>
             <input value={form.imagen_portada}
@@ -165,13 +161,11 @@ function EditModal({ modelo, onClose, onSaved }) {
               style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
           </div>
 
-          {/* Ventajas */}
           <div style={{ marginBottom: '16px' }}>
             <label style={S.label}>Ventajas (aparecen en la ficha del modelo)</label>
             <VentajasEditor ventajas={form.ventajas} onChange={v => setForm(p => ({ ...p, ventajas: v }))} />
           </div>
 
-          {/* Fotos extra */}
           <div style={{ marginBottom: '20px' }}>
             <label style={S.label}>Fotos adicionales</label>
             <div style={{ marginBottom: '6px', color: C.textMuted, fontSize: '0.78rem' }}>
@@ -199,11 +193,68 @@ function EditModal({ modelo, onClose, onSaved }) {
   );
 }
 
+function CrearModal({ onClose, onCreado }) {
+  const { token } = useAuth();
+  const [form, setForm] = useState({ nombre: '', superficie: '' });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true); setError('');
+    try {
+      await api.cms.modelos.create(token, form);
+      onCreado();
+      onClose();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px' }}
+      onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{ ...S.card, background: '#1a2035', width: '100%', maxWidth: '440px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h2 style={{ ...S.h2, margin: 0, color: C.gold }}>Nuevo Modelo</h2>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.textMuted, fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
+        </div>
+        <p style={{ color: C.textMuted, fontSize: '0.85rem', marginBottom: '20px' }}>
+          Se crea como <strong style={{ color: C.text }}>no publicado</strong>. Completá precio, fotos y descripción después con Editar.
+        </p>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={S.label}>Nombre *</label>
+            <input required value={form.nombre} onChange={e => setForm(p => ({ ...p, nombre: e.target.value }))}
+              placeholder="Ej: Alma 45" style={S.input} onFocus={inputFocus} onBlur={inputBlur} autoFocus />
+          </div>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={S.label}>Superficie</label>
+            <input value={form.superficie} onChange={e => setForm(p => ({ ...p, superficie: e.target.value }))}
+              placeholder="Ej: 45m²" style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
+          </div>
+          {error && <div style={{ ...S.alertError, marginBottom: '14px' }}>{error}</div>}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button type="submit" disabled={saving} style={{ ...S.btnGold, flex: 1, opacity: saving ? 0.6 : 1 }}>
+              {saving ? 'Creando...' : 'Crear modelo'}
+            </button>
+            <button type="button" onClick={onClose} style={S.btnGhost}>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export default function CmsModelos() {
   const { token } = useAuth();
   const [modelos, setModelos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState(null);
+  const [creando, setCreando] = useState(false);
+  const [toggling, setToggling] = useState(new Set());
   const [error, setError] = useState('');
 
   const cargar = () => {
@@ -216,10 +267,29 @@ export default function CmsModelos() {
 
   useEffect(() => { cargar(); }, [token]);
 
+  const toggleActivo = async (modelo) => {
+    if (toggling.has(modelo.id)) return;
+    const nuevoActivo = !modelo.activo;
+    setToggling(prev => new Set([...prev, modelo.id]));
+    setModelos(prev => prev.map(m => m.id === modelo.id ? { ...m, activo: nuevoActivo } : m));
+    try {
+      await api.cms.modelos.update(token, { id: modelo.id, activo: nuevoActivo });
+    } catch {
+      setModelos(prev => prev.map(m => m.id === modelo.id ? { ...m, activo: modelo.activo } : m));
+    } finally {
+      setToggling(prev => { const next = new Set(prev); next.delete(modelo.id); return next; });
+    }
+  };
+
   return (
     <AppLayout>
       <div style={{ padding: '28px 32px' }}>
-        <h1 style={{ ...S.h1, marginBottom: '8px' }}>🏠 Modelos — Sitio Web</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '8px' }}>
+          <h1 style={{ ...S.h1, margin: 0 }}>🏠 Modelos — Sitio Web</h1>
+          <button onClick={() => setCreando(true)} style={{ ...S.btnGold, padding: '9px 18px', fontSize: '0.85rem' }}>
+            + Nuevo Modelo
+          </button>
+        </div>
         <p style={{ color: C.textMuted, fontSize: '0.88rem', marginBottom: '28px' }}>
           Los cambios se publican al instante en <strong style={{ color: C.gold }}>almamod.com.ar</strong>
         </p>
@@ -236,9 +306,38 @@ export default function CmsModelos() {
                 : m.imagen_portada
                   ? `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400,h_280,c_fill,q_75,f_auto/${m.imagen_portada}`
                   : null;
+              const isToggling = toggling.has(m.id);
 
               return (
-                <div key={m.id} style={{ ...S.card, padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div key={m.id} style={{ ...S.card, padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', opacity: m.activo ? 1 : 0.8 }}>
+                  {/* Toggle publicar/despublicar */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '8px 12px',
+                    background: m.activo ? 'rgba(16,185,129,0.1)' : 'rgba(148,163,184,0.07)',
+                    borderBottom: `1px solid ${m.activo ? 'rgba(16,185,129,0.18)' : 'rgba(148,163,184,0.12)'}`,
+                  }}>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: m.activo ? C.green : C.textMuted }}>
+                      {m.activo ? '● Publicado' : '○ No publicado'}
+                    </span>
+                    <button
+                      onClick={() => toggleActivo(m)}
+                      disabled={isToggling}
+                      title={m.activo ? 'Despublicar de la tienda' : 'Publicar en la tienda'}
+                      style={{
+                        position: 'relative', width: '36px', height: '20px', border: 'none', borderRadius: '10px', cursor: isToggling ? 'wait' : 'pointer', flexShrink: 0, padding: 0,
+                        background: m.activo ? C.green : 'rgba(148,163,184,0.35)',
+                        transition: 'background 0.2s',
+                      }}
+                    >
+                      <span style={{
+                        position: 'absolute', top: '3px', left: m.activo ? '17px' : '3px',
+                        width: '14px', height: '14px', borderRadius: '50%', background: '#fff',
+                        transition: 'left 0.18s', display: 'block',
+                      }} />
+                    </button>
+                  </div>
+
                   {/* Imagen */}
                   <div style={{ height: '160px', background: 'rgba(255,255,255,0.03)', position: 'relative', overflow: 'hidden' }}>
                     {portadaUrl
@@ -253,9 +352,9 @@ export default function CmsModelos() {
                   {/* Info */}
                   <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <div style={{ color: C.text, fontWeight: 700, fontSize: '1rem' }}>{m.nombre}</div>
-                    <div style={{ color: C.textMuted, fontSize: '0.8rem' }}>{m.superficie}</div>
+                    {m.superficie && <div style={{ color: C.textMuted, fontSize: '0.8rem' }}>{m.superficie}</div>}
                     <div style={{ color: C.gold, fontWeight: 700, fontSize: '1.1rem', marginTop: '4px' }}>
-                      {m.precio ? `$${Number(m.precio).toLocaleString('es-AR')}` : <span style={{ color: C.textMuted, fontSize: '0.85rem' }}>Sin precio cargado</span>}
+                      {m.precio ? `$${Number(m.precio).toLocaleString('es-AR')}` : <span style={{ color: C.textMuted, fontSize: '0.8rem' }}>Sin precio cargado</span>}
                     </div>
                     {m.plazo && <div style={{ color: C.textMuted, fontSize: '0.78rem' }}>Entrega: {m.plazo}</div>}
                   </div>
@@ -274,6 +373,9 @@ export default function CmsModelos() {
 
       {editando && (
         <EditModal modelo={editando} onClose={() => setEditando(null)} onSaved={cargar} />
+      )}
+      {creando && (
+        <CrearModal onClose={() => setCreando(false)} onCreado={cargar} />
       )}
     </AppLayout>
   );

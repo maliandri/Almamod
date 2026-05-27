@@ -14,10 +14,11 @@ export async function handler(event) {
   const user = await getAuthUser(token);
   if (!user) return response(401, { error: 'Usuario no encontrado' });
 
+  // Lee de modelos (tabla unificada) — todos, publicados o no
   const { data: modelos, error } = await supabase
-    .from('modelos_fabricacion')
-    .select('id, nombre, descripcion, activo')
-    .eq('activo', true)
+    .from('modelos')
+    .select('id, nombre, superficie, activo')
+    .order('orden')
     .order('nombre');
 
   if (error) return response(500, { error: error.message });

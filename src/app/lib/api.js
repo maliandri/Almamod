@@ -141,6 +141,7 @@ export const api = {
   cms: {
     modelos: {
       list:   (token)       => request('cms-modelos', { token }),
+      create: (token, data) => request('cms-modelos', { method: 'POST', body: data, token }),
       update: (token, data) => request('cms-modelos', { method: 'PUT', body: data, token }),
     },
     obras: {

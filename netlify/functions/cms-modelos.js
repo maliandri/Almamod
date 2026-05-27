@@ -19,12 +19,30 @@ export async function handler(event) {
     return response(200, { modelos: data || [] });
   }
 
+  // POST — crear nuevo modelo (inicia como no publicado)
+  if (event.httpMethod === 'POST') {
+    const body = JSON.parse(event.body || '{}');
+    const { nombre, superficie } = body;
+    if (!nombre) return response(400, { error: 'nombre requerido' });
+    const slug = nombre.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const { data: maxRow } = await supabase.from('modelos').select('orden').order('orden', { ascending: false }).limit(1).single();
+    const orden = (maxRow?.orden || 0) + 1;
+    const { data, error } = await supabase
+      .from('modelos')
+      .insert({ nombre, superficie: superficie || '', slug, activo: false, orden })
+      .select().single();
+    if (error) return response(500, { error: error.message });
+    return response(201, { modelo: data });
+  }
+
   // PUT — actualizar modelo
   if (event.httpMethod === 'PUT') {
     const body = JSON.parse(event.body || '{}');
     const { id } = body;
     if (!id) return response(400, { error: 'id requerido' });
-    const allowed = ['precio', 'descripcion', 'plazo', 'ventajas', 'fotos', 'imagen_portada', 'activo'];
+    const allowed = ['nombre', 'superficie', 'slug', 'precio', 'descripcion', 'plazo', 'ventajas', 'fotos', 'imagen_portada', 'activo', 'orden'];
     const update = Object.fromEntries(Object.entries(body).filter(([k]) => allowed.includes(k)));
     const { data, error } = await supabase.from('modelos').update(update).eq('id', id).select().single();
     if (error) return response(500, { error: error.message });
