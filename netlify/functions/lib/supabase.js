@@ -24,6 +24,13 @@ export function getUserFromToken(authHeader) {
   return authHeader.replace('Bearer ', '');
 }
 
+function getTokenIat(token) {
+  try {
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
+    return payload.iat; // segundos desde epoch
+  } catch { return null; }
+}
+
 export async function getAuthUser(token) {
   const { data, error } = await supabase.auth.getUser(token);
   if (error || !data.user) return null;
@@ -32,5 +39,12 @@ export async function getAuthUser(token) {
     .select('*')
     .eq('id', data.user.id)
     .single();
+  if (!profile) return null;
+  // Si el admin cerró la sesión, rechazar tokens emitidos antes del corte
+  if (profile.session_invalidated_at) {
+    const iat = getTokenIat(token);
+    const corte = Math.floor(new Date(profile.session_invalidated_at).getTime() / 1000);
+    if (iat && iat < corte) return null;
+  }
   return profile;
 }

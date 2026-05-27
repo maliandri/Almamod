@@ -83,9 +83,10 @@ export default function Usuarios() {
   const [invError, setInvError] = useState('');
   const [invSuccess, setInvSuccess] = useState('');
   const [inviteLink, setInviteLink] = useState('');
-  const [reenviando, setReenviando] = useState(null); // email que se está reenviando
+  const [reenviando, setReenviando] = useState(null);
   const [editando, setEditando] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [confirmSignout, setConfirmSignout] = useState(null);
 
   const cargarUsuarios = () => {
     Promise.all([
@@ -142,6 +143,11 @@ export default function Usuarios() {
     await api.users.delete(token, id);
     setConfirmDelete(null);
     cargarUsuarios();
+  };
+
+  const handleSignout = async (id) => {
+    await api.users.signout(token, id);
+    setConfirmSignout(null);
   };
 
   return (
@@ -277,6 +283,12 @@ export default function Usuarios() {
                         onMouseLeave={e => e.currentTarget.style.background = C.goldDim}>
                         Editar
                       </button>
+                      <button onClick={() => setConfirmSignout(u)} title="Forzar cierre de sesión"
+                        style={{ background: 'rgba(102,126,234,0.12)', border: 'none', borderRadius: '6px', padding: '5px 10px', color: '#667eea', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(102,126,234,0.25)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(102,126,234,0.12)'}>
+                        Cerrar sesión
+                      </button>
                       <button onClick={() => setConfirmDelete(u)}
                         style={{ background: C.redDim, border: 'none', borderRadius: '6px', padding: '5px 10px', color: C.red, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}
                         onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.2)'}
@@ -295,6 +307,29 @@ export default function Usuarios() {
       {/* Edit modal */}
       {editando && (
         <EditModal usuario={editando} onClose={() => setEditando(null)} onSave={handleSave} />
+      )}
+
+      {/* Signout confirm modal */}
+      {confirmSignout && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+          onClick={e => e.target === e.currentTarget && setConfirmSignout(null)}>
+          <div style={{ ...S.card, width: '100%', maxWidth: '360px', textAlign: 'center' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🔒</div>
+            <h2 style={{ color: '#667eea', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>Cerrar sesión del usuario</h2>
+            <p style={{ color: C.textSub, fontSize: '0.9rem', marginBottom: '4px' }}>{confirmSignout.nombre}</p>
+            <p style={{ color: C.textMuted, fontSize: '0.82rem', marginBottom: '24px' }}>{confirmSignout.email}</p>
+            <p style={{ color: C.textMuted, fontSize: '0.82rem', marginBottom: '24px' }}>
+              El próximo request del usuario será rechazado y tendrá que volver a iniciar sesión.
+            </p>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={() => handleSignout(confirmSignout.id)}
+                style={{ flex: 1, background: 'rgba(102,126,234,0.15)', border: '1px solid rgba(102,126,234,0.3)', borderRadius: '8px', padding: '10px', color: '#667eea', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}>
+                Sí, cerrar sesión
+              </button>
+              <button onClick={() => setConfirmSignout(null)} style={{ ...S.btnGhost, flex: 1 }}>Cancelar</button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Delete confirm modal */}

@@ -97,9 +97,10 @@ export const api = {
     },
   },
   users: {
-    list:   (token, rol) => request(`users-list${rol ? `?rol=${rol}` : ''}`, { token }),
-    update: (token, data) => request('users-list', { method: 'PUT', body: data, token }),
-    delete: (token, id)   => request(`users-list?id=${id}`, { method: 'DELETE', token }),
+    list:    (token, rol) => request(`users-list${rol ? `?rol=${rol}` : ''}`, { token }),
+    update:  (token, data) => request('users-list', { method: 'PUT', body: data, token }),
+    delete:  (token, id)   => request(`users-list?id=${id}`, { method: 'DELETE', token }),
+    signout: (token, id)   => request('users-list', { method: 'PUT', body: { id, signout: true }, token }),
   },
   pdf: {
     download: async (token, obra_id, numero_obra) => {

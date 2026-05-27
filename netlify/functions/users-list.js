@@ -24,11 +24,23 @@ export async function handler(event) {
     return response(200, { users });
   }
 
-  // PUT — editar usuario
+  // PUT — editar usuario o cerrar sesión
   if (event.httpMethod === 'PUT') {
-    const { id, nombre, rol, telefono, activo } = JSON.parse(event.body || '{}');
+    const body = JSON.parse(event.body || '{}');
+    const { id } = body;
     if (!id) return response(400, { error: 'id requerido' });
     if (id === user.id) return response(400, { error: 'No podés editarte a vos mismo' });
+
+    // Cerrar sesión forzada
+    if (body.signout) {
+      const { error } = await supabase.from('users')
+        .update({ session_invalidated_at: new Date().toISOString() })
+        .eq('id', id);
+      if (error) return response(500, { error: error.message });
+      return response(200, { ok: true });
+    }
+
+    const { nombre, rol, telefono, activo } = body;
 
     const allowed = ['dueno', 'deposito', 'fabricacion', 'marketing', 'arquitectura', 'cliente'];
     const update = {};
