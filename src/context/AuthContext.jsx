@@ -76,6 +76,13 @@ export const AuthProvider = ({ children }) => {
     };
 
     init();
+
+    const onTokenRefreshed = (e) => {
+      const { token: newToken, refresh_token: newRefresh, user: newUser } = e.detail;
+      if (newToken) applySession(newUser, newToken, newRefresh);
+    };
+    window.addEventListener('auth:token-refreshed', onTokenRefreshed);
+    return () => window.removeEventListener('auth:token-refreshed', onTokenRefreshed);
   }, []);
 
   // Renovar el token 5 minutos antes de que expire

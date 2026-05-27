@@ -1,5 +1,42 @@
 const BASE = '/.netlify/functions';
 
+// Single in-flight refresh promise to avoid parallel refresh races
+let _refreshing = null;
+
+async function tryRefresh() {
+  if (_refreshing) return _refreshing;
+  _refreshing = (async () => {
+    const rt = localStorage.getItem('refresh_token');
+    if (!rt) return null;
+    try {
+      const res = await fetch(`${BASE}/auth-refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: rt }),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('refresh_token', data.refresh_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      window.dispatchEvent(new CustomEvent('auth:token-refreshed', { detail: data }));
+      return data.token;
+    } catch {
+      return null;
+    } finally {
+      _refreshing = null;
+    }
+  })();
+  return _refreshing;
+}
+
+function clearSession() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('refresh_token');
+  localStorage.removeItem('user');
+  window.location.href = '/app/login';
+}
+
 async function request(path, options = {}) {
   const { method = 'GET', body, token } = options;
   const headers = { 'Content-Type': 'application/json' };
@@ -10,12 +47,29 @@ async function request(path, options = {}) {
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
   const data = await res.json().catch(() => ({}));
+
   if (res.status === 401) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/app/login';
-    throw new Error('Sesión expirada');
+    const newToken = await tryRefresh();
+    if (!newToken) {
+      clearSession();
+      throw new Error('Sesión expirada');
+    }
+    // Retry original request with the new token
+    const retryHeaders = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${newToken}` };
+    const retryRes = await fetch(`${BASE}/${path}`, {
+      method,
+      headers: retryHeaders,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+    const retryData = await retryRes.json().catch(() => ({}));
+    if (retryRes.status === 401) {
+      clearSession();
+      throw new Error('Sesión expirada');
+    }
+    if (!retryRes.ok) throw new Error(retryData.error || `Error ${retryRes.status}`);
+    return retryData;
   }
+
   if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
   return data;
 }
