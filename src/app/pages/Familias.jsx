@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import * as XLSX from 'xlsx';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
@@ -80,7 +81,9 @@ export default function Familias() {
   const [nuevaNombre, setNuevaNombre] = useState('');
   const [nuevoColor, setNuevoColor] = useState(COLORES[0]);
   const [saving, setSaving] = useState(false);
+  const [importando, setImportando] = useState(false);
   const [msg, setMsg] = useState('');
+  const fileRef = useRef();
 
   const canWrite = ['superadmin', 'dueno', 'deposito'].includes(user?.rol);
 
@@ -113,6 +116,35 @@ export default function Familias() {
     cargar();
   };
 
+  const handleExcel = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportando(true); setMsg('');
+    try {
+      const buf = await file.arrayBuffer();
+      const wb  = XLSX.read(buf);
+      const ws  = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws);
+      let ok = 0;
+      for (const row of rows) {
+        const nombre = String(row.nombre || row.Nombre || row.NOMBRE || '').trim();
+        if (!nombre) continue;
+        const color = String(row.color || row.Color || '').trim();
+        const colorFinal = COLORES.includes(color) ? color : COLORES[ok % COLORES.length];
+        await api.familias.create(token, { nombre, color: colorFinal }).catch(() => null);
+        ok++;
+      }
+      setMsg(`✓ ${ok} familia${ok !== 1 ? 's' : ''} importada${ok !== 1 ? 's' : ''}`);
+      cargar();
+      setTimeout(() => setMsg(''), 3000);
+    } catch (err) {
+      setMsg(`Error: ${err.message}`);
+    } finally {
+      setImportando(false);
+      e.target.value = '';
+    }
+  };
+
   const handleDelete = async (id) => {
     if (!confirm('¿Eliminar esta familia? Las partes asociadas quedarán sin familia.')) return;
     await api.familias.delete(token, id);
@@ -122,9 +154,20 @@ export default function Familias() {
   return (
     <AppLayout>
       <div style={{ padding: '28px 32px' }}>
-        <h1 style={{ ...S.h1, margin: '0 0 24px 0' }}>🏷️ Familias de Componentes</h1>
-        <p style={{ color: C.textMuted, fontSize: '0.88rem', marginBottom: '24px', marginTop: '-12px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '10px' }}>
+          <h1 style={{ ...S.h1, margin: 0 }}>🏷️ Familias de Componentes</h1>
+          {canWrite && (
+            <>
+              <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" onChange={handleExcel} style={{ display: 'none' }} />
+              <button onClick={() => fileRef.current?.click()} disabled={importando} style={{ ...S.btnGhost, fontSize: '0.85rem' }}>
+                {importando ? 'Importando...' : '📊 Importar Excel'}
+              </button>
+            </>
+          )}
+        </div>
+        <p style={{ color: C.textMuted, fontSize: '0.88rem', marginBottom: '24px' }}>
           Agrupá los componentes por tipo para identificarlos más fácilmente en el catálogo y el BOM.
+          {canWrite && <span> El Excel debe tener columna <code style={{ background: 'rgba(255,255,255,0.08)', padding: '1px 5px', borderRadius: '4px' }}>nombre</code> y opcionalmente <code style={{ background: 'rgba(255,255,255,0.08)', padding: '1px 5px', borderRadius: '4px' }}>color</code>.</span>}
         </p>
 
         {canWrite && (
