@@ -55,6 +55,8 @@ function EditModal({ usuario, onClose, onSave }) {
               <option value="cliente">Cliente</option>
               <option value="fabricacion">Fabricación</option>
               <option value="deposito">Depósito</option>
+              <option value="marketing">Marketing</option>
+              <option value="arquitectura">Arquitectura</option>
               <option value="dueno">Dueño</option>
             </select>
           </div>
@@ -164,6 +166,8 @@ export default function Usuarios() {
                 <option value="cliente">Cliente</option>
                 <option value="fabricacion">Fabricación</option>
                 <option value="deposito">Depósito</option>
+                <option value="marketing">Marketing</option>
+                <option value="arquitectura">Arquitectura</option>
                 <option value="dueno">Dueño</option>
               </select>
               <button type="submit" disabled={invitando} style={{ ...S.btnGold, opacity: invitando ? 0.6 : 1 }}>

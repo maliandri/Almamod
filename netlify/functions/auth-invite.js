@@ -38,7 +38,7 @@ export async function handler(event) {
     return response(400, { error: 'Email y rol son requeridos' });
   }
 
-  const rolesPermitidos = ['dueno', 'deposito', 'fabricacion', 'cliente'];
+  const rolesPermitidos = ['dueno', 'deposito', 'fabricacion', 'marketing', 'arquitectura', 'cliente'];
   if (!rolesPermitidos.includes(rol)) {
     return response(400, { error: 'Rol inválido' });
   }

@@ -30,7 +30,7 @@ export async function handler(event) {
     if (!id) return response(400, { error: 'id requerido' });
     if (id === user.id) return response(400, { error: 'No podés editarte a vos mismo' });
 
-    const allowed = ['dueno', 'deposito', 'fabricacion', 'cliente'];
+    const allowed = ['dueno', 'deposito', 'fabricacion', 'marketing', 'arquitectura', 'cliente'];
     const update = {};
     if (nombre !== undefined) update.nombre = nombre;
     if (telefono !== undefined) update.telefono = telefono;

@@ -138,19 +138,23 @@ export const S = {
 };
 
 export const ROL_STYLE = {
-  superadmin:  { background: 'rgba(239,68,68,0.15)',   color: '#ef4444' },
-  dueno:       { background: 'rgba(212,165,116,0.15)', color: '#d4a574' },
-  deposito:    { background: 'rgba(102,126,234,0.15)', color: '#667eea' },
-  fabricacion: { background: 'rgba(16,185,129,0.15)',  color: '#10b981' },
-  cliente:     { background: 'rgba(148,163,184,0.15)', color: '#94a3b8' },
+  superadmin:   { background: 'rgba(239,68,68,0.15)',   color: '#ef4444' },
+  dueno:        { background: 'rgba(212,165,116,0.15)', color: '#d4a574' },
+  deposito:     { background: 'rgba(102,126,234,0.15)', color: '#667eea' },
+  fabricacion:  { background: 'rgba(16,185,129,0.15)',  color: '#10b981' },
+  marketing:    { background: 'rgba(249,115,22,0.15)',  color: '#f97316' },
+  arquitectura: { background: 'rgba(139,92,246,0.15)',  color: '#8b5cf6' },
+  cliente:      { background: 'rgba(148,163,184,0.15)', color: '#94a3b8' },
 };
 
 export const ROL_LABEL = {
-  superadmin:  'Super Admin',
-  dueno:       'Dueño',
-  deposito:    'Depósito',
-  fabricacion: 'Fabricación',
-  cliente:     'Cliente',
+  superadmin:   'Super Admin',
+  dueno:        'Dueño',
+  deposito:     'Depósito',
+  fabricacion:  'Fabricación',
+  marketing:    'Marketing',
+  arquitectura: 'Arquitectura',
+  cliente:      'Cliente',
 };
 
 export const ESTADO_STYLE = {

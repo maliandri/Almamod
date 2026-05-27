@@ -73,7 +73,7 @@ export default function AppRouter() {
       <Route
         path="cms/modelos"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'arquitectura']}>
             <CmsModelos />
           </ProtectedRoute>
         }
@@ -81,7 +81,7 @@ export default function AppRouter() {
       <Route
         path="cms/obras"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'arquitectura']}>
             <CmsObras />
           </ProtectedRoute>
         }
@@ -89,7 +89,7 @@ export default function AppRouter() {
       <Route
         path="marketing/reels"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']}>
             <MarketingReels />
           </ProtectedRoute>
         }
@@ -97,7 +97,7 @@ export default function AppRouter() {
       <Route
         path="marketing/publicaciones"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']}>
             <MarketingPublicaciones />
           </ProtectedRoute>
         }
@@ -105,7 +105,7 @@ export default function AppRouter() {
       <Route
         path="marketing/libre"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']}>
             <MarketingLibre />
           </ProtectedRoute>
         }
@@ -113,7 +113,7 @@ export default function AppRouter() {
       <Route
         path="marketing/make"
         element={
-          <ProtectedRoute roles={['superadmin', 'dueno']}>
+          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing']}>
             <MakeConfig />
           </ProtectedRoute>
         }
