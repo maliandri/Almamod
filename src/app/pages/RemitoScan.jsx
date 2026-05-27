@@ -29,6 +29,7 @@ async function resizeAndEncode(file) {
 export default function RemitoScan() {
   const { token } = useAuth();
   const fileRef = useRef();
+  const cameraRef = useRef();
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState(null);
   const [analizando, setAnalizando] = useState(false);
@@ -106,10 +107,14 @@ export default function RemitoScan() {
 
         {/* Upload */}
         <div style={{ ...S.card, marginBottom: '20px' }}>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => fileRef.current?.click()}
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <button onClick={() => cameraRef.current?.click()}
               style={{ ...S.btnGold, padding: '10px 20px' }}>
-              📎 Seleccionar imagen
+              📷 Tomar foto
+            </button>
+            <button onClick={() => fileRef.current?.click()}
+              style={{ ...S.btnGhost, padding: '10px 20px' }}>
+              📎 Elegir archivo
             </button>
             {file && (
               <button onClick={handleAnalizar} disabled={analizando}
@@ -117,11 +122,16 @@ export default function RemitoScan() {
                 {analizando ? '⏳ Analizando...' : '🔍 Analizar con IA'}
               </button>
             )}
-            <span style={{ color: C.textMuted, fontSize: '0.82rem' }}>
-              {file ? file.name : 'JPG, PNG, HEIC — máx. 10MB'}
-            </span>
           </div>
+          {file && !analizando && (
+            <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '8px' }}>
+              {file.name}
+            </div>
+          )}
+          {/* Abre galería */}
           <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFile} />
+          {/* Abre cámara directamente */}
+          <input ref={cameraRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={handleFile} />
 
           {preview && (
             <div style={{ marginTop: '16px', borderRadius: '10px', overflow: 'hidden', maxHeight: '320px' }}>
