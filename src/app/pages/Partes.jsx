@@ -148,13 +148,21 @@ export default function Partes() {
   const [partes, setPartes] = useState([]);
   const [familias, setFamilias] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [busqueda, setBusqueda] = useState('');
-  const [familiaFiltro, setFamiliaFiltro] = useState('');
-  const [modalParte, setModalParte] = useState(null); // null | 'nueva' | parte
+  const [filtros, setFiltros] = useState({ codigo: '', nombre: '', familia: '', unidad: '', costo: '', stock: '', minimo: '' });
+  const [sortCol, setSortCol] = useState('nombre');
+  const [sortDir, setSortDir] = useState('asc');
+  const [modalParte, setModalParte] = useState(null);
   const [modalStock, setModalStock] = useState(null);
   const [importando, setImportando] = useState(false);
   const [importMsg, setImportMsg] = useState('');
   const fileRef = useRef();
+
+  const setF = (k, v) => setFiltros(p => ({ ...p, [k]: v }));
+  const handleSort = (col) => {
+    if (sortCol === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortCol(col); setSortDir('asc'); }
+  };
+  const hayFiltros = Object.values(filtros).some(Boolean);
 
   const canWrite = ['superadmin', 'dueno', 'deposito'].includes(user?.rol);
 
@@ -226,10 +234,32 @@ export default function Partes() {
     }
   };
 
-  const filtradas = partes.filter(p =>
-    (!busqueda || p.nombre.toLowerCase().includes(busqueda.toLowerCase()) || p.codigo.toLowerCase().includes(busqueda.toLowerCase())) &&
-    (!familiaFiltro || String(p.familia_id) === familiaFiltro)
-  );
+  const filtradas = partes.filter(p => {
+    if (filtros.codigo && !p.codigo.toLowerCase().includes(filtros.codigo.toLowerCase())) return false;
+    if (filtros.nombre && !p.nombre.toLowerCase().includes(filtros.nombre.toLowerCase())) return false;
+    if (filtros.familia && String(p.familia_id) !== filtros.familia) return false;
+    if (filtros.unidad && !(p.unidad || '').toLowerCase().includes(filtros.unidad.toLowerCase())) return false;
+    if (filtros.costo && !String(p.costo || 0).includes(filtros.costo)) return false;
+    if (filtros.stock === '0' && Number(p.stock_actual) !== 0) return false;
+    if (filtros.stock === 'bajo' && !(Number(p.stock_actual) > 0 && Number(p.stock_actual) <= Number(p.stock_minimo))) return false;
+    if (filtros.stock === 'ok' && !(Number(p.stock_actual) > Number(p.stock_minimo))) return false;
+    if (filtros.minimo && !String(p.stock_minimo || 0).includes(filtros.minimo)) return false;
+    return true;
+  }).sort((a, b) => {
+    const vals = {
+      codigo:  [a.codigo, b.codigo],
+      nombre:  [a.nombre, b.nombre],
+      familia: [a.familias?.nombre || '', b.familias?.nombre || ''],
+      unidad:  [a.unidad || '', b.unidad || ''],
+      costo:   [Number(a.costo || 0), Number(b.costo || 0)],
+      stock:   [Number(a.stock_actual || 0), Number(b.stock_actual || 0)],
+      minimo:  [Number(a.stock_minimo || 0), Number(b.stock_minimo || 0)],
+    };
+    const [va, vb] = vals[sortCol] || vals.nombre;
+    if (va < vb) return sortDir === 'asc' ? -1 : 1;
+    if (va > vb) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
 
   const sinStock = partes.filter(p => Number(p.stock_actual) === 0).length;
   const stockBajo = partes.filter(p => Number(p.stock_actual) > 0 && Number(p.stock_actual) <= Number(p.stock_minimo)).length;
@@ -263,21 +293,12 @@ export default function Partes() {
 
         {importMsg && <div style={{ ...S.alertSuccess, marginBottom: '16px' }}>{importMsg}</div>}
 
-        {/* Búsqueda y filtros */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <input
-            placeholder="🔍 Buscar por código o nombre..."
-            value={busqueda}
-            onChange={e => setBusqueda(e.target.value)}
-            style={{ ...S.input, maxWidth: '340px' }}
-            onFocus={inputFocus} onBlur={inputBlur}
-          />
-          <select value={familiaFiltro} onChange={e => setFamiliaFiltro(e.target.value)} style={{ ...S.select, minWidth: '160px' }}>
-            <option value="">Todas las familias</option>
-            {familias.map(f => <option key={f.id} value={String(f.id)}>{f.nombre}</option>)}
-          </select>
-          {familiaFiltro && (
-            <button onClick={() => setFamiliaFiltro('')} style={{ ...S.btnGhost, padding: '6px 12px', fontSize: '0.8rem' }}>× Limpiar</button>
+        {/* Barra de resultados */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <span style={{ color: C.textMuted, fontSize: '0.8rem' }}>{filtradas.length} de {partes.length} componentes</span>
+          {hayFiltros && (
+            <button onClick={() => setFiltros({ codigo: '', nombre: '', familia: '', unidad: '', costo: '', stock: '', minimo: '' })}
+              style={{ ...S.btnGhost, padding: '4px 12px', fontSize: '0.78rem' }}>× Limpiar filtros</button>
           )}
         </div>
 
@@ -287,19 +308,60 @@ export default function Partes() {
         ) : (
           <div style={{ ...S.card, padding: 0, overflow: 'hidden' }}>
             <div style={{ overflowX: 'auto' }}>
-            {/* Header tabla */}
-            <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 150px 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '780px' }}>
-              {['Código','Nombre','Familia','Unidad','Costo','Stock','Mínimo',''].map((h, i) => (
-                <div key={i} style={{ color: C.textMuted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em', textAlign: i >= 3 ? 'center' : 'left' }}>{h}</div>
-              ))}
-            </div>
+            {/* Header tabla con sort */}
+            {(() => {
+              const GRID = '100px 1fr 150px 80px 90px 80px 80px 110px';
+              const fi = { width: '100%', background: 'rgba(255,255,255,0.05)', border: `1px solid rgba(212,165,116,0.12)`, borderRadius: '4px', padding: '3px 6px', color: C.textSub, fontSize: '0.72rem', outline: 'none', boxSizing: 'border-box' };
+              const SH = ({ col, label, center }) => {
+                const active = sortCol === col;
+                return (
+                  <div onClick={() => handleSort(col)} style={{ display: 'flex', alignItems: 'center', gap: '3px', justifyContent: center ? 'center' : 'flex-start', cursor: 'pointer', userSelect: 'none', color: active ? C.gold : C.textMuted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em' }}>
+                    {label}
+                    <span style={{ fontSize: '0.6rem', opacity: active ? 1 : 0.35 }}>{active ? (sortDir === 'asc' ? '↑' : '↓') : '↕'}</span>
+                  </div>
+                );
+              };
+              return (
+                <>
+                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '8px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '780px' }}>
+                    <SH col="codigo" label="Código" />
+                    <SH col="nombre" label="Nombre" />
+                    <SH col="familia" label="Familia" />
+                    <SH col="unidad" label="Unidad" center />
+                    <SH col="costo" label="Costo" center />
+                    <SH col="stock" label="Stock" center />
+                    <SH col="minimo" label="Mínimo" center />
+                    <div />
+                  </div>
+                  {/* Fila de filtros */}
+                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '6px 16px', background: 'rgba(255,255,255,0.015)', borderBottom: `1px solid ${C.border}`, minWidth: '780px' }}>
+                    <input style={fi} placeholder="Código..." value={filtros.codigo} onChange={e => setF('codigo', e.target.value)} />
+                    <input style={{ ...fi, marginLeft: '0' }} placeholder="Nombre..." value={filtros.nombre} onChange={e => setF('nombre', e.target.value)} />
+                    <select style={{ ...fi, cursor: 'pointer' }} value={filtros.familia} onChange={e => setF('familia', e.target.value)}>
+                      <option value="">Todas</option>
+                      {familias.map(f => <option key={f.id} value={String(f.id)}>{f.nombre}</option>)}
+                    </select>
+                    <input style={{ ...fi, textAlign: 'center' }} placeholder="unidad" value={filtros.unidad} onChange={e => setF('unidad', e.target.value)} />
+                    <input style={{ ...fi, textAlign: 'center' }} placeholder="$..." value={filtros.costo} onChange={e => setF('costo', e.target.value)} />
+                    <select style={{ ...fi, cursor: 'pointer', textAlign: 'center' }} value={filtros.stock} onChange={e => setF('stock', e.target.value)}>
+                      <option value="">Todos</option>
+                      <option value="0">Sin stock</option>
+                      <option value="bajo">Bajo mínimo</option>
+                      <option value="ok">OK</option>
+                    </select>
+                    <input style={{ ...fi, textAlign: 'center' }} placeholder="mín..." value={filtros.minimo} onChange={e => setF('minimo', e.target.value)} />
+                    <div />
+                  </div>
+                </>
+              );
+            })()}
 
             {filtradas.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '40px', color: C.textMuted }}>
-                {busqueda ? 'Sin resultados' : 'No hay partes cargadas'}
+                {hayFiltros ? 'Sin resultados para los filtros aplicados' : 'No hay partes cargadas'}
               </div>
             ) : filtradas.map((p, i) => (
-              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 150px 80px 80px 80px 80px 110px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '780px' }}>
+              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 150px 80px 90px 80px 80px 110px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '780px' }}>
                 <div style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 700 }}>{p.codigo}</div>
                 <div>
                   <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 500 }}>{p.nombre}</div>
@@ -351,9 +413,6 @@ export default function Partes() {
           </div>
         )}
 
-        <div style={{ marginTop: '12px', color: C.textMuted, fontSize: '0.8rem' }}>
-          {filtradas.length} de {partes.length} partes
-        </div>
       </div>
 
       {modalParte && (
