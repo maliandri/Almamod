@@ -183,6 +183,10 @@ export const api = {
     list:   (token, qs)  => request(`crm-almita${qs ? `?${qs}` : ''}`, { token }),
     delete: (token, id)  => request(`crm-almita?id=${id}`, { method: 'DELETE', token }),
   },
+  cloudinary: {
+    list: (token, folder = 'todo', next_cursor) =>
+      request(`cloudinary-list?folder=${folder}${next_cursor ? `&next_cursor=${encodeURIComponent(next_cursor)}` : ''}`, { token }),
+  },
   pdf: {
     download: async (token, obra_id, numero_obra) => {
       const res = await fetch(`${BASE}/pdf-export?obra_id=${obra_id}`, {
