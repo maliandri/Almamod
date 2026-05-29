@@ -14,8 +14,8 @@ export async function handler(event) {
   const API_SECRET = process.env.CLOUDINARY_API_SECRET;
   const CLOUD      = 'dlshym1te';
 
-  // Carpetas AlmaMod permitidas
-  const ALMAMOD_FOLDERS = ['modulos', 'certificaciones'];
+  // Carpetas AlmaMod permitidas (nombres exactos en Cloudinary)
+  const ALMAMOD_FOLDERS = ['Modulos', 'certificaciones', 'ObrasAlmamod', 'reels', 'social-media'];
 
   if (API_KEY && API_SECRET) {
     const { folder, next_cursor } = event.queryStringParameters || {};
