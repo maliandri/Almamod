@@ -8,15 +8,16 @@ export async function handler(event) {
 
   if (!webhook_url) return response(400, { error: 'webhook_url requerido' });
 
-  // Solo permite dominios de Make
-  const allowed = ['hook.eu1.make.com', 'hook.eu2.make.com', 'hook.us1.make.com', 'hook.make.com'];
+  // Solo permite dominios de Make / Integromat
   let urlHost;
   try {
     urlHost = new URL(webhook_url).hostname;
   } catch {
     return response(400, { error: 'URL inválida' });
   }
-  if (!allowed.includes(urlHost)) return response(400, { error: 'URL no permitida' });
+  const isMake = urlHost.endsWith('.make.com') || urlHost === 'make.com'
+    || urlHost.endsWith('.integromat.com') || urlHost === 'integromat.com';
+  if (!isMake) return response(400, { error: 'URL no permitida — debe ser un webhook de Make.com' });
 
   try {
     const res = await fetch(webhook_url, {
