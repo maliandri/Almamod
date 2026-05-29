@@ -35,9 +35,10 @@ function PartePicker({ partes, onAdd }) {
   return (
     <div style={{ position: 'relative' }}>
       <input value={query} onChange={e => { setQuery(e.target.value); setOpen(true); }}
-        onFocus={() => setOpen(true)} onBlur={() => setTimeout(() => setOpen(false), 160)}
+        onFocus={e => { setOpen(true); inputFocus(e); }}
+        onBlur={e => { setTimeout(() => setOpen(false), 160); inputBlur(e); }}
         placeholder="Buscar componente por código o nombre..."
-        style={{ ...S.input }} onFocus={inputFocus} onBlur={inputBlur} />
+        style={{ ...S.input }} />
       {open && filtered.length > 0 && (
         <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#1e2d4a', border: `1px solid ${C.border}`, borderRadius: '8px', zIndex: 20, maxHeight: '200px', overflowY: 'auto', marginTop: '2px' }}>
           {filtered.map(p => (
