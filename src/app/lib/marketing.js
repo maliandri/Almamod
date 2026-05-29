@@ -30,16 +30,21 @@ export async function publicarEnMake(tipo, contenido, imagen_url) {
   const url = webhooks.url;
   if (!url) throw new Error('Webhook de Make no configurado. Andá a Configurar Make.');
 
-  const res = await fetch(url, {
+  // Proxy server-side para evitar bloqueo CORS del browser
+  const res = await fetch('/.netlify/functions/make-proxy', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      tipo,
-      ...contenido,
-      imagen_url: imagen_url || '',
-      redes: ['instagram', 'facebook'],
-      timestamp: new Date().toISOString(),
+      webhook_url: url,
+      payload: {
+        tipo,
+        ...contenido,
+        imagen_url: imagen_url || '',
+        redes: ['instagram', 'facebook'],
+        timestamp: new Date().toISOString(),
+      },
     }),
   });
-  if (!res.ok) throw new Error(`Make respondió con status ${res.status}`);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
 }

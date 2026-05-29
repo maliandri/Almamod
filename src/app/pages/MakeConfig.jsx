@@ -72,19 +72,21 @@ export default function MakeConfig() {
     if (!webhooks.url) { setTestResult('Primero ingresá la URL del webhook'); return; }
     setTesting(true); setTestResult('');
     try {
-      await fetch(webhooks.url, {
+      const res = await fetch('/.netlify/functions/make-proxy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          tipo: 'post',
-          caption: 'TEST desde AlmaMod — Ignorar',
-          hashtags: '#almamod #test',
-          cta: 'Test de conexión',
-          imagen_url: '',
-          redes: ['instagram', 'facebook'],
-          timestamp: new Date().toISOString(),
+          webhook_url: webhooks.url,
+          payload: {
+            tipo: 'test',
+            caption: 'TEST desde AlmaMod — Ignorar',
+            hashtags: '#almamod #test',
+            timestamp: new Date().toISOString(),
+          },
         }),
       });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
       setTestResult('✓ Webhook enviado correctamente');
     } catch (err) {
       setTestResult(`Error: ${err.message}`);
