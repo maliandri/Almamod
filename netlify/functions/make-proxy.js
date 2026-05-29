@@ -4,7 +4,12 @@ export async function handler(event) {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: corsHeaders, body: '' };
   if (event.httpMethod !== 'POST') return response(405, { error: 'Método no permitido' });
 
-  const { payload } = JSON.parse(event.body || '{}');
+  let payload;
+  try {
+    ({ payload } = JSON.parse(event.body || '{}'));
+  } catch (e) {
+    return response(400, { error: `JSON inválido en el body: ${e.message}` });
+  }
 
   // Prioridad: variable de entorno → no se expone al cliente
   const webhookUrl = process.env.MAKE_WEBHOOK_URL;
