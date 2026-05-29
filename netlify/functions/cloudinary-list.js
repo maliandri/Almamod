@@ -14,46 +14,44 @@ export async function handler(event) {
   const API_SECRET = process.env.CLOUDINARY_API_SECRET;
   const CLOUD      = 'dlshym1te';
 
-  // Carpetas permitidas — solo imágenes de AlmaMod
+  // Carpetas AlmaMod permitidas
   const ALMAMOD_FOLDERS = ['modulos', 'certificaciones'];
 
   if (API_KEY && API_SECRET) {
     const { folder, next_cursor } = event.queryStringParameters || {};
     const auth = Buffer.from(`${API_KEY}:${API_SECRET}`).toString('base64');
 
-    const fetchFolder = async (prefix, cursor) => {
-      const params = new URLSearchParams({ type: 'upload', max_results: '200', prefix: prefix + '/' });
-      if (cursor) params.set('next_cursor', cursor);
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUD}/resources/image?${params}`,
-        { headers: { Authorization: `Basic ${auth}` } }
-      );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error?.message || 'Error Cloudinary');
-      return data;
-    };
+    // Expresión para el Search API
+    const folders = (folder && folder !== 'todo')
+      ? (ALMAMOD_FOLDERS.includes(folder) ? [folder] : null)
+      : ALMAMOD_FOLDERS;
+    if (!folders) return response(400, { error: 'Carpeta no permitida' });
+
+    const expression = folders.map(f => `folder="${f}"`).join(' OR ');
+
+    const body = { expression, max_results: 200, sort_by: [{ created_at: 'desc' }] };
+    if (next_cursor) body.next_cursor = next_cursor;
 
     try {
-      // Folder específico
-      if (folder && folder !== 'todo') {
-        if (!ALMAMOD_FOLDERS.includes(folder)) return response(400, { error: 'Carpeta no permitida' });
-        const data = await fetchFolder(folder, next_cursor);
-        const images = (data.resources || []).map(r => ({
-          public_id: r.public_id, secure_url: r.secure_url,
-          folder: r.folder || '', width: r.width, height: r.height,
-        }));
-        return response(200, { images, next_cursor: data.next_cursor || null, source: 'api' });
-      }
-
-      // Todo: combinar todas las carpetas AlmaMod en paralelo
-      const results = await Promise.all(ALMAMOD_FOLDERS.map(f => fetchFolder(f, null)));
-      const images = results.flatMap(data =>
-        (data.resources || []).map(r => ({
-          public_id: r.public_id, secure_url: r.secure_url,
-          folder: r.folder || '', width: r.width, height: r.height,
-        }))
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD}/resources/search`,
+        {
+          method: 'POST',
+          headers: { Authorization: `Basic ${auth}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }
       );
-      return response(200, { images, next_cursor: null, source: 'api' });
+      const data = await res.json();
+      if (!res.ok) return response(500, { error: data.error?.message || 'Error Cloudinary' });
+
+      const images = (data.resources || []).map(r => ({
+        public_id:  r.public_id,
+        secure_url: r.secure_url,
+        folder:     r.folder || r.asset_folder || '',
+        width:      r.width,
+        height:     r.height,
+      }));
+      return response(200, { images, next_cursor: data.next_cursor || null, source: 'api' });
     } catch (err) {
       return response(500, { error: err.message });
     }
