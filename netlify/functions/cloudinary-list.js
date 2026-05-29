@@ -14,24 +14,46 @@ export async function handler(event) {
   const API_SECRET = process.env.CLOUDINARY_API_SECRET;
   const CLOUD      = 'dlshym1te';
 
+  // Carpetas permitidas — solo imágenes de AlmaMod
+  const ALMAMOD_FOLDERS = ['modulos', 'certificaciones'];
+
   if (API_KEY && API_SECRET) {
     const { folder, next_cursor } = event.queryStringParameters || {};
-    const params = new URLSearchParams({ type: 'upload', max_results: '200' });
-    if (folder && folder !== 'todo') params.set('prefix', folder + '/');
-    if (next_cursor) params.set('next_cursor', next_cursor);
     const auth = Buffer.from(`${API_KEY}:${API_SECRET}`).toString('base64');
-    try {
+
+    const fetchFolder = async (prefix, cursor) => {
+      const params = new URLSearchParams({ type: 'upload', max_results: '200', prefix: prefix + '/' });
+      if (cursor) params.set('next_cursor', cursor);
       const res = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUD}/resources/image?${params}`,
         { headers: { Authorization: `Basic ${auth}` } }
       );
       const data = await res.json();
-      if (!res.ok) return response(500, { error: data.error?.message || 'Error Cloudinary' });
-      const images = (data.resources || []).map(r => ({
-        public_id: r.public_id, secure_url: r.secure_url,
-        folder: r.folder || '', width: r.width, height: r.height,
-      }));
-      return response(200, { images, next_cursor: data.next_cursor || null, source: 'api' });
+      if (!res.ok) throw new Error(data.error?.message || 'Error Cloudinary');
+      return data;
+    };
+
+    try {
+      // Folder específico
+      if (folder && folder !== 'todo') {
+        if (!ALMAMOD_FOLDERS.includes(folder)) return response(400, { error: 'Carpeta no permitida' });
+        const data = await fetchFolder(folder, next_cursor);
+        const images = (data.resources || []).map(r => ({
+          public_id: r.public_id, secure_url: r.secure_url,
+          folder: r.folder || '', width: r.width, height: r.height,
+        }));
+        return response(200, { images, next_cursor: data.next_cursor || null, source: 'api' });
+      }
+
+      // Todo: combinar todas las carpetas AlmaMod en paralelo
+      const results = await Promise.all(ALMAMOD_FOLDERS.map(f => fetchFolder(f, null)));
+      const images = results.flatMap(data =>
+        (data.resources || []).map(r => ({
+          public_id: r.public_id, secure_url: r.secure_url,
+          folder: r.folder || '', width: r.width, height: r.height,
+        }))
+      );
+      return response(200, { images, next_cursor: null, source: 'api' });
     } catch (err) {
       return response(500, { error: err.message });
     }
