@@ -25,17 +25,10 @@ export async function generarContenido(tipo, datos) {
 }
 
 export async function publicarEnMake(tipo, contenido, imagen_url) {
-  const stored = localStorage.getItem(WEBHOOKS_KEY);
-  const webhooks = stored ? JSON.parse(stored) : {};
-  const url = webhooks.url;
-  if (!url) throw new Error('Webhook de Make no configurado. Andá a Configurar Make.');
-
-  // Proxy server-side para evitar bloqueo CORS del browser
   const res = await fetch('/.netlify/functions/make-proxy', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      webhook_url: url,
       payload: {
         tipo,
         ...contenido,

@@ -69,14 +69,12 @@ export default function MakeConfig() {
   };
 
   const handleTest = async () => {
-    if (!webhooks.url) { setTestResult('Primero ingresá la URL del webhook'); return; }
     setTesting(true); setTestResult('');
     try {
       const res = await fetch('/.netlify/functions/make-proxy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          webhook_url: webhooks.url,
           payload: {
             tipo: 'test',
             caption: 'TEST desde AlmaMod — Ignorar',
