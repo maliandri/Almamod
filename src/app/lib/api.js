@@ -88,6 +88,10 @@ export const api = {
       request('auth-invite', { token }),
     reenviarInvite: (token, email, rol) =>
       request('auth-invite', { method: 'POST', body: { email, rol, reenviar: true }, token }),
+    forgot: (email) =>
+      request('auth-forgot', { method: 'POST', body: { email } }),
+    resetPassword: (access_token, password) =>
+      request('auth-reset-password', { method: 'POST', body: { access_token, password } }),
   },
   obras: {
     list: (token) => request('obras-list', { token }),

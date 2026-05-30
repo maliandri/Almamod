@@ -22,6 +22,7 @@ import CrmAlmita from './pages/CrmAlmita';
 import PIC from './pages/PIC';
 import OT from './pages/OT';
 import REI from './pages/REI';
+import ResetPassword from './pages/ResetPassword';
 
 export default function AppRouter() {
   return (
@@ -160,8 +161,9 @@ export default function AppRouter() {
         }
       />
 
-      {/* Ruta pública — sin auth */}
+      {/* Rutas públicas — sin auth */}
       <Route path="firmar/:token" element={<FirmarRemito />} />
+      <Route path="reset-password" element={<ResetPassword />} />
 
       <Route
         path="pic"
