@@ -3,11 +3,11 @@ import AppLayout from '../components/AppLayout';
 import { C, S, inputFocus, inputBlur } from '../styles';
 import { uploadImagen, generarContenido, publicarEnMake } from '../lib/marketing';
 import SelectorImagenModelo from '../components/SelectorImagenModelo';
-
-const MODELOS = ['MiCasita', 'Alma 18', 'Alma 27', 'Alma Loft 28', 'Alma 36', 'Alma 36 Refugio', 'AlmaMod en general'];
+import { useModelosCms } from '../hooks/useModelosCms';
 const TONOS = ['Inspirador', 'Informativo', 'Urgencia', 'Emocional', 'Humorístico', 'Educativo'];
 
 export default function MarketingReels() {
+  const MODELOS = useModelosCms();
   const [form, setForm] = useState({ tema: '', modelo: 'AlmaMod en general', tono: 'Inspirador' });
   const [imagenUrl, setImagenUrl] = useState('');
   const [uploadingImg, setUploadingImg] = useState(false);
