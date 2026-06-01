@@ -15,9 +15,8 @@ const FOLDERS = [
   { key: 'todo',           label: 'Todo' },
   { key: 'Modulos',        label: 'Módulos' },
   { key: 'certificaciones', label: 'Certificaciones' },
-  { key: 'ObrasAlmamod',   label: 'Obras' },
-  { key: 'reels',          label: 'Reels' },
-  { key: 'social-media',   label: 'Social' },
+  { key: 'ObrasAlmamod',  label: 'Obras' },
+  { key: 'socialmedialma', label: 'Social AlmaMod' },
 ];
 
 function GaleriaCloudinary({ onSelect, selected }) {

@@ -5,7 +5,7 @@ const API_KEY    = process.env.CLOUDINARY_API_KEY;
 const API_SECRET = process.env.CLOUDINARY_API_SECRET;
 
 // Carpetas exclusivas de AlmaMod (nombres exactos en Cloudinary)
-const ALMAMOD_FOLDERS = ['Modulos', 'certificaciones', 'ObrasAlmamod', 'reels', 'social-media'];
+const ALMAMOD_FOLDERS = ['Modulos', 'certificaciones', 'ObrasAlmamod', 'socialmedialma'];
 
 export async function handler(event) {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: corsHeaders, body: '' };

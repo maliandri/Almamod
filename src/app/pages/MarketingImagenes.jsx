@@ -12,8 +12,7 @@ const FOLDERS = [
   { key: 'Modulos',         label: 'Módulos' },
   { key: 'certificaciones', label: 'Certificaciones' },
   { key: 'ObrasAlmamod',    label: 'Obras' },
-  { key: 'reels',           label: 'Reels' },
-  { key: 'social-media',    label: 'Social' },
+  { key: 'socialmedialma',  label: 'Social AlmaMod' },
 ];
 
 const thumb = (public_id) =>

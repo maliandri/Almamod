@@ -5,7 +5,7 @@ const API_KEY    = process.env.CLOUDINARY_API_KEY;
 const API_SECRET = process.env.CLOUDINARY_API_SECRET;
 
 const ALLOWED_ROLES   = ['superadmin', 'dueno', 'marketing', 'arquitectura'];
-const ALLOWED_FOLDERS = ['Modulos', 'certificaciones', 'ObrasAlmamod', 'reels', 'social-media'];
+const ALLOWED_FOLDERS = ['Modulos', 'certificaciones', 'ObrasAlmamod', 'socialmedialma'];
 
 export async function handler(event) {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: corsHeaders, body: '' };
