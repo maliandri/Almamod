@@ -832,9 +832,9 @@ function TiendaAlma() {
 
   const cmsLoaded = Object.keys(cmsOverrides).length > 0;
 
-  const modulosConCms = modulosData
+  // Modelos hard-coded con overrides del CMS
+  const modulosBase = modulosData
     .filter(m => {
-      // Si el CMS está cargado y el modelo está marcado como inactivo, ocultarlo
       if (cmsLoaded && cmsOverrides[m.slug] && cmsOverrides[m.slug].activo === false) return false;
       return true;
     })
@@ -843,16 +843,42 @@ function TiendaAlma() {
       if (!cms) return m;
       return {
         ...m,
-        nombre:        cms.nombre        || m.nombre,
-        precio:        cms.precio        || m.precio,
-        descripcion:   cms.descripcion   || m.descripcion,
-        plazo:         cms.plazo         || m.plazo,
-        ventajas:      cms.ventajas?.length ? cms.ventajas : m.ventajas,
-        imagenPortada: cms.imagen_portada || m.imagenPortada,
-        fotos:         cms.fotos?.length        ? cms.fotos          : m.imagenesDetalle,
-      fotosPortada:  cms.fotos_portada?.length ? cms.fotos_portada  : null,
+        nombre:       cms.nombre        || m.nombre,
+        precio:       cms.precio        || m.precio,
+        descripcion:  cms.descripcion   || m.descripcion,
+        plazo:        cms.plazo         || m.plazo,
+        ventajas:     cms.ventajas?.length      ? cms.ventajas       : m.ventajas,
+        imagenPortada:cms.imagen_portada         || m.imagenPortada,
+        fotos:        cms.fotos?.length          ? cms.fotos          : m.imagenesDetalle,
+        fotosPortada: cms.fotos_portada?.length  ? cms.fotos_portada  : null,
       };
     });
+
+  // Modelos creados desde el CMS que NO están en el array hard-coded
+  const slugsBase = new Set(modulosData.map(m => m.slug));
+  const modulosCmsNuevos = cmsLoaded
+    ? Object.values(cmsOverrides)
+        .filter(cms => cms.activo && !slugsBase.has(cms.slug))
+        .map(cms => ({
+          id:           cms.slug,
+          slug:         cms.slug,
+          nombre:       cms.nombre        || '',
+          superficie:   cms.superficie    || '',
+          precio:       cms.precio        || 0,
+          descripcion:  cms.descripcion   || '',
+          plazo:        cms.plazo         || '',
+          ventajas:     cms.ventajas      || [],
+          imagenPortada:cms.imagen_portada || null,
+          fotos:        cms.fotos         || [],
+          fotosPortada: cms.fotos_portada  || [],
+          imagenesDetalle: cms.fotos      || [],
+          casosDeUso:   [],
+          especificacionesTecnicas: { construccion: [], equipamiento: [] },
+          faqProducto:  [],
+        }))
+    : [];
+
+  const modulosConCms = [...modulosBase, ...modulosCmsNuevos];
 
   const getImagenPortada = (modulo) => {
     const color = coloresPortada[modulo.id];
