@@ -8,7 +8,7 @@ const TONOS = ['Inspirador', 'Informativo', 'Urgencia', 'Emocional', 'Educativo'
 const FORMATOS = ['Imagen única', 'Carrusel', 'Comparativa', 'Testimonio', 'Precio/Oferta'];
 
 export default function MarketingPublicaciones() {
-  const MODELOS = useModelosCms();
+  const { nombres: MODELOS, getModeloData } = useModelosCms();
   const [form, setForm] = useState({ tema: '', modelo: 'AlmaMod en general', tono: 'Informativo', formato: 'Imagen única' });
   const [imagenUrl, setImagenUrl] = useState('');
   const [uploadingImg, setUploadingImg] = useState(false);
@@ -35,7 +35,7 @@ export default function MarketingPublicaciones() {
     if (!form.tema.trim()) { setError('Ingresá el tema de la publicación'); return; }
     setGenerando(true); setError(''); setResultado(null); setPublishOk(false);
     try {
-      const res = await generarContenido('post', form);
+      const res = await generarContenido('post', { ...form, modeloData: getModeloData(form.modelo) });
       setResultado(res);
     } catch (err) {
       setError(err.message);

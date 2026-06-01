@@ -6,19 +6,34 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const CONTEXT = `Sos el community manager de AlmaMod, empresa de construcción modular con paneles SIP PROPANEL ubicada en Neuquén, Patagonia Argentina.
-Vendemos viviendas modulares llave en mano. Los 6 modelos son:
-- MiCasita: 12m², $17.900.000, monoambiente, ideal primera vivienda u oficina
-- Alma 18: 18m², $39.850.000, monoambiente amplio
-- Alma 27: 27m², $46.650.000, 2 dormitorios
-- Alma Loft 28: 28m², $42.300.000, loft con entrepiso
-- Alma 36: 36m², $58.720.000, 2-3 dormitorios
-- Alma 36 Refugio: 36m², $61.200.000, versión premium
-
+const BASE_CONTEXT = `Sos el community manager de AlmaMod, empresa de construcción modular con paneles SIP PROPANEL ubicada en Neuquén, Patagonia Argentina.
+Vendemos viviendas modulares llave en mano.
 Ventajas clave: construcción en 30-60 días, ahorro energético 40% con SIP, transportable, ampliable, llave en mano.
 Tono: cercano, aspiracional, argentino (no usar "vosotros"). Emojis moderados. Siempre incluir CTA.`;
 
+function buildContext(datos) {
+  if (!datos.modelo || datos.modelo === 'AlmaMod en general') return BASE_CONTEXT;
+  // Si vienen datos del modelo desde el CMS, usarlos
+  if (datos.modeloData) {
+    const m = datos.modeloData;
+    const ventajas = Array.isArray(m.ventajas) && m.ventajas.length
+      ? `\nVentajas: ${m.ventajas.join(', ')}`
+      : '';
+    const precio = m.precio ? `\nPrecio: $${Number(m.precio).toLocaleString('es-AR')}` : '';
+    const superficie = m.superficie ? `\nSuperficie: ${m.superficie}m²` : '';
+    const descripcion = m.descripcion ? `\nDescripción: ${m.descripcion}` : '';
+    const plazo = m.plazo ? `\nPlazo de entrega: ${m.plazo}` : '';
+    return `${BASE_CONTEXT}
+
+MODELO A PROMOCIONAR: ${datos.modelo}${superficie}${precio}${plazo}${descripcion}${ventajas}
+
+Usá EXCLUSIVAMENTE estos datos del modelo. No inventes características ni confundas con otros modelos.`;
+  }
+  return `${BASE_CONTEXT}\n\nModelo a promocionar: ${datos.modelo}`;
+}
+
 function buildPrompt(tipo, datos) {
+  const CONTEXT = buildContext(datos);
   if (tipo === 'reel') {
     return `${CONTEXT}
 
@@ -41,6 +56,7 @@ Devolvé EXACTAMENTE este JSON (sin markdown, sin explicaciones):
 
 Generá contenido para un POST de feed de Instagram/Facebook sobre: "${datos.tema}"
 Modelo destacado: ${datos.modelo || 'AlmaMod en general'}
+IMPORTANTE: Si el modelo tiene descripción y características arriba, usá ESA información. No inventes datos del modelo.
 Tono: ${datos.tono || 'informativo'}
 Formato: ${datos.formato || 'imagen única'}
 

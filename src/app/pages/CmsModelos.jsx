@@ -10,11 +10,25 @@ const fotoThumb = url => url?.startsWith('http')
   ? url
   : `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_120,h_120,c_fill,q_70,f_auto/${url}`;
 
-async function uploadToCloudinary(file) {
+function generarPublicId(modeloNombre, fotosActuales) {
+  const slug = modeloNombre
+    .toUpperCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/\s+/g, '_')
+    .replace(/[^A-Z0-9_]/g, '');
+  const sufijo = fotosActuales === 0 ? 'PORTADA' : String(fotosActuales);
+  return `Modulos/ALMAMOD_${slug}_${sufijo}`;
+}
+
+async function uploadToCloudinary(file, publicId) {
   const fd = new FormData();
   fd.append('file', file);
   fd.append('upload_preset', UPLOAD_PRESET);
-  fd.append('folder', 'modulos');
+  if (publicId) {
+    fd.append('public_id', publicId);
+  } else {
+    fd.append('folder', 'Modulos');
+  }
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
   const data = await res.json();
   if (data.error) throw new Error(data.error.message);
@@ -140,7 +154,8 @@ function EditModal({ modelo, onClose, onSaved }) {
   const handleUpload = async (file) => {
     setUploading(true);
     try {
-      const url = await uploadToCloudinary(file);
+      const publicId = generarPublicId(form.nombre || 'MODELO', form.fotos.length);
+      const url = await uploadToCloudinary(file, publicId);
       setForm(p => ({ ...p, fotos: [...p.fotos, url] }));
     } catch (err) {
       setError(`Error subiendo foto: ${err.message}`);

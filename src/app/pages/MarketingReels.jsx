@@ -7,7 +7,7 @@ import { useModelosCms } from '../hooks/useModelosCms';
 const TONOS = ['Inspirador', 'Informativo', 'Urgencia', 'Emocional', 'Humorístico', 'Educativo'];
 
 export default function MarketingReels() {
-  const MODELOS = useModelosCms();
+  const { nombres: MODELOS, getModeloData } = useModelosCms();
   const [form, setForm] = useState({ tema: '', modelo: 'AlmaMod en general', tono: 'Inspirador' });
   const [imagenUrl, setImagenUrl] = useState('');
   const [uploadingImg, setUploadingImg] = useState(false);
@@ -34,7 +34,7 @@ export default function MarketingReels() {
     if (!form.tema.trim()) { setError('Ingresá el tema del reel'); return; }
     setGenerando(true); setError(''); setResultado(null); setPublishOk(false);
     try {
-      const res = await generarContenido('reel', form);
+      const res = await generarContenido('reel', { ...form, modeloData: getModeloData(form.modelo) });
       setResultado(res);
     } catch (err) {
       setError(err.message);
