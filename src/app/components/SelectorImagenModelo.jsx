@@ -52,12 +52,26 @@ const FOTOS = {
   ],
 };
 
-export default function SelectorImagenModelo({ modelo, selectedUrl, onSelectUrl, onUploadFile, uploading }) {
+// Convierte URL completa de Cloudinary a thumbnail aplicando transformaciones
+const thumbFromUrl = url => {
+  if (!url) return '';
+  const match = url.match(/\/upload\/(?:v\d+\/)?(.+?)(?:\?.*)?$/);
+  const pid = match ? match[1] : null;
+  if (!pid) return url;
+  return `https://res.cloudinary.com/${CLOUD}/image/upload/w_140,h_105,c_fill,q_70,f_auto/${pid}`;
+};
+
+export default function SelectorImagenModelo({ modelo, selectedUrl, onSelectUrl, onUploadFile, uploading, fotosExternas }) {
   const fileRef = useRef();
-  const fotos = FOTOS[modelo] || [];
+
+  // Usar fotos del CMS si el modelo no está en la lista hard-coded
+  const fotasHardcoded = FOTOS[modelo];
+  const usarExternas   = !fotasHardcoded && fotosExternas?.length > 0;
+  const fotos          = fotasHardcoded || [];
 
   return (
     <div>
+      {/* Fotos hard-coded (modelos originales) */}
       {fotos.length > 0 && (
         <>
           <div style={{ color: C.textMuted, fontSize: '0.75rem', marginBottom: '6px' }}>
@@ -68,22 +82,40 @@ export default function SelectorImagenModelo({ modelo, selectedUrl, onSelectUrl,
               const url = full(nombre);
               const isSelected = selectedUrl === url;
               return (
-                <div key={nombre}
-                  onClick={() => onSelectUrl(url)}
-                  style={{
-                    borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', position: 'relative',
-                    border: isSelected ? `2px solid ${C.gold}` : '2px solid transparent',
-                    transition: 'border 0.15s',
-                  }}>
-                  <img src={thumb(nombre)} alt=""
-                    style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }} />
+                <div key={nombre} onClick={() => onSelectUrl(url)}
+                  style={{ borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', position: 'relative',
+                    border: isSelected ? `2px solid ${C.gold}` : '2px solid transparent', transition: 'border 0.15s' }}>
+                  <img src={thumb(nombre)} alt="" style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }} />
                   {isSelected && (
-                    <div style={{
-                      position: 'absolute', top: '4px', right: '4px',
-                      background: C.gold, color: '#000', borderRadius: '50%',
-                      width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '0.7rem', fontWeight: 700,
-                    }}>✓</div>
+                    <div style={{ position: 'absolute', top: '4px', right: '4px', background: C.gold, color: '#000',
+                      borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center',
+                      justifyContent: 'center', fontSize: '0.7rem', fontWeight: 700 }}>✓</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {/* Fotos desde el CMS (modelos nuevos) */}
+      {usarExternas && (
+        <>
+          <div style={{ color: C.textMuted, fontSize: '0.75rem', marginBottom: '6px' }}>
+            Fotos del modelo — clic para seleccionar
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', marginBottom: '10px' }}>
+            {fotosExternas.map((url, i) => {
+              const isSelected = selectedUrl === url;
+              return (
+                <div key={i} onClick={() => onSelectUrl(url)}
+                  style={{ borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', position: 'relative',
+                    border: isSelected ? `2px solid ${C.gold}` : '2px solid transparent', transition: 'border 0.15s' }}>
+                  <img src={thumbFromUrl(url)} alt="" style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }} />
+                  {isSelected && (
+                    <div style={{ position: 'absolute', top: '4px', right: '4px', background: C.gold, color: '#000',
+                      borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center',
+                      justifyContent: 'center', fontSize: '0.7rem', fontWeight: 700 }}>✓</div>
                   )}
                 </div>
               );

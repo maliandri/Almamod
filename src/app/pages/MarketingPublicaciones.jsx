@@ -105,6 +105,7 @@ export default function MarketingPublicaciones() {
                   onSelectUrl={url => setImagenUrl(url)}
                   onUploadFile={handleImagen}
                   uploading={uploadingImg}
+                  fotosExternas={getModeloData(form.modelo)?.fotos || []}
                 />
                 {imagenUrl && !uploadingImg && (
                   <div style={{ color: C.green, fontSize: '0.75rem', marginTop: '4px' }}>✓ Imagen seleccionada</div>
