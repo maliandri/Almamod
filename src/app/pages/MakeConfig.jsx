@@ -128,38 +128,35 @@ export default function MakeConfig() {
         {/* Webhook URL */}
         <div style={S.card}>
           <h2 style={{ ...S.h2, color: C.gold, marginBottom: '8px' }}>URL del Webhook</h2>
-          <p style={{ color: C.textMuted, fontSize: '0.82rem', marginBottom: '20px' }}>
-            Un solo webhook para todos los tipos de contenido. Make filtra internamente por el campo <code style={{ color: C.gold, fontSize: '0.8rem' }}>tipo</code> (reel / post / libre).
+
+          {/* Info arquitectura */}
+          <div style={{ background: 'rgba(212,165,116,0.08)', border: '1px solid rgba(212,165,116,0.2)', borderRadius: '10px', padding: '14px 16px', marginBottom: '20px' }}>
+            <p style={{ color: C.text, fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>
+              🔒 La URL se gestiona desde Netlify (variable de entorno)
+            </p>
+            <p style={{ color: C.textMuted, fontSize: '0.82rem', lineHeight: 1.5, margin: 0 }}>
+              La URL del webhook está guardada como <code style={{ color: C.gold }}>MAKE_WEBHOOK_URL</code> en Netlify.
+              Para cambiarla: <strong style={{ color: C.text }}>Netlify → Site configuration → Environment variables → MAKE_WEBHOOK_URL</strong>.
+              Después de guardar, Netlify hace un redeploy automático.
+            </p>
+          </div>
+
+          <p style={{ color: C.textMuted, fontSize: '0.82rem', marginBottom: '16px' }}>
+            Podés probar si el webhook activo está funcionando:
           </p>
 
-          <label style={S.label}>Webhook URL</label>
           <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-            <input
-              value={webhooks.url}
-              onChange={e => setWebhooks({ url: e.target.value })}
-              placeholder="https://hook.eu1.make.com/..."
-              style={{ ...S.input, flex: 1, fontSize: '0.85rem' }}
-              onFocus={inputFocus} onBlur={inputBlur}
-            />
             <button type="button" onClick={handleTest} disabled={testing}
-              style={{ ...S.btnGhost, fontSize: '0.8rem', padding: '8px 14px', opacity: testing ? 0.6 : 1, whiteSpace: 'nowrap' }}>
-              {testing ? 'Enviando...' : 'Probar'}
+              style={{ ...S.btnGold, fontSize: '0.85rem', padding: '10px 20px', opacity: testing ? 0.6 : 1 }}>
+              {testing ? 'Enviando...' : '🔗 Probar conexión con Make'}
             </button>
           </div>
 
           {testResult && (
-            <div style={{ ...(testResult.startsWith('✓') ? S.alertSuccess : S.alertError), marginBottom: '16px', fontSize: '0.85rem' }}>
+            <div style={{ ...(testResult.startsWith('✓') ? S.alertSuccess : S.alertError), fontSize: '0.85rem' }}>
               {testResult}
             </div>
           )}
-
-          <button onClick={handleSave} style={{ ...S.btnGold, padding: '10px 24px' }}>
-            {saved ? '✓ Guardado' : 'Guardar webhook'}
-          </button>
-
-          <p style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '12px' }}>
-            La URL se guarda en este navegador. Si accedés desde otro dispositivo tenés que volver a configurarla.
-          </p>
         </div>
 
         {/* Payload reference */}
