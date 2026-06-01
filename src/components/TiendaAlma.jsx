@@ -830,17 +830,28 @@ function TiendaAlma() {
       .catch(() => {});
   }, []);
 
-  const modulosConCms = modulosData.map(m => {
-    const cms = cmsOverrides[m.slug];
-    if (!cms) return m;
-    return {
-      ...m,
-      precio:      cms.precio      || m.precio,
-      descripcion: cms.descripcion || m.descripcion,
-      plazo:       cms.plazo       || m.plazo,
-      ventajas:    cms.ventajas?.length ? cms.ventajas : m.ventajas,
-    };
-  });
+  const cmsLoaded = Object.keys(cmsOverrides).length > 0;
+
+  const modulosConCms = modulosData
+    .filter(m => {
+      // Si el CMS está cargado y el modelo está marcado como inactivo, ocultarlo
+      if (cmsLoaded && cmsOverrides[m.slug] && cmsOverrides[m.slug].activo === false) return false;
+      return true;
+    })
+    .map(m => {
+      const cms = cmsOverrides[m.slug];
+      if (!cms) return m;
+      return {
+        ...m,
+        nombre:        cms.nombre        || m.nombre,
+        precio:        cms.precio        || m.precio,
+        descripcion:   cms.descripcion   || m.descripcion,
+        plazo:         cms.plazo         || m.plazo,
+        ventajas:      cms.ventajas?.length ? cms.ventajas : m.ventajas,
+        imagenPortada: cms.imagen_portada || m.imagenPortada,
+        fotos:         cms.fotos?.length  ? cms.fotos     : m.imagenesDetalle,
+      };
+    });
 
   const getImagenPortada = (modulo) => {
     const color = coloresPortada[modulo.id];

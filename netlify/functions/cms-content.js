@@ -8,8 +8,7 @@ export async function handler(event) {
   const [{ data: modelos, error: e1 }, { data: obras, error: e2 }] = await Promise.all([
     supabase
       .from('modelos')
-      .select('id, slug, nombre, precio, descripcion, plazo, ventajas, fotos, imagen_portada, superficie, orden')
-      .eq('activo', true)
+      .select('id, slug, nombre, precio, descripcion, plazo, ventajas, fotos, imagen_portada, superficie, orden, activo')
       .order('orden'),
     supabase
       .from('obras_galeria')
