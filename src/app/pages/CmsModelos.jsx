@@ -84,6 +84,7 @@ function FotosManager({ fotos, onAdd, onDelete, uploading }) {
 function EditModal({ modelo, onClose, onSaved }) {
   const { token } = useAuth();
   const [form, setForm] = useState({
+    nombre: modelo.nombre || '',
     precio: modelo.precio || '',
     descripcion: modelo.descripcion || '',
     plazo: modelo.plazo || '30 días',
@@ -131,6 +132,12 @@ function EditModal({ modelo, onClose, onSaved }) {
         </div>
 
         <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={S.label}>Nombre del modelo</label>
+            <input value={form.nombre} onChange={e => setForm(p => ({ ...p, nombre: e.target.value }))}
+              placeholder="Ej: Alma 36" style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
+          </div>
+
           <div style={{ marginBottom: '16px' }}>
             <label style={S.label}>Precio ($) *</label>
             <input type="number" required value={form.precio}
