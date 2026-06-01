@@ -50,55 +50,50 @@ function VentajasEditor({ ventajas, onChange }) {
   );
 }
 
-function FotosUnificadas({ fotos, imagenPortada, onAdd, onDelete, onSetPortada, uploading }) {
+function FotosUnificadas({ fotos, fotosPortada, onAdd, onDelete, onTogglePortada, uploading }) {
   const fileRef = useRef();
+  const portadas = fotosPortada || [];
 
-  // Normalizar portada a URL completa para comparar
-  const portadaUrl = imagenPortada
-    ? (imagenPortada.startsWith('http')
-        ? imagenPortada
-        : `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${imagenPortada}`)
-    : '';
-
-  // Todas las fotos + portada si no está ya en fotos
-  const todas = [...fotos];
-  if (portadaUrl && !todas.includes(portadaUrl)) todas.unshift(portadaUrl);
+  // Todas las fotos únicas (fotos + portadas que no estén ya)
+  const todas = [...new Set([...portadas, ...fotos])];
 
   return (
     <div>
-      <div style={{ marginBottom: '6px', color: C.textMuted, fontSize: '0.75rem' }}>
-        Hacé clic en ⭐ para elegir la foto de portada. La portada se muestra en la tarjeta del modelo.
+      <div style={{ marginBottom: '8px', padding: '8px 12px', background: C.goldDim, borderRadius: '7px', border: `1px solid ${C.goldBorder}` }}>
+        <p style={{ color: C.gold, fontSize: '0.72rem', fontWeight: 700, margin: '0 0 2px', letterSpacing: '0.04em' }}>⭐ FOTOS DE PORTADA (carrusel)</p>
+        <p style={{ color: C.textMuted, fontSize: '0.72rem', margin: 0 }}>
+          Clic en ⭐ para agregar/quitar del carrusel de portada. El número indica el orden. Podés tener varias.
+        </p>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
         {todas.map((url, i) => {
-          const esPortada = url === portadaUrl && portadaUrl !== '';
+          const idxPortada = portadas.indexOf(url);
+          const esPortada  = idxPortada !== -1;
           return (
             <div key={i} style={{ position: 'relative', width: '90px', height: '90px', borderRadius: '8px', overflow: 'hidden', border: `2px solid ${esPortada ? C.gold : C.border}` }}>
               <img src={fotoThumb(url)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
 
-              {/* Badge portada */}
+              {/* Badge orden en portada */}
               {esPortada && (
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(212,165,116,0.85)', textAlign: 'center', fontSize: '0.58rem', fontWeight: 700, color: '#1a1a2e', padding: '2px', letterSpacing: '0.04em' }}>
-                  ⭐ PORTADA
+                <div style={{ position: 'absolute', top: '2px', left: '2px', background: C.gold, color: '#1a1a2e', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 900, padding: '1px 5px', lineHeight: 1.6 }}>
+                  ⭐ {idxPortada + 1}
                 </div>
               )}
 
-              {/* Botón set portada */}
-              {!esPortada && (
-                <button type="button" onClick={() => onSetPortada(url)} title="Usar como portada"
-                  style={{ position: 'absolute', bottom: '2px', left: '2px', background: 'rgba(0,0,0,0.65)', border: `1px solid ${C.goldBorder}`, borderRadius: '4px', color: C.gold, cursor: 'pointer', fontSize: '0.6rem', padding: '2px 4px', lineHeight: 1 }}>
-                  ⭐
-                </button>
-              )}
+              {/* Toggle portada */}
+              <button type="button" onClick={() => onTogglePortada(url)} title={esPortada ? 'Quitar del carrusel' : 'Agregar al carrusel de portada'}
+                style={{ position: 'absolute', bottom: '2px', left: '2px', background: esPortada ? C.gold : 'rgba(0,0,0,0.65)', border: `1px solid ${esPortada ? C.gold : C.goldBorder}`, borderRadius: '4px', color: esPortada ? '#1a1a2e' : C.gold, cursor: 'pointer', fontSize: '0.6rem', fontWeight: 700, padding: '2px 5px', lineHeight: 1.4 }}>
+                {esPortada ? '✓ portada' : '+ portada'}
+              </button>
 
-              {/* Botón eliminar */}
-              <button type="button" onClick={() => onDelete(url)} title="Eliminar"
+              {/* Eliminar */}
+              <button type="button" onClick={() => onDelete(url)} title="Eliminar foto"
                 style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', width: '20px', height: '20px', color: '#fff', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
             </div>
           );
         })}
 
-        {/* Botón subir */}
+        {/* Subir */}
         <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
           style={{ width: '90px', height: '90px', background: C.goldDim, border: `2px dashed ${C.goldBorder}`, borderRadius: '8px', color: C.gold, cursor: 'pointer', fontSize: '1.4rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
           {uploading ? <span style={{ fontSize: '0.7rem' }}>...</span> : <><span>+</span><span style={{ fontSize: '0.65rem' }}>Subir foto</span></>}
@@ -116,13 +111,26 @@ function FotosUnificadas({ fotos, imagenPortada, onAdd, onDelete, onSetPortada, 
 
 function EditModal({ modelo, onClose, onSaved }) {
   const { token } = useAuth();
+  // Normalizar fotos_portada: si viene vacío, inicializar desde imagen_portada existente
+  const initFotosPortada = () => {
+    if (modelo.fotos_portada?.length) return modelo.fotos_portada;
+    if (modelo.imagen_portada) {
+      const url = modelo.imagen_portada.startsWith('http')
+        ? modelo.imagen_portada
+        : `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${modelo.imagen_portada}`;
+      return [url];
+    }
+    return [];
+  };
+
   const [form, setForm] = useState({
-    nombre: modelo.nombre || '',
-    precio: modelo.precio || '',
-    descripcion: modelo.descripcion || '',
-    plazo: modelo.plazo || '30 días',
-    ventajas: modelo.ventajas || [],
-    fotos: modelo.fotos || [],
+    nombre:        modelo.nombre        || '',
+    precio:        modelo.precio        || '',
+    descripcion:   modelo.descripcion   || '',
+    plazo:         modelo.plazo         || '30 días',
+    ventajas:      modelo.ventajas      || [],
+    fotos:         modelo.fotos         || [],
+    fotos_portada: initFotosPortada(),
     imagen_portada: modelo.imagen_portada || '',
   });
   const [saving, setSaving] = useState(false);
@@ -145,7 +153,13 @@ function EditModal({ modelo, onClose, onSaved }) {
     e.preventDefault();
     setSaving(true); setError('');
     try {
-      await api.cms.modelos.update(token, { id: modelo.id, ...form, precio: Number(form.precio) });
+      // imagen_portada = primera foto del carrusel (compatibilidad hacia atrás)
+      const imagen_portada = form.fotos_portada?.[0] || form.imagen_portada || '';
+      await api.cms.modelos.update(token, {
+        id: modelo.id, ...form,
+        precio: Number(form.precio),
+        imagen_portada,
+      });
       onSaved();
       onClose();
     } catch (err) {
@@ -202,22 +216,24 @@ function EditModal({ modelo, onClose, onSaved }) {
             <label style={S.label}>Fotos</label>
             <FotosUnificadas
               fotos={form.fotos}
-              imagenPortada={form.imagen_portada}
+              fotosPortada={form.fotos_portada}
               onAdd={handleUpload}
-              onDelete={url => {
-                // Si era la portada, limpiarla
-                const portadaUrl = form.imagen_portada?.startsWith('http')
-                  ? form.imagen_portada
-                  : form.imagen_portada
-                    ? `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${form.imagen_portada}`
-                    : '';
-                setForm(p => ({
+              onDelete={url => setForm(p => ({
+                ...p,
+                fotos:         p.fotos.filter(f => f !== url),
+                fotos_portada: p.fotos_portada.filter(f => f !== url),
+              }))}
+              onTogglePortada={url => setForm(p => {
+                const ya = p.fotos_portada.includes(url);
+                return {
                   ...p,
-                  fotos: p.fotos.filter(f => f !== url),
-                  imagen_portada: url === portadaUrl ? '' : p.imagen_portada,
-                }));
-              }}
-              onSetPortada={url => setForm(p => ({ ...p, imagen_portada: url }))}
+                  fotos_portada: ya
+                    ? p.fotos_portada.filter(f => f !== url)   // quitar
+                    : [...p.fotos_portada, url],               // agregar al final
+                  // Si no está en fotos todavía, agregarla
+                  fotos: p.fotos.includes(url) ? p.fotos : [...p.fotos, url],
+                };
+              })}
               uploading={uploading}
             />
           </div>

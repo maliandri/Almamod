@@ -849,7 +849,8 @@ function TiendaAlma() {
         plazo:         cms.plazo         || m.plazo,
         ventajas:      cms.ventajas?.length ? cms.ventajas : m.ventajas,
         imagenPortada: cms.imagen_portada || m.imagenPortada,
-        fotos:         cms.fotos?.length  ? cms.fotos     : m.imagenesDetalle,
+        fotos:         cms.fotos?.length        ? cms.fotos          : m.imagenesDetalle,
+      fotosPortada:  cms.fotos_portada?.length ? cms.fotos_portada  : null,
       };
     });
 
