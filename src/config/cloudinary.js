@@ -75,13 +75,21 @@ export const IMG_HERO = {
  */
 export const getCloudinaryUrl = (fileName, transformations = IMG_CARD) => {
   if (!fileName) return '';
-  
+
+  // Si ya es una URL completa de Cloudinary, extraer el public_id para aplicar transformaciones
+  let publicId = fileName;
+  if (fileName.startsWith('http')) {
+    const match = fileName.match(/\/upload\/(?:v\d+\/)?(.+?)(?:\?.*)?$/);
+    publicId = match ? match[1] : null;
+    if (!publicId) return fileName; // URL externa no-Cloudinary: devolver tal cual
+  }
+
   // Cache-busting diario
   const version = new Date().toISOString().split('T')[0].replace(/-/g, '');
   
   // Retrocompatibilidad: si recibe un número, solo aplica width
   if (typeof transformations === 'number') {
-    return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_${transformations},q_auto,f_auto,fl_progressive/${fileName}?v=${version}`;
+    return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_${transformations},q_auto,f_auto,fl_progressive/${publicId}?v=${version}`;
   }
   
   // Si recibe un objeto, construye transformaciones completas
@@ -98,7 +106,7 @@ export const getCloudinaryUrl = (fileName, transformations = IMG_CARD) => {
   
   const transformString = transforms.join(',');
   
-  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transformString}/${fileName}?v=${version}`;
+  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transformString}/${publicId}?v=${version}`;
 };
 
 /**
