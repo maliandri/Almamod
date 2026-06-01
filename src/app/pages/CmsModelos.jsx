@@ -50,25 +50,58 @@ function VentajasEditor({ ventajas, onChange }) {
   );
 }
 
-function FotosManager({ fotos, onAdd, onDelete, uploading }) {
+function FotosUnificadas({ fotos, imagenPortada, onAdd, onDelete, onSetPortada, uploading }) {
   const fileRef = useRef();
+
+  // Normalizar portada a URL completa para comparar
+  const portadaUrl = imagenPortada
+    ? (imagenPortada.startsWith('http')
+        ? imagenPortada
+        : `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${imagenPortada}`)
+    : '';
+
+  // Todas las fotos + portada si no está ya en fotos
+  const todas = [...fotos];
+  if (portadaUrl && !todas.includes(portadaUrl)) todas.unshift(portadaUrl);
+
   return (
     <div>
+      <div style={{ marginBottom: '6px', color: C.textMuted, fontSize: '0.75rem' }}>
+        Hacé clic en ⭐ para elegir la foto de portada. La portada se muestra en la tarjeta del modelo.
+      </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
-        {fotos.map((url, i) => (
-          <div key={i} style={{ position: 'relative', width: '90px', height: '90px', borderRadius: '8px', overflow: 'hidden', border: `1px solid ${C.border}` }}>
-            <img src={fotoThumb(url)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <button type="button" onClick={() => onDelete(i)}
-              style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', width: '20px', height: '20px', color: '#fff', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
-          </div>
-        ))}
-        <button type="button" onClick={() => fileRef.current?.click()}
-          disabled={uploading}
+        {todas.map((url, i) => {
+          const esPortada = url === portadaUrl && portadaUrl !== '';
+          return (
+            <div key={i} style={{ position: 'relative', width: '90px', height: '90px', borderRadius: '8px', overflow: 'hidden', border: `2px solid ${esPortada ? C.gold : C.border}` }}>
+              <img src={fotoThumb(url)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+
+              {/* Badge portada */}
+              {esPortada && (
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(212,165,116,0.85)', textAlign: 'center', fontSize: '0.58rem', fontWeight: 700, color: '#1a1a2e', padding: '2px', letterSpacing: '0.04em' }}>
+                  ⭐ PORTADA
+                </div>
+              )}
+
+              {/* Botón set portada */}
+              {!esPortada && (
+                <button type="button" onClick={() => onSetPortada(url)} title="Usar como portada"
+                  style={{ position: 'absolute', bottom: '2px', left: '2px', background: 'rgba(0,0,0,0.65)', border: `1px solid ${C.goldBorder}`, borderRadius: '4px', color: C.gold, cursor: 'pointer', fontSize: '0.6rem', padding: '2px 4px', lineHeight: 1 }}>
+                  ⭐
+                </button>
+              )}
+
+              {/* Botón eliminar */}
+              <button type="button" onClick={() => onDelete(url)} title="Eliminar"
+                style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', width: '20px', height: '20px', color: '#fff', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+            </div>
+          );
+        })}
+
+        {/* Botón subir */}
+        <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
           style={{ width: '90px', height: '90px', background: C.goldDim, border: `2px dashed ${C.goldBorder}`, borderRadius: '8px', color: C.gold, cursor: 'pointer', fontSize: '1.4rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-          {uploading ? <span style={{ fontSize: '0.7rem' }}>...</span> : <>
-            <span>+</span>
-            <span style={{ fontSize: '0.65rem' }}>Subir foto</span>
-          </>}
+          {uploading ? <span style={{ fontSize: '0.7rem' }}>...</span> : <><span>+</span><span style={{ fontSize: '0.65rem' }}>Subir foto</span></>}
         </button>
       </div>
       <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
@@ -161,27 +194,30 @@ function EditModal({ modelo, onClose, onSaved }) {
           </div>
 
           <div style={{ marginBottom: '16px' }}>
-            <label style={S.label}>Imagen portada (nombre Cloudinary o URL)</label>
-            <input value={form.imagen_portada}
-              onChange={e => setForm(p => ({ ...p, imagen_portada: e.target.value }))}
-              placeholder="ALMAMOD_36_PORTADA.webp o https://..."
-              style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
-          </div>
-
-          <div style={{ marginBottom: '16px' }}>
             <label style={S.label}>Ventajas (aparecen en la ficha del modelo)</label>
             <VentajasEditor ventajas={form.ventajas} onChange={v => setForm(p => ({ ...p, ventajas: v }))} />
           </div>
 
           <div style={{ marginBottom: '20px' }}>
-            <label style={S.label}>Fotos adicionales</label>
-            <div style={{ marginBottom: '6px', color: C.textMuted, fontSize: '0.78rem' }}>
-              Las fotos se suben a Cloudinary automáticamente. Requiere preset "almamod_cms" configurado.
-            </div>
-            <FotosManager
+            <label style={S.label}>Fotos</label>
+            <FotosUnificadas
               fotos={form.fotos}
+              imagenPortada={form.imagen_portada}
               onAdd={handleUpload}
-              onDelete={i => setForm(p => ({ ...p, fotos: p.fotos.filter((_, j) => j !== i) }))}
+              onDelete={url => {
+                // Si era la portada, limpiarla
+                const portadaUrl = form.imagen_portada?.startsWith('http')
+                  ? form.imagen_portada
+                  : form.imagen_portada
+                    ? `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${form.imagen_portada}`
+                    : '';
+                setForm(p => ({
+                  ...p,
+                  fotos: p.fotos.filter(f => f !== url),
+                  imagen_portada: url === portadaUrl ? '' : p.imagen_portada,
+                }));
+              }}
+              onSetPortada={url => setForm(p => ({ ...p, imagen_portada: url }))}
               uploading={uploading}
             />
           </div>
