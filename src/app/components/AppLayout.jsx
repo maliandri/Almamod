@@ -28,6 +28,7 @@ const NAV_SECTIONS = [
       { to: '/app/marketing/libre',         module: 'marketing', icon: '✍️', label: 'Publicación libre', roles: ['superadmin','dueno','marketing'] },
       { to: '/app/marketing/make',          module: 'marketing', icon: '⚙️', label: 'Configurar Make',   roles: ['superadmin','dueno','marketing'] },
       { to: '/app/marketing/imagenes',      module: 'marketing', icon: '🖼️', label: 'Imágenes del sitio', roles: ['superadmin','dueno','marketing','arquitectura'] },
+      { to: '/app/marketing/sitio',         module: 'marketing', icon: '✏️', label: 'Contenido del sitio', roles: ['superadmin','dueno','marketing','arquitectura'] },
     ],
   },
   {

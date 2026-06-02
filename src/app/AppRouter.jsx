@@ -20,6 +20,7 @@ import RemitoScan from './pages/RemitoScan';
 import Familias from './pages/Familias';
 import CrmAlmita from './pages/CrmAlmita';
 import MarketingImagenes from './pages/MarketingImagenes';
+import SitioContenido from './pages/SitioContenido';
 import PIC from './pages/PIC';
 import OT from './pages/OT';
 import REI from './pages/REI';
@@ -132,6 +133,14 @@ export default function AppRouter() {
         element={
           <ProtectedRoute roles={['superadmin', 'dueno', 'marketing', 'arquitectura']} module="marketing" mode="read">
             <MarketingImagenes />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="marketing/sitio"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'marketing', 'arquitectura']} module="marketing" mode="read">
+            <SitioContenido />
           </ProtectedRoute>
         }
       />
