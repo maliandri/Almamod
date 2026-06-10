@@ -17,7 +17,7 @@ export async function handler(event) {
   // Lee de modelos (tabla unificada) — todos, publicados o no
   const { data: modelos, error } = await supabase
     .from('modelos')
-    .select('id, nombre, superficie, activo')
+    .select('id, nombre, superficie, precio, descripcion, ventajas, plazo, activo')
     .order('orden')
     .order('nombre');
 

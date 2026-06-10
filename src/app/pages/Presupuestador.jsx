@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
@@ -31,6 +31,7 @@ const FORM_INICIAL = {
   cliente_contacto: '',
   cliente_direccion: '',
   margen_pct: 30,
+  costo_total: 0,
   precio_total: 0,
   notas: '',
   estado: 'borrador',
@@ -46,11 +47,8 @@ export default function Presupuestador() {
   const [saving, setSaving] = useState(false);
 
   const [modelos, setModelos] = useState([]);
-  const [partes, setPartes] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(FORM_INICIAL);
-  const [addingItem, setAddingItem] = useState(false);
-  const [parteSearch, setParteSearch] = useState('');
 
   const cargarLista = () => {
     setLoading(true);
@@ -64,26 +62,24 @@ export default function Presupuestador() {
 
   useEffect(() => {
     api.modelos.list(token).then(d => setModelos((d.modelos || []).filter(m => m.activo !== false)));
-    api.partes.list(token).then(d => setPartes(d.partes || []));
   }, [token]);
 
-  const costoTotal = useMemo(() =>
-    form.items.reduce((sum, it) => sum + (Number(it.cantidad) || 0) * (Number(it.costo_unitario) || 0), 0)
-  , [form.items]);
-
-  // Recalcula precio_total cuando cambia el costo o el margen
-  useEffect(() => {
-    setForm(f => ({ ...f, precio_total: Math.round(costoTotal * (1 + (Number(f.margen_pct) || 0) / 100)) }));
-  }, [costoTotal]);
+  const handleCostoChange = (v) => {
+    const costo = Number(v) || 0;
+    const margen = Number(form.margen_pct) || 0;
+    setForm(f => ({ ...f, costo_total: costo, precio_total: Math.round(costo * (1 + margen / 100)) }));
+  };
 
   const handleMargenChange = (v) => {
     const margen = Number(v) || 0;
-    setForm(f => ({ ...f, margen_pct: margen, precio_total: Math.round(costoTotal * (1 + margen / 100)) }));
+    const costo = Number(form.costo_total) || 0;
+    setForm(f => ({ ...f, margen_pct: margen, precio_total: Math.round(costo * (1 + margen / 100)) }));
   };
 
   const handlePrecioChange = (v) => {
     const precio = Number(v) || 0;
-    const margen = costoTotal > 0 ? ((precio / costoTotal - 1) * 100) : 0;
+    const costo = Number(form.costo_total) || 0;
+    const margen = costo > 0 ? ((precio / costo - 1) * 100) : Number(form.margen_pct) || 0;
     setForm(f => ({ ...f, precio_total: precio, margen_pct: Math.round(margen * 100) / 100 }));
   };
 
@@ -108,16 +104,11 @@ export default function Presupuestador() {
         cliente_contacto: presupuesto.cliente_contacto || '',
         cliente_direccion: presupuesto.cliente_direccion || '',
         margen_pct: presupuesto.margen_pct ?? 30,
+        costo_total: presupuesto.costo_total ?? 0,
         precio_total: presupuesto.precio_total ?? 0,
         notas: presupuesto.notas || '',
         estado: presupuesto.estado || 'borrador',
-        items: (presupuesto.items || []).map(it => ({
-          parte_id: it.parte_id || null,
-          descripcion: it.descripcion,
-          unidad: it.unidad || '',
-          cantidad: it.cantidad,
-          costo_unitario: it.costo_unitario,
-        })),
+        items: (presupuesto.items || []).map(it => ({ descripcion: it.descripcion })),
       });
       setView('form');
     } catch (err) {
@@ -145,45 +136,36 @@ export default function Presupuestador() {
     }));
   };
 
-  const seleccionarModelo = async (modelo_id) => {
+  const seleccionarModelo = (modelo_id) => {
     if (!modelo_id) {
-      setForm(f => ({ ...f, modelo_id: '', modelo_nombre: '', items: [] }));
+      setForm(f => ({ ...f, modelo_id: '', modelo_nombre: '', modelo_descripcion: '', items: [], precio_total: 0 }));
       return;
     }
     const modelo = modelos.find(m => String(m.id) === String(modelo_id));
-    try {
-      const { partes: bomItems } = await api.bom.list(token, modelo_id);
-      const items = (bomItems || []).map(b => ({
-        parte_id: b.partes?.id || null,
-        descripcion: b.partes?.nombre || '',
-        unidad: b.partes?.unidad || '',
-        cantidad: b.cantidad_necesaria,
-        costo_unitario: b.partes?.costo || 0,
-      }));
-      setForm(f => ({ ...f, modelo_id, modelo_nombre: modelo?.nombre || '', items }));
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const agregarItemLibre = () => {
-    setForm(f => ({ ...f, items: [...f.items, { parte_id: null, descripcion: '', unidad: '', cantidad: 1, costo_unitario: 0 }] }));
-  };
-
-  const agregarItemParte = (parte) => {
-    setForm(f => ({ ...f, items: [...f.items, { parte_id: parte.id, descripcion: parte.nombre, unidad: parte.unidad, cantidad: 1, costo_unitario: parte.costo || 0 }] }));
-    setAddingItem(false);
-    setParteSearch('');
-  };
-
-  const actualizarItem = (idx, field, value) => {
+    if (!modelo) return;
+    const ventajas = Array.isArray(modelo.ventajas) ? modelo.ventajas : [];
     setForm(f => ({
       ...f,
-      items: f.items.map((it, i) => i === idx ? { ...it, [field]: value } : it),
+      modelo_id,
+      modelo_nombre: modelo.nombre || '',
+      modelo_descripcion: modelo.descripcion || '',
+      items: ventajas.map(v => ({ descripcion: v })),
+      precio_total: Number(modelo.precio) || 0,
     }));
   };
 
-  const eliminarItem = (idx) => {
+  const agregarCaracteristica = () => {
+    setForm(f => ({ ...f, items: [...f.items, { descripcion: '' }] }));
+  };
+
+  const actualizarCaracteristica = (idx, value) => {
+    setForm(f => ({
+      ...f,
+      items: f.items.map((it, i) => i === idx ? { ...it, descripcion: value } : it),
+    }));
+  };
+
+  const eliminarCaracteristica = (idx) => {
     setForm(f => ({ ...f, items: f.items.filter((_, i) => i !== idx) }));
   };
 
@@ -202,11 +184,13 @@ export default function Presupuestador() {
         cliente_contacto: form.cliente_contacto,
         cliente_direccion: form.cliente_direccion,
         margen_pct: form.margen_pct,
-        costo_total: costoTotal,
+        costo_total: form.costo_total,
         precio_total: form.precio_total,
         notas: form.notas,
         estado: form.estado,
-        items: form.items.map((it, idx) => ({ ...it, orden: idx })),
+        items: form.items
+          .filter(it => it.descripcion && it.descripcion.trim())
+          .map((it, idx) => ({ descripcion: it.descripcion.trim(), orden: idx })),
       };
       if (editingId) {
         await api.presupuestos.update(token, { id: editingId, ...payload });
@@ -221,10 +205,6 @@ export default function Presupuestador() {
       setSaving(false);
     }
   };
-
-  const partesFiltradas = partes.filter(p =>
-    !parteSearch || p.nombre.toLowerCase().includes(parteSearch.toLowerCase()) || p.codigo.toLowerCase().includes(parteSearch.toLowerCase())
-  );
 
   // ------------------------------------------------------------------
   // Vista: lista
@@ -358,78 +338,27 @@ export default function Presupuestador() {
           </div>
         </div>
 
-        {/* Items */}
+        {/* Características incluidas */}
         <div style={{ ...S.card, marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <h2 style={{ ...S.h2, margin: 0 }}>Ítems</h2>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button onClick={() => setAddingItem(v => !v)} style={{ ...S.btnGhost, fontSize: '0.8rem', padding: '6px 12px' }}>+ Del catálogo</button>
-              <button onClick={agregarItemLibre} style={{ ...S.btnGhost, fontSize: '0.8rem', padding: '6px 12px' }}>+ Ítem libre</button>
-            </div>
+            <h2 style={{ ...S.h2, margin: 0 }}>Características incluidas</h2>
+            <button onClick={agregarCaracteristica} style={{ ...S.btnGhost, fontSize: '0.8rem', padding: '6px 12px' }}>+ Agregar característica</button>
           </div>
-
-          {addingItem && (
-            <div style={{ marginBottom: '14px', padding: '10px', border: `1px solid ${C.border}`, borderRadius: '8px' }}>
-              <input
-                autoFocus
-                value={parteSearch}
-                onChange={e => setParteSearch(e.target.value)}
-                placeholder="Buscar parte por código o nombre..."
-                style={{ ...S.input, marginBottom: '8px' }}
-                onFocus={inputFocus} onBlur={inputBlur}
-              />
-              <div style={{ maxHeight: '180px', overflowY: 'auto' }}>
-                {partesFiltradas.slice(0, 30).map(p => (
-                  <button key={p.id}
-                    onMouseDown={e => e.preventDefault()}
-                    onClick={() => agregarItemParte(p)}
-                    style={{ display: 'flex', width: '100%', padding: '6px 10px', background: 'transparent', border: 'none', borderBottom: `1px solid ${C.border}`, color: C.textSub, cursor: 'pointer', textAlign: 'left', fontSize: '0.85rem', gap: '8px', alignItems: 'center' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = C.goldDim; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
-                  >
-                    <span style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.78rem', minWidth: '90px' }}>{p.codigo}</span>
-                    <span style={{ flex: 1 }}>{p.nombre}</span>
-                    <span style={{ color: C.textMuted, fontSize: '0.78rem' }}>{money(p.costo)}</span>
-                  </button>
-                ))}
-                {partesFiltradas.length === 0 && <div style={{ color: C.textMuted, fontSize: '0.85rem', padding: '8px' }}>Sin resultados</div>}
-              </div>
-              <button onClick={() => { setAddingItem(false); setParteSearch(''); }} style={{ ...S.btnGhost, marginTop: '8px', fontSize: '0.8rem', padding: '5px 12px' }}>Cancelar</button>
-            </div>
-          )}
 
           {form.items.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '24px', color: C.textMuted, fontSize: '0.85rem' }}>
-              Sin ítems. Agregá partes del catálogo o ítems libres.
+              Sin características. Seleccioná un modelo del catálogo o agregá manualmente.
             </div>
           ) : (
-            <div style={{ overflowX: 'auto' }}>
-              <div style={{ minWidth: '640px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 90px 90px 130px 130px 36px', gap: '8px', padding: '0 0 8px', borderBottom: `1px solid ${C.border}` }}>
-                  {['Descripción', 'Unidad', 'Cant.', 'Costo unit.', 'Subtotal', ''].map(h => (
-                    <div key={h} style={{ color: C.textMuted, fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{h}</div>
-                  ))}
+            <div>
+              {form.items.map((it, idx) => (
+                <div key={idx} style={{ display: 'flex', gap: '8px', padding: '6px 0', alignItems: 'center' }}>
+                  <input value={it.descripcion} onChange={e => actualizarCaracteristica(idx, e.target.value)}
+                    placeholder="Ej: Aislación térmica SIP de alta eficiencia"
+                    style={{ ...S.input, padding: '8px 10px', fontSize: '0.85rem', flex: 1 }} onFocus={inputFocus} onBlur={inputBlur} />
+                  <button onClick={() => eliminarCaracteristica(idx)} style={{ background: 'rgba(239,68,68,0.1)', border: 'none', borderRadius: '6px', padding: '7px 10px', color: '#ef4444', cursor: 'pointer', fontSize: '0.8rem' }}>×</button>
                 </div>
-                {form.items.map((it, idx) => {
-                  const subtotal = (Number(it.cantidad) || 0) * (Number(it.costo_unitario) || 0);
-                  return (
-                    <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 90px 90px 130px 130px 36px', gap: '8px', padding: '8px 0', borderBottom: `1px solid ${C.border}`, alignItems: 'center' }}>
-                      <input value={it.descripcion} onChange={e => actualizarItem(idx, 'descripcion', e.target.value)}
-                        disabled={!!it.parte_id}
-                        style={{ ...S.input, padding: '6px 10px', fontSize: '0.85rem', opacity: it.parte_id ? 0.7 : 1 }} onFocus={inputFocus} onBlur={inputBlur} />
-                      <input value={it.unidad} onChange={e => actualizarItem(idx, 'unidad', e.target.value)}
-                        disabled={!!it.parte_id}
-                        style={{ ...S.input, padding: '6px 10px', fontSize: '0.85rem', opacity: it.parte_id ? 0.7 : 1 }} onFocus={inputFocus} onBlur={inputBlur} />
-                      <input type="number" min="0" step="0.01" value={it.cantidad} onChange={e => actualizarItem(idx, 'cantidad', e.target.value)}
-                        style={{ ...S.input, padding: '6px 10px', fontSize: '0.85rem', textAlign: 'center' }} onFocus={inputFocus} onBlur={inputBlur} />
-                      <input type="number" min="0" step="0.01" value={it.costo_unitario} onChange={e => actualizarItem(idx, 'costo_unitario', e.target.value)}
-                        style={{ ...S.input, padding: '6px 10px', fontSize: '0.85rem', textAlign: 'right' }} onFocus={inputFocus} onBlur={inputBlur} />
-                      <div style={{ color: C.textSub, fontSize: '0.85rem', textAlign: 'right', paddingRight: '8px' }}>{money(subtotal)}</div>
-                      <button onClick={() => eliminarItem(idx)} style={{ background: 'rgba(239,68,68,0.1)', border: 'none', borderRadius: '6px', padding: '5px 8px', color: '#ef4444', cursor: 'pointer', fontSize: '0.8rem' }}>×</button>
-                    </div>
-                  );
-                })}
-              </div>
+              ))}
             </div>
           )}
         </div>
@@ -440,7 +369,8 @@ export default function Presupuestador() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px', alignItems: 'end' }}>
             <div>
               <label style={S.label}>Costo total</label>
-              <div style={{ ...S.input, background: 'rgba(255,255,255,0.02)', color: C.textSub, fontWeight: 600 }}>{money(costoTotal)}</div>
+              <input type="number" min="0" step="1" value={form.costo_total} onChange={e => handleCostoChange(e.target.value)}
+                style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
             </div>
             <div>
               <label style={S.label}>Margen %</label>

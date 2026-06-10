@@ -1,5 +1,6 @@
 import { supabase, corsHeaders, getUserFromToken, getAuthUser } from './lib/supabase.js';
 import { jsPDF } from 'jspdf';
+import { LOGO_PNG_BASE64 } from './lib/logo.js';
 
 export async function handler(event) {
   if (event.httpMethod === 'OPTIONS') {
@@ -38,20 +39,31 @@ export async function handler(event) {
   const margin = 15;
   let y = margin;
 
-  // Header
-  doc.setFillColor(212, 165, 116);
-  doc.rect(0, 0, pageW, 30, 'F');
-  doc.setTextColor(26, 26, 46);
-  doc.setFontSize(18);
-  doc.setFont('helvetica', 'bold');
-  doc.text('ALMAMOD', margin, 13);
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Presupuesto #${String(presupuesto.numero).padStart(3, '0')}`, margin, 21);
-  doc.text(`Generado: ${new Date(presupuesto.created_at).toLocaleDateString('es-AR')}`, pageW - margin, 21, { align: 'right' });
-
-  y = 40;
+  // Fondo blanco + texto negro
+  doc.setFillColor(255, 255, 255);
+  doc.rect(0, 0, pageW, 297, 'F');
   doc.setTextColor(0, 0, 0);
+
+  // Logo centrado
+  const logoW = 70;
+  const logoH = logoW * (234 / 1042);
+  doc.addImage(LOGO_PNG_BASE64, 'PNG', (pageW - logoW) / 2, y, logoW, logoH);
+  y += logoH + 8;
+
+  // Título + número + fecha
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Presupuesto #${String(presupuesto.numero).padStart(3, '0')}`, pageW / 2, y, { align: 'center' });
+  y += 6;
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Fecha: ${new Date(presupuesto.created_at).toLocaleDateString('es-AR')}`, pageW / 2, y, { align: 'center' });
+  y += 10;
+
+  doc.setDrawColor(212, 165, 116);
+  doc.setLineWidth(0.5);
+  doc.line(margin, y, pageW - margin, y);
+  y += 10;
 
   // Datos del modelo
   doc.setFontSize(13);
@@ -63,76 +75,65 @@ export async function handler(event) {
   if (presupuesto.modelo_descripcion) {
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.setTextColor(80, 80, 80);
     const lines = doc.splitTextToSize(presupuesto.modelo_descripcion, pageW - margin * 2);
     doc.text(lines, margin, y);
     y += lines.length * 4.5 + 2;
   }
 
   // Datos del cliente
-  doc.setTextColor(0, 0, 0);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   if (presupuesto.cliente_nombre) { doc.text(`Cliente: ${presupuesto.cliente_nombre}`, margin, y); y += 5; }
   if (presupuesto.cliente_contacto) { doc.text(`Contacto: ${presupuesto.cliente_contacto}`, margin, y); y += 5; }
   if (presupuesto.cliente_direccion) { doc.text(`Dirección: ${presupuesto.cliente_direccion}`, margin, y); y += 5; }
 
-  y += 5;
+  y += 6;
 
-  // Tabla de items
-  doc.setFillColor(243, 244, 246);
-  doc.rect(margin, y, pageW - margin * 2, 8, 'F');
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Descripción', margin + 2, y + 5.5);
-  doc.text('Unidad', margin + 110, y + 5.5);
-  doc.text('Cant.', margin + 135, y + 5.5);
-  doc.text('Precio', margin + 180, y + 5.5, { align: 'right' });
-  y += 10;
-
-  doc.setFont('helvetica', 'normal');
-  for (const item of items || []) {
-    if (y > 270) {
-      doc.addPage();
-      y = margin;
-    }
-    const subtotal = Number(item.cantidad || 0) * Number(item.costo_unitario || 0);
-
-    doc.setFontSize(8);
-    doc.text(doc.splitTextToSize(item.descripcion, 100)[0], margin + 2, y);
-    doc.text(item.unidad || '-', margin + 110, y);
-    doc.text(String(item.cantidad), margin + 145, y, { align: 'right' });
-    doc.text(money(subtotal), margin + 180, y, { align: 'right' });
-
-    doc.setDrawColor(220, 220, 220);
-    doc.line(margin, y + 2, pageW - margin, y + 2);
+  // Características incluidas
+  if (items && items.length) {
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Características incluidas', margin, y);
     y += 7;
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    for (const item of items) {
+      const lines = doc.splitTextToSize(item.descripcion, pageW - margin * 2 - 6);
+      if (y + lines.length * 5 > 270) {
+        doc.addPage();
+        doc.setFillColor(255, 255, 255);
+        doc.rect(0, 0, pageW, 297, 'F');
+        doc.setTextColor(0, 0, 0);
+        y = margin;
+      }
+      doc.text('•', margin, y);
+      doc.text(lines, margin + 5, y);
+      y += lines.length * 5;
+    }
+    y += 5;
   }
 
-  // Totales
-  y += 5;
-  if (y > 260) { doc.addPage(); y = margin; }
+  // Precio total
+  if (y > 260) { doc.addPage(); doc.setFillColor(255, 255, 255); doc.rect(0, 0, pageW, 297, 'F'); doc.setTextColor(0, 0, 0); y = margin; }
   doc.setDrawColor(212, 165, 116);
   doc.setLineWidth(0.5);
-  doc.line(margin + 100, y, pageW - margin, y);
-  y += 7;
+  doc.line(margin + 90, y, pageW - margin, y);
+  y += 8;
 
-  doc.setFontSize(11);
+  doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(26, 26, 46);
-  doc.text('TOTAL:', margin + 130, y);
+  doc.text('PRECIO TOTAL:', margin + 90, y);
   doc.text(money(presupuesto.precio_total), pageW - margin, y, { align: 'right' });
 
   // Notas
   if (presupuesto.notas) {
-    y += 12;
+    y += 14;
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 0, 0);
     doc.text('Notas:', margin, y);
     y += 5;
     doc.setFont('helvetica', 'normal');
-    doc.setTextColor(80, 80, 80);
     const lines = doc.splitTextToSize(presupuesto.notas, pageW - margin * 2);
     doc.text(lines, margin, y);
   }
@@ -140,7 +141,7 @@ export async function handler(event) {
   // Footer
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(150, 150, 150);
+  doc.setTextColor(120, 120, 120);
   doc.text('AlmaMod · C. la Caña de Azúcar 18, Neuquén, Patagonia Argentina · almamod.com.ar', pageW / 2, 290, { align: 'center' });
 
   const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
