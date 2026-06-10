@@ -24,6 +24,7 @@ import SitioContenido from './pages/SitioContenido';
 import PIC from './pages/PIC';
 import OT from './pages/OT';
 import REI from './pages/REI';
+import Presupuestador from './pages/Presupuestador';
 import ResetPassword from './pages/ResetPassword';
 
 export default function AppRouter() {
@@ -204,6 +205,14 @@ export default function AppRouter() {
         element={
           <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="rei" mode="read">
             <REI />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="presupuestador"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno']} module="presupuestador" mode="read">
+            <Presupuestador />
           </ProtectedRoute>
         }
       />

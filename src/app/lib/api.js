@@ -156,6 +156,31 @@ export const api = {
     update: (token, data) => request('ot', { method: 'PUT', body: data, token }),
     delete: (token, id)   => request(`ot?id=${id}`, { method: 'DELETE', token }),
   },
+  otIncidencias: {
+    list:   (token, ot_id) => request(`ot-incidencias?ot_id=${ot_id}`, { token }),
+    create: (token, data)  => request('ot-incidencias', { method: 'POST', body: data, token }),
+    delete: (token, id)    => request(`ot-incidencias?id=${id}`, { method: 'DELETE', token }),
+  },
+  presupuestos: {
+    list:   (token)       => request('presupuestos', { token }),
+    get:    (token, id)   => request(`presupuestos?id=${id}`, { token }),
+    create: (token, data) => request('presupuestos', { method: 'POST', body: data, token }),
+    update: (token, data) => request('presupuestos', { method: 'PUT', body: data, token }),
+    delete: (token, id)   => request(`presupuestos?id=${id}`, { method: 'DELETE', token }),
+    pdf: async (token, id, numero) => {
+      const res = await fetch(`${BASE}/presupuesto-pdf?id=${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Error al generar PDF');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `almamod-presupuesto-${numero}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    },
+  },
   rei: {
     list:           (token)              => request('rei', { token }),
     get:            (token, id)          => request(`rei?id=${id}`, { token }),

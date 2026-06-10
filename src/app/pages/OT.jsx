@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
@@ -12,6 +12,23 @@ const ESTADO_COLOR = {
 };
 const ESTADO_LABEL  = { pendiente: 'Pendiente', en_proceso: 'En proceso', completada: 'Completada', cancelada: 'Cancelada' };
 const TIPO_COLOR    = { fabricacion: { bg: 'rgba(139,92,246,0.15)', text: '#8b5cf6' }, servicio: { bg: C.goldDim, text: C.gold } };
+
+const TIPO_INC_COLOR = { avance: { bg: C.blueDim, text: C.blue }, incidencia: { bg: C.redDim, text: '#ef4444' } };
+const TIPO_INC_LABEL = { avance: 'Avance', incidencia: 'Incidencia' };
+
+const CLOUD_NAME = 'dlshym1te';
+const UPLOAD_PRESET = 'almamod_cms';
+
+async function uploadFoto(file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', UPLOAD_PRESET);
+  fd.append('folder', 'almamod/produccion');
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.secure_url;
+}
 
 function EstadoBadge({ estado }) {
   const col = ESTADO_COLOR[estado] || ESTADO_COLOR.pendiente;
@@ -160,9 +177,160 @@ const TRANSICIONES = {
   en_proceso: { label: 'Completar', next: 'completada', color: C.green },
 };
 
+function IncidenciasPanel({ ot }) {
+  const { token } = useAuth();
+  const fileRef = useRef();
+  const [incidencias, setIncidencias] = useState([]);
+  const [etapas, setEtapas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [tipo, setTipo] = useState('avance');
+  const [etapaId, setEtapaId] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [foto, setFoto] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const cargar = () => {
+    setLoading(true);
+    api.otIncidencias.list(token, ot.id)
+      .then(d => setIncidencias(d.incidencias || []))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    cargar();
+    if (ot.modelo_id) {
+      api.etapasProduccion.list(token, ot.modelo_id).then(d => setEtapas(d.etapas || [])).catch(() => {});
+    }
+  }, [ot.id]);
+
+  const handleFile = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setFoto(f);
+    const reader = new FileReader();
+    reader.onload = ev => setFotoPreview(ev.target.result);
+    reader.readAsDataURL(f);
+    e.target.value = '';
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!descripcion.trim()) return;
+    setSaving(true); setError('');
+    try {
+      let fotos = [];
+      if (foto) fotos = [await uploadFoto(foto)];
+      await api.otIncidencias.create(token, {
+        ot_id: ot.id,
+        etapa_produccion_id: etapaId || undefined,
+        tipo,
+        descripcion: descripcion.trim(),
+        fotos,
+      });
+      setDescripcion(''); setFoto(null); setFotoPreview(null); setTipo('avance'); setEtapaId('');
+      cargar();
+    } catch (err) {
+      setError(err.message);
+    } finally { setSaving(false); }
+  };
+
+  const eliminar = async (id) => {
+    if (!confirm('¿Eliminar este registro?')) return;
+    await api.otIncidencias.delete(token, id);
+    cargar();
+  };
+
+  return (
+    <div style={{ borderTop: `1px solid ${C.border}`, padding: '14px 16px', background: 'rgba(0,0,0,0.15)' }} onClick={e => e.stopPropagation()}>
+      <div style={{ color: C.gold, fontSize: '0.78rem', fontWeight: 700, marginBottom: '10px', letterSpacing: '0.04em' }}>
+        AVANCES E INCIDENCIAS
+      </div>
+
+      <form onSubmit={handleSubmit} style={{ marginBottom: '14px' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            {[['avance', '📈 Avance'], ['incidencia', '⚠️ Incidencia']].map(([val, label]) => (
+              <button key={val} type="button" onClick={() => setTipo(val)}
+                style={{ padding: '6px 12px', borderRadius: '7px', border: `1px solid ${tipo === val ? C.gold : C.border}`, background: tipo === val ? C.goldDim : 'transparent', color: tipo === val ? C.gold : C.textMuted, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600 }}>
+                {label}
+              </button>
+            ))}
+          </div>
+          {etapas.length > 0 && (
+            <select value={etapaId} onChange={e => setEtapaId(e.target.value)}
+              style={{ ...S.input, width: 'auto', fontSize: '0.8rem', padding: '6px 10px' }}
+              onFocus={inputFocus} onBlur={inputBlur}>
+              <option value="">— Sin etapa —</option>
+              {etapas.map(ep => <option key={ep.id} value={ep.id}>{ep.nombre}</option>)}
+            </select>
+          )}
+        </div>
+        <textarea value={descripcion} onChange={e => setDescripcion(e.target.value)} rows={2}
+          placeholder="Detalle del avance o incidencia..."
+          style={{ ...S.input, resize: 'vertical', fontFamily: 'inherit', minHeight: '50px', marginBottom: '8px' }}
+          onFocus={inputFocus} onBlur={inputBlur} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <button type="button" onClick={() => fileRef.current?.click()} style={{ ...S.btnGhost, padding: '6px 12px', fontSize: '0.78rem' }}>
+            📷 {foto ? foto.name : 'Adjuntar foto'}
+          </button>
+          <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFile} />
+          <button type="submit" disabled={saving || !descripcion.trim()}
+            style={{ ...S.btnGold, padding: '6px 16px', fontSize: '0.8rem', opacity: (saving || !descripcion.trim()) ? 0.5 : 1 }}>
+            {saving ? 'Guardando...' : '+ Agregar'}
+          </button>
+        </div>
+        {fotoPreview && <img src={fotoPreview} alt="" style={{ marginTop: '8px', maxHeight: '90px', borderRadius: '6px' }} />}
+        {error && <div style={{ ...S.alertError, marginTop: '8px', fontSize: '0.78rem' }}>{error}</div>}
+      </form>
+
+      {loading ? (
+        <div style={{ color: C.textMuted, fontSize: '0.8rem' }}>Cargando...</div>
+      ) : incidencias.length === 0 ? (
+        <div style={{ color: C.textMuted, fontSize: '0.8rem' }}>Sin registros todavía</div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {incidencias.map(inc => {
+            const col = TIPO_INC_COLOR[inc.tipo] || TIPO_INC_COLOR.avance;
+            return (
+              <div key={inc.id} style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', borderLeft: `3px solid ${col.text}` }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
+                  <span style={{ background: col.bg, color: col.text, fontSize: '0.68rem', fontWeight: 700, padding: '1px 8px', borderRadius: '20px' }}>
+                    {TIPO_INC_LABEL[inc.tipo] || inc.tipo}
+                  </span>
+                  {inc.etapas_produccion && (
+                    <span style={{ color: C.textMuted, fontSize: '0.72rem' }}>· {inc.etapas_produccion.nombre}</span>
+                  )}
+                  <span style={{ color: C.textMuted, fontSize: '0.7rem', marginLeft: 'auto' }}>
+                    {inc.usuario?.nombre ? `${inc.usuario.nombre} · ` : ''}
+                    {new Date(inc.created_at).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                  <button onClick={() => eliminar(inc.id)} style={{ background: 'none', border: 'none', color: C.red, cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1 }}>×</button>
+                </div>
+                <div style={{ color: C.text, fontSize: '0.84rem' }}>{inc.descripcion}</div>
+                {inc.fotos?.length > 0 && (
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
+                    {inc.fotos.map((url, i) => (
+                      <a key={i} href={url} target="_blank" rel="noreferrer">
+                        <img src={url} alt="" style={{ height: '60px', borderRadius: '6px', objectFit: 'cover' }} />
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function OTRow({ ot, onRefresh }) {
   const { token } = useAuth();
   const [actionLoading, setActionLoading] = useState(null);
+  const [expanded, setExpanded] = useState(false);
 
   const avanzar = async () => {
     const t = TRANSICIONES[ot.estado];
@@ -186,45 +354,52 @@ function OTRow({ ot, onRefresh }) {
   const trans = TRANSICIONES[ot.estado];
 
   return (
-    <div style={{ ...S.card, display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-      <span style={{ color: C.textMuted, fontSize: '0.78rem', fontWeight: 600, minWidth: '44px' }}>
-        #{String(ot.numero).padStart(3, '0')}
-      </span>
-      <TipoBadge tipo={ot.tipo} />
-      <EstadoBadge estado={ot.estado} />
+    <div style={{ ...S.card, padding: 0, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', padding: '14px 16px', cursor: 'pointer' }}
+        onClick={() => setExpanded(v => !v)}>
+        <span style={{ color: C.textMuted, fontSize: '0.78rem', fontWeight: 600, minWidth: '44px' }}>
+          #{String(ot.numero).padStart(3, '0')}
+        </span>
+        <TipoBadge tipo={ot.tipo} />
+        <EstadoBadge estado={ot.estado} />
 
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ot.titulo}</div>
-        {(ot.obras || ot.modelos) && (
-          <div style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '2px' }}>
-            {ot.obras && `Obra #${ot.obras.numero_obra}`}
-            {ot.obras && ot.modelos && ' · '}
-            {ot.modelos && ot.modelos.nombre}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ot.titulo}</div>
+          {(ot.obras || ot.modelos) && (
+            <div style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '2px' }}>
+              {ot.obras && `Obra #${ot.obras.numero_obra}`}
+              {ot.obras && ot.modelos && ' · '}
+              {ot.modelos && ot.modelos.nombre}
+            </div>
+          )}
+        </div>
+
+        {ot.fecha_entrega && (
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <div style={{ color: C.textMuted, fontSize: '0.7rem' }}>Entrega</div>
+            <div style={{ color: C.text, fontSize: '0.8rem' }}>{new Date(ot.fecha_entrega + 'T00:00').toLocaleDateString('es-AR')}</div>
           </div>
         )}
-      </div>
 
-      {ot.fecha_entrega && (
-        <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <div style={{ color: C.textMuted, fontSize: '0.7rem' }}>Entrega</div>
-          <div style={{ color: C.text, fontSize: '0.8rem' }}>{new Date(ot.fecha_entrega + 'T00:00').toLocaleDateString('es-AR')}</div>
+        <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }} onClick={e => e.stopPropagation()}>
+          {trans && (
+            <button onClick={avanzar} disabled={!!actionLoading}
+              style={{ padding: '5px 14px', fontSize: '0.78rem', background: `rgba(${trans.color === C.blue ? '102,126,234' : '16,185,129'},0.15)`, color: trans.color, border: `1px solid ${trans.color}33`, borderRadius: '7px', cursor: 'pointer', fontWeight: 600 }}>
+              {actionLoading === 'avanzar' ? '...' : trans.label}
+            </button>
+          )}
+          {!['completada', 'cancelada'].includes(ot.estado) && (
+            <button onClick={cancelar} disabled={!!actionLoading}
+              style={{ padding: '5px 10px', fontSize: '0.78rem', background: C.redDim, color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '7px', cursor: 'pointer', fontWeight: 600 }}>
+              ✕
+            </button>
+          )}
         </div>
-      )}
 
-      <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
-        {trans && (
-          <button onClick={avanzar} disabled={!!actionLoading}
-            style={{ padding: '5px 14px', fontSize: '0.78rem', background: `rgba(${trans.color === C.blue ? '102,126,234' : '16,185,129'},0.15)`, color: trans.color, border: `1px solid ${trans.color}33`, borderRadius: '7px', cursor: 'pointer', fontWeight: 600 }}>
-            {actionLoading === 'avanzar' ? '...' : trans.label}
-          </button>
-        )}
-        {!['completada', 'cancelada'].includes(ot.estado) && (
-          <button onClick={cancelar} disabled={!!actionLoading}
-            style={{ padding: '5px 10px', fontSize: '0.78rem', background: C.redDim, color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '7px', cursor: 'pointer', fontWeight: 600 }}>
-            ✕
-          </button>
-        )}
+        <span style={{ color: C.textMuted, fontSize: '0.75rem' }}>{expanded ? '▲' : '▼'}</span>
       </div>
+
+      {expanded && <IncidenciasPanel ot={ot} />}
     </div>
   );
 }

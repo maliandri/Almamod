@@ -34,6 +34,99 @@ function matchPartes(items, partes) {
   });
 }
 
+function sugerirCodigo(descripcion, codigoOriginal) {
+  if (codigoOriginal) return codigoOriginal.trim().toUpperCase();
+  return (descripcion || '')
+    .toUpperCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^A-Z0-9\s]/g, '')
+    .trim()
+    .split(/\s+/)
+    .slice(0, 4)
+    .join('-');
+}
+
+function ModalNuevaParte({ item, familias, onClose, onCreated }) {
+  const { token } = useAuth();
+  const [form, setForm] = useState({
+    codigo: sugerirCodigo(item.descripcion, item.codigo),
+    nombre: item.descripcion || '',
+    unidad: item.unidad || 'unidad',
+    familia_id: item._familia_filtro || '',
+    costo: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const f = (k, v) => setForm(p => ({ ...p, [k]: v }));
+
+  const handleSave = async () => {
+    if (!form.codigo.trim() || !form.nombre.trim()) { setError('Código y nombre son requeridos'); return; }
+    setLoading(true); setError('');
+    try {
+      const { parte } = await api.partes.create(token, {
+        codigo: form.codigo.trim(),
+        nombre: form.nombre.trim(),
+        unidad: form.unidad.trim() || 'unidad',
+        costo: Number(form.costo) || 0,
+        stock_actual: 0,
+        stock_minimo: 0,
+        familia_id: form.familia_id || null,
+      });
+      onCreated(parte);
+    } catch (err) {
+      setError(err.message);
+    } finally { setLoading(false); }
+  };
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+      <div style={{ ...S.card, width: '100%', maxWidth: '440px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+          <h2 style={{ ...S.h2, margin: 0, color: C.gold }}>Nueva parte del catálogo</h2>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.textMuted, fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
+        </div>
+        <p style={{ color: C.textMuted, fontSize: '0.8rem', marginTop: 0, marginBottom: '16px' }}>
+          Se creará en el catálogo de componentes y quedará vinculada a este ítem del remito.
+        </p>
+
+        <div style={{ marginBottom: '12px' }}>
+          <label style={S.label}>Código *</label>
+          <input value={form.codigo} onChange={e => f('codigo', e.target.value.toUpperCase())} style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
+        </div>
+        <div style={{ marginBottom: '12px' }}>
+          <label style={S.label}>Nombre / Descripción *</label>
+          <input value={form.nombre} onChange={e => f('nombre', e.target.value)} style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+          <div>
+            <label style={S.label}>Unidad</label>
+            <input value={form.unidad} onChange={e => f('unidad', e.target.value)} style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
+          </div>
+          <div>
+            <label style={S.label}>Costo $</label>
+            <input type="number" min="0" value={form.costo} onChange={e => f('costo', e.target.value)} style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
+          </div>
+        </div>
+        <div style={{ marginBottom: '18px' }}>
+          <label style={S.label}>Familia</label>
+          <select value={form.familia_id} onChange={e => f('familia_id', e.target.value)} style={S.select}>
+            <option value="">— Sin familia —</option>
+            {familias.map(fam => <option key={fam.id} value={fam.id}>{fam.nombre}</option>)}
+          </select>
+        </div>
+
+        {error && <div style={{ ...S.alertError, marginBottom: '12px' }}>{error}</div>}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={onClose} style={{ ...S.btnGhost, flex: 1 }}>Cancelar</button>
+          <button onClick={handleSave} disabled={loading} style={{ ...S.btnGold, flex: 1, opacity: loading ? 0.6 : 1 }}>
+            {loading ? 'Creando...' : 'Crear y vincular'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function RemitoScan() {
   const { token } = useAuth();
   const fileRef = useRef();
@@ -47,6 +140,7 @@ export default function RemitoScan() {
   const [guardando, setGuardando] = useState(false);
   const [guardado, setGuardado] = useState(false);
   const [error, setError] = useState('');
+  const [nuevaParteIdx, setNuevaParteIdx] = useState(null);
 
   useEffect(() => {
     Promise.all([
@@ -101,6 +195,17 @@ export default function RemitoScan() {
 
   const removeItem = (i) => {
     setResultado(prev => ({ ...prev, items: prev.items.filter((_, idx) => idx !== i) }));
+  };
+
+  const handleParteCreada = (idx, parte) => {
+    setPartes(prev => [...prev, parte]);
+    setResultado(prev => ({
+      ...prev,
+      items: prev.items.map((it, i) => i === idx
+        ? { ...it, parte_id: parte.id, _parte: parte, _familia_filtro: parte.familia_id ? String(parte.familia_id) : '' }
+        : it),
+    }));
+    setNuevaParteIdx(null);
   };
 
   const handleGuardar = async () => {
@@ -240,7 +345,10 @@ export default function RemitoScan() {
                         </select>
                         <select
                           value={item.parte_id || ''}
-                          onChange={e => updateItem(i, 'parte_id', e.target.value)}
+                          onChange={e => {
+                            if (e.target.value === '__nueva__') { setNuevaParteIdx(i); return; }
+                            updateItem(i, 'parte_id', e.target.value);
+                          }}
                           style={{
                             ...S.select,
                             padding: '4px 7px',
@@ -250,6 +358,7 @@ export default function RemitoScan() {
                           }}
                         >
                           <option value="">— Sin vincular</option>
+                          <option value="__nueva__">+ Crear nueva parte...</option>
                           {partesFiltradas.map(p => (
                             <option key={p.id} value={p.id}>{p.codigo} — {p.nombre}</option>
                           ))}
@@ -276,6 +385,15 @@ export default function RemitoScan() {
           </div>
         )}
       </div>
+
+      {nuevaParteIdx !== null && (
+        <ModalNuevaParte
+          item={resultado.items[nuevaParteIdx]}
+          familias={familias}
+          onClose={() => setNuevaParteIdx(null)}
+          onCreated={(parte) => handleParteCreada(nuevaParteIdx, parte)}
+        />
+      )}
     </AppLayout>
   );
 }

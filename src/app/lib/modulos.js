@@ -63,6 +63,14 @@ export const MODULOS = [
     defaultReadRoles: ['superadmin', 'dueno'],
     defaultWriteRoles: ['superadmin', 'dueno'],
   },
+  {
+    key: 'presupuestador',
+    label: 'Presupuestador',
+    icon: '🧮',
+    desc: 'Presupuestos para clientes (modelos del catálogo o personalizados)',
+    defaultReadRoles: ['superadmin', 'dueno'],
+    defaultWriteRoles: ['superadmin', 'dueno'],
+  },
 ];
 
 const PERM_LABEL = { none: 'Sin acceso', read: 'Solo lectura', write: 'Escritura' };

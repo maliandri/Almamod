@@ -60,6 +60,7 @@ const NAV_SECTIONS = [
   {
     label: 'Administración',
     items: [
+      { to: '/app/presupuestador', module: 'presupuestador', icon: '🧮', label: 'Presupuestador', roles: ['superadmin','dueno'] },
       { to: '/app/usuarios',    module: 'usuarios', icon: '👥', label: 'Usuarios',     roles: ['superadmin','dueno'] },
       { to: '/app/crm-almita',                      icon: '🤖', label: 'CRM Almita',   roles: ['superadmin','dueno'] },
     ],
