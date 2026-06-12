@@ -187,6 +187,7 @@ function EditModal({ usuario, onClose, onSave }) {
           <div style={{ marginBottom: '14px' }}>
             <label style={S.label}>Teléfono</label>
             <input
+              type="tel"
               value={form.telefono}
               onChange={e => setForm(p => ({ ...p, telefono: e.target.value }))}
               placeholder="+54 299 ..."

@@ -180,19 +180,29 @@ export default function AppLayout({ children }) {
   // Cierra sidebar al navegar en móvil
   const closeSidebar = () => setSidebarOpen(false);
 
+  // Escape cierra el sidebar móvil
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') setSidebarOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [sidebarOpen]);
+
   return (
-    <div style={{ display: 'flex', height: '100vh', background: 'var(--bg-primary, #0f172a)', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', height: '100dvh', background: 'var(--bg-primary, #0f172a)', overflow: 'hidden' }}>
       <ThemeToggle />
 
       {/* Sidebar desktop — siempre visible */}
       {!isMobile && <SidebarContent />}
 
-      {/* Sidebar móvil — overlay */}
+      {/* Sidebar móvil — overlay con slide-in */}
       {isMobile && sidebarOpen && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 40, display: 'flex' }}>
-          <SidebarContent onClose={closeSidebar} />
+          <div className="sidebar-slide-in" style={{ height: '100%' }}>
+            <SidebarContent onClose={closeSidebar} />
+          </div>
           <div style={{ flex: 1, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
-            onClick={closeSidebar} />
+            onClick={closeSidebar} aria-label="Cerrar menú" />
         </div>
       )}
 
@@ -204,21 +214,51 @@ export default function AppLayout({ children }) {
           <div style={{
             background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
             borderBottom: '1px solid rgba(212,165,116,0.15)',
-            padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0,
+            padding: '6px 10px', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0,
           }}>
-            <button onClick={() => setSidebarOpen(true)}
-              style={{ background: 'transparent', border: 'none', color: '#d4a574', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>
+            <button onClick={() => setSidebarOpen(true)} aria-label="Abrir menú"
+              style={{
+                background: 'transparent', border: 'none', color: '#d4a574', fontSize: '1.4rem',
+                cursor: 'pointer', lineHeight: 1, minWidth: '44px', minHeight: '44px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
               ☰
             </button>
             <img src={logoAlmamod} alt="AlmaMod" style={{ height: '26px', objectFit: 'contain' }} />
           </div>
         )}
 
-        <main style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', background: 'var(--bg-primary, #0f172a)' }}>
+        <main className="app-main" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', background: 'var(--bg-primary, #0f172a)' }}>
           <style>{`
+            .sidebar-slide-in { animation: sidebarSlide 0.25s ease-out; }
+            @keyframes sidebarSlide {
+              from { transform: translateX(-100%); }
+              to   { transform: translateX(0); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .sidebar-slide-in { animation: none; }
+            }
             @media (max-width: 767px) {
-              .admin-page { padding: 16px 14px !important; }
+              /* Padding de página compacto (las páginas usan inline 28px 32px) */
+              .app-main > div { padding: 16px 12px !important; }
+              .admin-page { padding: 16px 12px !important; }
               .admin-page > * { max-width: 100% !important; }
+
+              /* iOS: font-size < 16px en inputs dispara zoom automático al enfocar */
+              .app-main input, .app-main select, .app-main textarea {
+                font-size: 16px !important;
+              }
+              .app-main input:not([type=checkbox]):not([type=radio]), .app-main select {
+                min-height: 44px;
+              }
+
+              /* Touch targets mínimos */
+              .app-main button { min-height: 44px; }
+              /* Links del sidebar (está fuera de .app-main; el sitio público no se renderiza en /app) */
+              nav a { padding-top: 12px !important; padding-bottom: 12px !important; }
+
+              /* Tablas siempre desplazables sin romper la página */
+              .app-main table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
             }
           `}</style>
           {children}

@@ -153,7 +153,7 @@ function CrearModal({ onClose, onCreado }) {
             <div style={{ color: C.gold, fontSize: '0.78rem', fontWeight: 700, marginBottom: '10px', letterSpacing: '0.04em' }}>
               CARGAR DESDE ETAPA BOM
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px', alignItems: 'end' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '8px', alignItems: 'end' }}>
               <div>
                 <label style={{ ...S.label, marginBottom: '4px' }}>Modelo</label>
                 <select value={modeloId} onChange={e => setModeloId(e.target.value)}
@@ -291,28 +291,30 @@ function REIRow({ rei, onRefresh }) {
           {!detail ? (
             <div style={{ color: C.textMuted, fontSize: '0.82rem' }}>Cargando...</div>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-              <thead>
-                <tr>
-                  {['Código', 'Componente', 'Unidad', 'Cantidad', 'Stock'].map(h => (
-                    <th key={h} style={{ textAlign: 'left', color: C.textMuted, fontWeight: 600, padding: '4px 8px', borderBottom: `1px solid ${C.border}` }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {(detail.rei_items || []).map(it => (
-                  <tr key={it.id}>
-                    <td style={{ padding: '6px 8px', color: C.textMuted }}>{it.partes?.codigo}</td>
-                    <td style={{ padding: '6px 8px', color: C.text }}>{it.partes?.nombre}</td>
-                    <td style={{ padding: '6px 8px', color: C.textMuted }}>{it.partes?.unidad}</td>
-                    <td style={{ padding: '6px 8px', color: C.gold, fontWeight: 600 }}>{it.cantidad}</td>
-                    <td style={{ padding: '6px 8px', color: (it.partes?.stock_actual || 0) < (it.partes?.stock_minimo || 0) ? '#ef4444' : C.textMuted }}>
-                      {it.partes?.stock_actual ?? '—'}
-                    </td>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+              <table style={{ width: '100%', minWidth: '460px', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                <thead>
+                  <tr>
+                    {['Código', 'Componente', 'Unidad', 'Cantidad', 'Stock'].map(h => (
+                      <th key={h} style={{ textAlign: 'left', color: C.textMuted, fontWeight: 600, padding: '4px 8px', borderBottom: `1px solid ${C.border}` }}>{h}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {(detail.rei_items || []).map(it => (
+                    <tr key={it.id}>
+                      <td style={{ padding: '6px 8px', color: C.textMuted }}>{it.partes?.codigo}</td>
+                      <td style={{ padding: '6px 8px', color: C.text }}>{it.partes?.nombre}</td>
+                      <td style={{ padding: '6px 8px', color: C.textMuted }}>{it.partes?.unidad}</td>
+                      <td style={{ padding: '6px 8px', color: C.gold, fontWeight: 600 }}>{it.cantidad}</td>
+                      <td style={{ padding: '6px 8px', color: (it.partes?.stock_actual || 0) < (it.partes?.stock_minimo || 0) ? '#ef4444' : C.textMuted }}>
+                        {it.partes?.stock_actual ?? '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}
