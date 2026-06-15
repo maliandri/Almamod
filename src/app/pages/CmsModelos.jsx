@@ -275,15 +275,15 @@ function EditModal({ modelo, onClose, onSaved }) {
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 50, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '24px 16px', overflowY: 'auto' }}
-      onClick={e => e.target === e.currentTarget && onClose()}>
-      <div style={{ ...S.card, background: '#1a2035', width: '100%', maxWidth: '580px', marginTop: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ ...S.h2, margin: 0, color: C.gold }}>{modelo.nombre}</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.textMuted, fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
-        </div>
+    <div style={{ position: 'fixed', inset: 0, background: '#1a2035', zIndex: 50, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
+        <h2 style={{ ...S.h2, margin: 0, color: C.gold }}>{modelo.nombre}</h2>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.textMuted, fontSize: '1.6rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
+      </div>
 
-        <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           <div style={{ marginBottom: '16px' }}>
             <label style={S.label}>Nombre del modelo</label>
             <input value={form.nombre} onChange={e => setForm(p => ({ ...p, nombre: e.target.value }))}
@@ -354,15 +354,16 @@ function EditModal({ modelo, onClose, onSaved }) {
           </div>
 
           {error && <div style={{ ...S.alertError, marginBottom: '14px' }}>{error}</div>}
-
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button type="submit" disabled={saving} style={{ ...S.btnGold, flex: 1, opacity: saving ? 0.6 : 1 }}>
-              {saving ? 'Guardando...' : 'Guardar cambios'}
-            </button>
-            <button type="button" onClick={onClose} style={S.btnGhost}>Cancelar</button>
           </div>
-        </form>
-      </div>
+        </div>
+
+        <div style={{ flexShrink: 0, padding: '14px 20px', borderTop: `1px solid ${C.border}`, background: '#161c2e', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+          <button type="button" onClick={onClose} style={S.btnGhost}>Cancelar</button>
+          <button type="submit" disabled={saving} style={{ ...S.btnGold, minWidth: '170px', opacity: saving ? 0.6 : 1 }}>
+            {saving ? 'Guardando...' : 'Guardar cambios'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
