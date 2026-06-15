@@ -20,6 +20,27 @@ function generarPublicId(modeloNombre, fotosActuales) {
   return `Modulos/ALMAMOD_${slug}_${sufijo}`;
 }
 
+// Categorías de documentación por modelo. grupo define visibilidad:
+// 'comercial' → clientes · 'tecnica' → solo dueño/depósito
+const DOC_CATS = [
+  { key: 'comercial',       label: 'Comercial',          grupo: 'comercial' },
+  { key: 'agua',            label: 'Agua',               grupo: 'tecnica' },
+  { key: 'gas',             label: 'Gas',                grupo: 'tecnica' },
+  { key: 'cloacas',         label: 'Plano de cloacas',   grupo: 'tecnica' },
+  { key: 'paneles_piso',    label: 'Paneles · Piso',     grupo: 'tecnica' },
+  { key: 'paneles_techo',   label: 'Paneles · Techo',    grupo: 'tecnica' },
+  { key: 'paneles_paredes', label: 'Paneles · Paredes',  grupo: 'tecnica' },
+];
+
+function generarDocPublicId(modeloNombre, cat, n) {
+  const slug = (modeloNombre || 'MODELO')
+    .toUpperCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/\s+/g, '_')
+    .replace(/[^A-Z0-9_]/g, '');
+  return `Documentos/ALMAMOD_${slug}_${cat.toUpperCase()}_${n + 1}`;
+}
+
 async function uploadToCloudinary(file, publicId) {
   const fd = new FormData();
   fd.append('file', file);
@@ -123,6 +144,55 @@ function FotosUnificadas({ fotos, fotosPortada, onAdd, onDelete, onTogglePortada
   );
 }
 
+function DocCatRow({ cat, urls, onUpload, onDelete, uploading }) {
+  const fileRef = useRef();
+  return (
+    <div style={{ marginBottom: '10px' }}>
+      <p style={{ color: C.textSub, fontSize: '0.78rem', fontWeight: 600, marginBottom: '6px' }}>{cat.label}</p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+        {urls.map((url, i) => (
+          <div key={i} style={{ position: 'relative', width: '74px', height: '74px', borderRadius: '8px', overflow: 'hidden', border: `1px solid ${C.border}` }}>
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              <img src={fotoThumb(url)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </a>
+            <button type="button" onClick={() => onDelete(cat.key, url)} title="Eliminar"
+              style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', width: '18px', height: '18px', color: '#fff', cursor: 'pointer', fontSize: '0.7rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+          </div>
+        ))}
+        <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+          style={{ width: '74px', height: '74px', background: C.goldDim, border: `2px dashed ${C.goldBorder}`, borderRadius: '8px', color: C.gold, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+          {uploading ? <span style={{ fontSize: '0.7rem' }}>...</span> : <><span style={{ fontSize: '1.2rem' }}>+</span><span style={{ fontSize: '0.6rem' }}>Subir</span></>}
+        </button>
+      </div>
+      <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+        onChange={async e => {
+          const files = Array.from(e.target.files || []);
+          for (const f of files) await onUpload(f, cat.key);
+          e.target.value = '';
+        }} />
+    </div>
+  );
+}
+
+function DocsEditor({ documentos, onUpload, onDelete, uploadingDoc }) {
+  return (
+    <div>
+      <div style={{ marginBottom: '12px', padding: '8px 12px', background: 'rgba(16,185,129,0.08)', borderRadius: '7px', border: '1px solid rgba(16,185,129,0.2)' }}>
+        <p style={{ color: C.green, fontSize: '0.72rem', fontWeight: 700, margin: '0 0 8px', letterSpacing: '0.04em' }}>🟢 COMERCIAL — visible para clientes</p>
+        {DOC_CATS.filter(c => c.grupo === 'comercial').map(cat => (
+          <DocCatRow key={cat.key} cat={cat} urls={documentos[cat.key] || []} onUpload={onUpload} onDelete={onDelete} uploading={uploadingDoc === cat.key} />
+        ))}
+      </div>
+      <div style={{ padding: '8px 12px', background: C.goldDim, borderRadius: '7px', border: `1px solid ${C.goldBorder}` }}>
+        <p style={{ color: C.gold, fontSize: '0.72rem', fontWeight: 700, margin: '0 0 8px', letterSpacing: '0.04em' }}>🔒 TÉCNICA — solo dueño/depósito</p>
+        {DOC_CATS.filter(c => c.grupo === 'tecnica').map(cat => (
+          <DocCatRow key={cat.key} cat={cat} urls={documentos[cat.key] || []} onUpload={onUpload} onDelete={onDelete} uploading={uploadingDoc === cat.key} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function EditModal({ modelo, onClose, onSaved }) {
   const { token } = useAuth();
   // Normalizar fotos_portada: si viene vacío, inicializar desde imagen_portada existente
@@ -146,9 +216,11 @@ function EditModal({ modelo, onClose, onSaved }) {
     fotos:         modelo.fotos         || [],
     fotos_portada: initFotosPortada(),
     imagen_portada: modelo.imagen_portada || '',
+    documentos:    modelo.documentos    || {},
   });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingDoc, setUploadingDoc] = useState(null);
   const [error, setError] = useState('');
 
   const handleUpload = async (file) => {
@@ -162,6 +234,24 @@ function EditModal({ modelo, onClose, onSaved }) {
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleUploadDoc = async (file, cat) => {
+    setUploadingDoc(cat);
+    try {
+      const arr = form.documentos[cat] || [];
+      const publicId = generarDocPublicId(form.nombre, cat, arr.length);
+      const url = await uploadToCloudinary(file, publicId);
+      setForm(p => ({ ...p, documentos: { ...p.documentos, [cat]: [...(p.documentos[cat] || []), url] } }));
+    } catch (err) {
+      setError(`Error subiendo documento: ${err.message}`);
+    } finally {
+      setUploadingDoc(null);
+    }
+  };
+
+  const handleDeleteDoc = (cat, url) => {
+    setForm(p => ({ ...p, documentos: { ...p.documentos, [cat]: (p.documentos[cat] || []).filter(u => u !== url) } }));
   };
 
   const handleSubmit = async (e) => {
@@ -250,6 +340,16 @@ function EditModal({ modelo, onClose, onSaved }) {
                 };
               })}
               uploading={uploading}
+            />
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <label style={S.label}>Documentación (imágenes)</label>
+            <DocsEditor
+              documentos={form.documentos}
+              onUpload={handleUploadDoc}
+              onDelete={handleDeleteDoc}
+              uploadingDoc={uploadingDoc}
             />
           </div>
 

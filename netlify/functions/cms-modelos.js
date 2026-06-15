@@ -13,7 +13,7 @@ export async function handler(event) {
   if (event.httpMethod === 'GET') {
     const { data, error } = await supabase
       .from('modelos')
-      .select('id, slug, nombre, superficie, precio, descripcion, plazo, ventajas, fotos, imagen_portada, fotos_portada, orden, activo')
+      .select('id, slug, nombre, superficie, precio, descripcion, plazo, ventajas, fotos, imagen_portada, fotos_portada, documentos, orden, activo')
       .order('orden');
     if (error) return response(500, { error: error.message });
     return response(200, { modelos: data || [] });
@@ -42,7 +42,7 @@ export async function handler(event) {
     const body = JSON.parse(event.body || '{}');
     const { id } = body;
     if (!id) return response(400, { error: 'id requerido' });
-    const allowed = ['nombre', 'superficie', 'slug', 'precio', 'descripcion', 'plazo', 'ventajas', 'fotos', 'imagen_portada', 'fotos_portada', 'activo', 'orden'];
+    const allowed = ['nombre', 'superficie', 'slug', 'precio', 'descripcion', 'plazo', 'ventajas', 'fotos', 'imagen_portada', 'fotos_portada', 'documentos', 'activo', 'orden'];
     const update = Object.fromEntries(Object.entries(body).filter(([k]) => allowed.includes(k)));
     const { data, error } = await supabase.from('modelos').update(update).eq('id', id).select().single();
     if (error) return response(500, { error: error.message });
