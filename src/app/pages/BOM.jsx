@@ -437,7 +437,7 @@ export default function BOM() {
 
             {/* Resumen de costo — recalcula en vivo */}
             {(etapas.length > 0 || bom.length > 0) && (
-              <div style={{ ...S.card, position: 'sticky', bottom: '12px', marginTop: '8px', borderColor: C.goldBorder, background: 'linear-gradient(135deg, rgba(212,165,116,0.10), rgba(255,255,255,0.03))' }}>
+              <div style={{ ...S.card, marginTop: '16px', border: `1px solid ${C.goldBorder}`, background: '#1a2035' }}>
                 <h2 style={{ ...S.h2, marginBottom: '14px' }}>💰 Resumen de costo{modeloSel ? ` — ${modeloSel.nombre}` : ''}</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0 18px' }}>
                   <ResumenRow label="Materiales" value={fmt(costo.materiales)} />
