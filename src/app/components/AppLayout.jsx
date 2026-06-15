@@ -67,12 +67,13 @@ const NAV_SECTIONS = [
   },
 ];
 
-function NavItem({ to, icon, label, end, onClose }) {
+function NavItem({ to, icon, label, end, onClose, collapsed }) {
   return (
-    <NavLink to={to} end={end} onClick={onClose}
+    <NavLink to={to} end={end} onClick={onClose} title={collapsed ? label : undefined}
       style={({ isActive }) => ({
-        display: 'flex', alignItems: 'center', gap: '10px',
-        padding: '8px 12px', borderRadius: '7px',
+        display: 'flex', alignItems: 'center', gap: collapsed ? 0 : '10px',
+        justifyContent: collapsed ? 'center' : 'flex-start',
+        padding: collapsed ? '9px 0' : '8px 12px', borderRadius: '7px',
         fontSize: '0.875rem', fontWeight: 500, textDecoration: 'none',
         transition: 'all 0.15s ease',
         borderLeft: isActive ? '3px solid #d4a574' : '3px solid transparent',
@@ -93,12 +94,12 @@ function NavItem({ to, icon, label, end, onClose }) {
       }}
     >
       <span style={{ fontSize: '0.95rem', width: '18px', textAlign: 'center' }}>{icon}</span>
-      <span>{label}</span>
+      {!collapsed && <span>{label}</span>}
     </NavLink>
   );
 }
 
-function SidebarContent({ onClose }) {
+function SidebarContent({ onClose, collapsed = false, onToggleCollapse }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const rol = user?.rol;
@@ -112,20 +113,33 @@ function SidebarContent({ onClose }) {
 
   return (
     <div style={{
-      width: '224px', background: 'linear-gradient(to bottom, #1a1a2e 0%, #0f172a 100%)',
+      width: collapsed ? '64px' : '224px', background: 'linear-gradient(to bottom, #1a1a2e 0%, #0f172a 100%)',
       display: 'flex', flexDirection: 'column', height: '100%',
       borderRight: '1px solid rgba(212,165,116,0.15)', flexShrink: 0,
+      transition: 'width 0.18s ease',
     }}>
-      <div style={{ padding: '18px 14px 14px', borderBottom: '1px solid rgba(212,165,116,0.15)' }}>
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <img src={logoAlmamod} alt="AlmaMod" style={{ height: '30px', objectFit: 'contain' }} />
-        </Link>
-        <div style={{ color: '#94a3b8', fontSize: '0.68rem', marginTop: '5px', letterSpacing: '0.06em' }}>
-          SISTEMA DE GESTIÓN
+      <div style={{ padding: collapsed ? '14px 8px' : '18px 14px 14px', borderBottom: '1px solid rgba(212,165,116,0.15)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'space-between', gap: '8px' }}>
+          {!collapsed && (
+            <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+              <img src={logoAlmamod} alt="AlmaMod" style={{ height: '28px', objectFit: 'contain' }} />
+            </Link>
+          )}
+          {onToggleCollapse && (
+            <button onClick={onToggleCollapse} title={collapsed ? 'Expandir menú' : 'Colapsar menú'}
+              style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '6px', width: '28px', height: '28px', color: '#d4a574', cursor: 'pointer', fontSize: '1rem', lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              {collapsed ? '»' : '«'}
+            </button>
+          )}
         </div>
+        {!collapsed && (
+          <div style={{ color: '#94a3b8', fontSize: '0.68rem', marginTop: '5px', letterSpacing: '0.06em' }}>
+            SISTEMA DE GESTIÓN
+          </div>
+        )}
       </div>
 
-      <nav style={{ flex: 1, padding: '10px 6px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+      <nav style={{ flex: 1, padding: '10px 6px', overflowY: 'auto', overflowX: 'hidden', display: 'flex', flexDirection: 'column', gap: '2px' }}>
         {NAV_SECTIONS.map(section => {
           const visibles = section.items.filter(item => {
             const perm = user?.permisos?.[item.module];
@@ -139,28 +153,34 @@ function SidebarContent({ onClose }) {
           if (visibles.length === 0) return null;
           return (
             <div key={section.label} style={{ marginBottom: '4px' }}>
-              <div style={{ color: 'rgba(148,163,184,0.5)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.08em', padding: '8px 12px 4px', textTransform: 'uppercase' }}>
-                {section.label}
-              </div>
-              {visibles.map(item => <NavItem key={item.to} {...item} onClose={onClose} />)}
+              {!collapsed && (
+                <div style={{ color: 'rgba(148,163,184,0.5)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.08em', padding: '8px 12px 4px', textTransform: 'uppercase' }}>
+                  {section.label}
+                </div>
+              )}
+              {visibles.map(item => <NavItem key={item.to} {...item} onClose={onClose} collapsed={collapsed} />)}
             </div>
           );
         })}
       </nav>
 
-      <div style={{ padding: '10px 14px', borderTop: '1px solid rgba(212,165,116,0.15)' }}>
-        <div style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 600, marginBottom: '3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {user?.nombre}
-        </div>
-        <div style={{ display: 'inline-block', background: rolColor.bg, color: rolColor.text, fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: '20px', letterSpacing: '0.04em', marginBottom: '10px' }}>
-          {ROL_LABEL[rol] || rol}
-        </div>
-        <button onClick={handleLogout}
-          style={{ display: 'block', width: '100%', textAlign: 'left', background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '0.82rem', padding: '7px 10px', borderRadius: '6px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+      <div style={{ padding: collapsed ? '10px 6px' : '10px 14px', borderTop: '1px solid rgba(212,165,116,0.15)' }}>
+        {!collapsed && (
+          <>
+            <div style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 600, marginBottom: '3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {user?.nombre}
+            </div>
+            <div style={{ display: 'inline-block', background: rolColor.bg, color: rolColor.text, fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: '20px', letterSpacing: '0.04em', marginBottom: '10px' }}>
+              {ROL_LABEL[rol] || rol}
+            </div>
+          </>
+        )}
+        <button onClick={handleLogout} title="Cerrar sesión"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start', width: '100%', textAlign: 'left', background: 'transparent', border: 'none', color: '#94a3b8', fontSize: collapsed ? '1.1rem' : '0.82rem', padding: '7px 10px', borderRadius: '6px', cursor: 'pointer', transition: 'all 0.2s ease' }}
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#ef4444'; }}
           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#94a3b8'; }}
         >
-          Cerrar sesión →
+          {collapsed ? '🚪' : 'Cerrar sesión →'}
         </button>
       </div>
     </div>
@@ -170,6 +190,13 @@ function SidebarContent({ onClose }) {
 export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [collapsed, setCollapsed] = useState(() => localStorage.getItem('sidebar_collapsed') === '1');
+
+  const toggleCollapse = () => setCollapsed(c => {
+    const next = !c;
+    localStorage.setItem('sidebar_collapsed', next ? '1' : '0');
+    return next;
+  });
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -192,8 +219,8 @@ export default function AppLayout({ children }) {
     <div style={{ display: 'flex', height: '100dvh', background: 'var(--bg-primary, #0f172a)', overflow: 'hidden' }}>
       <ThemeToggle />
 
-      {/* Sidebar desktop — siempre visible */}
-      {!isMobile && <SidebarContent />}
+      {/* Sidebar desktop — siempre visible, colapsable */}
+      {!isMobile && <SidebarContent collapsed={collapsed} onToggleCollapse={toggleCollapse} />}
 
       {/* Sidebar móvil — overlay con slide-in */}
       {isMobile && sidebarOpen && (
