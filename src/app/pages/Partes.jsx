@@ -52,12 +52,13 @@ function ModalParte({ parte, familias, subfamilias = [], onClose, onSave }) {
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-      <div style={{ ...S.card, width: '100%', maxWidth: '480px', maxHeight: '90vh', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ ...S.h2, margin: 0, color: C.gold }}>{parte?.id ? 'Editar parte' : 'Nueva parte'}</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.textMuted, fontSize: '1.4rem', cursor: 'pointer' }}>×</button>
-        </div>
+    <div style={{ position: 'fixed', inset: 0, background: '#1a2035', zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
+        <h2 style={{ ...S.h2, margin: 0, color: C.gold }}>{parte?.id ? 'Editar parte' : 'Nueva parte'}</h2>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.textMuted, fontSize: '1.6rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+        <div style={{ maxWidth: '760px', margin: '0 auto' }}>
         {[['codigo','Código *','text'],['nombre','Nombre *','text'],['descripcion','Descripción','text'],['unidad','Unidad','text']].map(([k, label]) => (
           <div key={k} style={{ marginBottom: '14px' }}>
             <label style={S.label}>{label}</label>
@@ -89,12 +90,13 @@ function ModalParte({ parte, familias, subfamilias = [], onClose, onSave }) {
           ))}
         </div>
         {error && <div style={{ ...S.alertError, marginBottom: '12px' }}>{error}</div>}
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={onClose} style={{ ...S.btnGhost, flex: 1 }}>Cancelar</button>
-          <button onClick={handleSave} disabled={loading} style={{ ...S.btnGold, flex: 1, opacity: loading ? 0.6 : 1 }}>
-            {loading ? 'Guardando...' : 'Guardar'}
-          </button>
         </div>
+      </div>
+      <div style={{ flexShrink: 0, padding: '14px 20px', borderTop: `1px solid ${C.border}`, background: '#161c2e', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+        <button onClick={onClose} style={S.btnGhost}>Cancelar</button>
+        <button onClick={handleSave} disabled={loading} style={{ ...S.btnGold, minWidth: '170px', opacity: loading ? 0.6 : 1 }}>
+          {loading ? 'Guardando...' : 'Guardar'}
+        </button>
       </div>
     </div>
   );
