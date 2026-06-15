@@ -437,8 +437,8 @@ export default function Partes() {
                         ✏️
                       </button>
                       <button onClick={() => clonarParte(p)} title="Clonar (crear variante)"
-                        style={{ background: C.blueDim, border: 'none', borderRadius: '6px', padding: '4px 8px', color: C.blue, cursor: 'pointer', fontSize: '0.8rem' }}>
-                        ⧉
+                        style={{ background: C.blueDim, border: `1px solid ${C.blue}40`, borderRadius: '6px', padding: '4px 8px', color: C.blue, cursor: 'pointer', fontSize: '0.8rem', lineHeight: 1 }}>
+                        📋
                       </button>
                     </>
                   )}
