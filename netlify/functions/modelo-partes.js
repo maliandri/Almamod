@@ -71,14 +71,21 @@ export async function handler(event) {
     return response(200, { item: data });
   }
 
-  // DELETE ?id=xxx
+  // DELETE ?id=xxx  (una parte)  |  ?modelo_id=xxx  (vaciar todo el BOM del modelo)
   if (event.httpMethod === 'DELETE') {
     if (!canWrite) return response(403, { error: 'Sin permisos' });
-    const { id } = event.queryStringParameters || {};
-    if (!id) return response(400, { error: 'id requerido' });
-    const { error } = await supabase.from('modelo_partes').delete().eq('id', id);
-    if (error) return response(500, { error: error.message });
-    return response(200, { ok: true });
+    const { id, modelo_id } = event.queryStringParameters || {};
+    if (id) {
+      const { error } = await supabase.from('modelo_partes').delete().eq('id', id);
+      if (error) return response(500, { error: error.message });
+      return response(200, { ok: true });
+    }
+    if (modelo_id) {
+      const { error } = await supabase.from('modelo_partes').delete().eq('modelo_id', modelo_id);
+      if (error) return response(500, { error: error.message });
+      return response(200, { ok: true, cleared: true });
+    }
+    return response(400, { error: 'id o modelo_id requerido' });
   }
 
   return response(405, { error: 'Método no permitido' });

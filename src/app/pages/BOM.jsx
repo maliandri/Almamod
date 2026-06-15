@@ -113,6 +113,18 @@ export default function BOM() {
     setBom(prev => prev.filter(b => b.id !== id));
   };
 
+  const vaciarBOM = async () => {
+    if (!bom.length) return;
+    if (!window.confirm(`¿Eliminar las ${bom.length} partes del BOM de este modelo? No se puede deshacer.`)) return;
+    try {
+      await api.bom.clear(token, modeloId);
+      setBom([]);
+      setImportMsg('✓ BOM vaciado');
+    } catch (err) {
+      setImportMsg(`Error al vaciar BOM: ${err.message}`);
+    }
+  };
+
   const handleExcel = async (e) => {
     const file = e.target.files?.[0];
     if (!file || !modeloId) return;
@@ -188,6 +200,9 @@ export default function BOM() {
             <>
               <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" onChange={handleExcel} style={{ display: 'none' }} />
               <button onClick={() => fileRef.current?.click()} style={{ ...S.btnGhost, fontSize: '0.85rem' }}>📊 Importar Excel</button>
+              {bom.length > 0 && (
+                <button onClick={vaciarBOM} style={{ ...S.btnDanger, fontSize: '0.85rem' }}>🗑 Vaciar BOM</button>
+              )}
             </>
           )}
           {modeloId && (etapas.length > 0 || bom.length > 0) && (

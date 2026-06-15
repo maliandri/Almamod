@@ -128,6 +128,7 @@ export const api = {
     save:   (token, data)      => request('modelo-partes', { method: 'POST', body: data, token }),
     update: (token, data)      => request('modelo-partes', { method: 'PUT',  body: data, token }),
     delete: (token, id)        => request(`modelo-partes?id=${id}`, { method: 'DELETE', token }),
+    clear:  (token, modelo_id) => request(`modelo-partes?modelo_id=${modelo_id}`, { method: 'DELETE', token }),
   },
   familias: {
     list:   (token)       => request('familias', { token }),

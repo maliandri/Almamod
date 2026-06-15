@@ -43,7 +43,7 @@ export async function handler(event) {
     const { nombre, rol, telefono, activo, permisos } = body;
 
     const allowed = ['dueno', 'deposito', 'fabricacion', 'marketing', 'arquitectura', 'cliente'];
-    const validModules = ['obras', 'partes', 'familias', 'bom', 'remito_scan', 'cms', 'marketing', 'usuarios'];
+    const validModules = ['obras', 'partes', 'familias', 'bom', 'remito_scan', 'cms', 'marketing', 'usuarios', 'presupuestador', 'pic', 'ot', 'rei'];
     const validPerms = ['none', 'read', 'write'];
     const update = {};
     if (nombre !== undefined) update.nombre = nombre;
