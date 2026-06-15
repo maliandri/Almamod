@@ -16,6 +16,33 @@ Vende viviendas modulares llave en mano (6 modelos) y tiene un chatbot de ventas
 
 ---
 
+## ⚠️ Arquitectura de DOS proyectos (leer antes que nada)
+
+Hoy AlmaMod vive en **dos codebases separados, con código distinto** (NO es el mismo proyecto duplicado):
+
+| | **`almamod` (este repo, Vite)** | **`almamod-next` (Next.js)** |
+|---|---|---|
+| Ruta disco | `c:\proyectos\almamod` | `c:\proyectos\almamod-next` |
+| Qué es | Producción actual | Rediseño del sitio público (preview) |
+| Sitio público | ✅ (el que está live) | ✅ (versión nueva, tema claro, Neue Kabel/Alfabet) |
+| **Panel interno de gestión** | ✅ **completo (26 páginas)** | ❌ **no existe** |
+| "admin" en Next | — | solo mini-CMS: login, dashboard, **Contenido del sitio** (carrusel) y **Galería**. NO es el panel. |
+| URL | `almamod.com.ar` + `/app/*` (panel) | `almamod-preview.netlify.app` |
+| Repo | github.com/maliandri/Almamod (rama `main`) | github.com/maliandri/almamod-next (rama `master`) |
+| Routing | React Router + `styles.js` inline | App Router + Tailwind v4 |
+
+- **El panel interno de gestión completo (Obras, Remitos, Partes, Familias, BOM, PIC, OT, REI, Presupuestador, Usuarios, CRM Almita, Marketing, CMS) existe SOLO en el Vite.** No está portado a Next.
+- **Ambos comparten el mismo backend**: misma base Supabase y las mismas Netlify Functions servidas desde `almamod.com.ar`. Por eso datos/usuarios/Almita son consistentes entre los dos.
+- El `app/obras` que aparece en Next es la **galería pública** de obras, no la gestión de obras del panel (mismo nombre, cosa distinta).
+
+### 🎯 Plan de migración a Next.js (cuando el usuario lo pida)
+Cuando el usuario diga *"quiero migrar finalmente a Next.js"*, el orden acordado es:
+1. **Primero reescribir/portar el panel interno completo a Next.js** (las 26 páginas de `src/app/pages` del Vite) y **dejarlo funcionando** contra el mismo backend Supabase/Functions.
+2. Recién después, consolidar todo en Next.js y dar de baja el Vite.
+El sitio público nuevo ya está en `almamod-next`; lo que falta para unificar es el panel.
+
+---
+
 ## Stack técnico
 
 | Capa | Tecnología |
