@@ -32,7 +32,7 @@ export async function handler(event) {
 
     const { data, error } = await supabase
       .from('partes')
-      .select('id, codigo, nombre, descripcion, unidad, costo, stock_actual, stock_minimo, familia_id, familias(id, nombre, color)')
+      .select('id, codigo, nombre, descripcion, unidad, costo, stock_actual, stock_minimo, familia_id, subfamilia_id, familias(id, nombre, color), subfamilias(id, nombre)')
       .order('nombre');
     if (error) return response(500, { error: error.message });
     return response(200, { partes: data });
@@ -41,11 +41,11 @@ export async function handler(event) {
   // POST — crear parte
   if (event.httpMethod === 'POST') {
     if (!canWrite) return response(403, { error: 'Sin permisos' });
-    const { codigo, nombre, descripcion, unidad, costo, stock_actual, stock_minimo, familia_id } = JSON.parse(event.body || '{}');
+    const { codigo, nombre, descripcion, unidad, costo, stock_actual, stock_minimo, familia_id, subfamilia_id } = JSON.parse(event.body || '{}');
     if (!codigo || !nombre) return response(400, { error: 'codigo y nombre son requeridos' });
     const { data, error } = await supabase
       .from('partes')
-      .insert({ codigo, nombre, descripcion, unidad: unidad || 'unidad', costo: costo || 0, stock_actual: stock_actual || 0, stock_minimo: stock_minimo || 0, familia_id: familia_id || null })
+      .insert({ codigo, nombre, descripcion, unidad: unidad || 'unidad', costo: costo || 0, stock_actual: stock_actual || 0, stock_minimo: stock_minimo || 0, familia_id: familia_id || null, subfamilia_id: subfamilia_id || null })
       .select().single();
     if (error) return response(500, { error: error.message });
     return response(201, { parte: data });
@@ -56,7 +56,7 @@ export async function handler(event) {
     if (!canWrite) return response(403, { error: 'Sin permisos' });
     const { id, ...fields } = JSON.parse(event.body || '{}');
     if (!id) return response(400, { error: 'id requerido' });
-    const allowed = ['codigo','nombre','descripcion','unidad','costo','stock_actual','stock_minimo','familia_id'];
+    const allowed = ['codigo','nombre','descripcion','unidad','costo','stock_actual','stock_minimo','familia_id','subfamilia_id'];
     const update = Object.fromEntries(Object.entries(fields).filter(([k]) => allowed.includes(k)));
     const { data, error } = await supabase.from('partes').update(update).eq('id', id).select().single();
     if (error) return response(500, { error: error.message });

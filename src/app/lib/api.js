@@ -136,6 +136,12 @@ export const api = {
     update: (token, data) => request('familias', { method: 'PUT',  body: data, token }),
     delete: (token, id)   => request(`familias?id=${id}`, { method: 'DELETE', token }),
   },
+  subfamilias: {
+    list:   (token, familia_id) => request(`subfamilias${familia_id ? `?familia_id=${familia_id}` : ''}`, { token }),
+    create: (token, data)       => request('subfamilias', { method: 'POST', body: data, token }),
+    update: (token, data)       => request('subfamilias', { method: 'PUT',  body: data, token }),
+    delete: (token, id)         => request(`subfamilias?id=${id}`, { method: 'DELETE', token }),
+  },
   stock: {
     movimientos: (token, parte_id) => request(`stock-movimiento?parte_id=${parte_id}`, { token }),
     registrar:   (token, data)     => request('stock-movimiento', { method: 'POST', body: data, token }),

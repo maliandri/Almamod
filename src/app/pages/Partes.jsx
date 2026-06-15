@@ -5,7 +5,7 @@ import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
 import { C, S, inputFocus, inputBlur } from '../styles';
 
-const EMPTY = { codigo: '', nombre: '', descripcion: '', unidad: 'unidad', costo: '', stock_actual: '', stock_minimo: '', familia_id: '' };
+const EMPTY = { codigo: '', nombre: '', descripcion: '', unidad: 'unidad', costo: '', stock_actual: '', stock_minimo: '', familia_id: '', subfamilia_id: '' };
 
 function FamiliaBadge({ familia }) {
   if (!familia) return null;
@@ -32,16 +32,21 @@ function StockBadge({ actual, minimo }) {
   );
 }
 
-function ModalParte({ parte, familias, onClose, onSave }) {
+function ModalParte({ parte, familias, subfamilias = [], onClose, onSave }) {
   const [form, setForm] = useState(parte || EMPTY);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const f = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
+  const subsDeFamilia = subfamilias.filter(s => String(s.familia_id) === String(form.familia_id));
+
   const handleSave = async () => {
     if (!form.codigo || !form.nombre) { setError('Código y nombre son requeridos'); return; }
     setLoading(true); setError('');
-    try { await onSave({ ...form, familia_id: form.familia_id || null }); onClose(); }
+    try {
+      await onSave({ ...form, familia_id: form.familia_id || null, subfamilia_id: form.subfamilia_id || null });
+      onClose();
+    }
     catch (e) { setError(e.message); }
     finally { setLoading(false); }
   };
@@ -50,7 +55,7 @@ function ModalParte({ parte, familias, onClose, onSave }) {
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
       <div style={{ ...S.card, width: '100%', maxWidth: '480px', maxHeight: '90vh', overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ ...S.h2, margin: 0, color: C.gold }}>{parte ? 'Editar parte' : 'Nueva parte'}</h2>
+          <h2 style={{ ...S.h2, margin: 0, color: C.gold }}>{parte?.id ? 'Editar parte' : 'Nueva parte'}</h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.textMuted, fontSize: '1.4rem', cursor: 'pointer' }}>×</button>
         </div>
         {[['codigo','Código *','text'],['nombre','Nombre *','text'],['descripcion','Descripción','text'],['unidad','Unidad','text']].map(([k, label]) => (
@@ -59,12 +64,21 @@ function ModalParte({ parte, familias, onClose, onSave }) {
             <input value={form[k]} onChange={e => f(k, e.target.value)} style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
           </div>
         ))}
-        <div style={{ marginBottom: '14px' }}>
-          <label style={S.label}>Familia</label>
-          <select value={form.familia_id || ''} onChange={e => f('familia_id', e.target.value || null)} style={S.select}>
-            <option value="">— Sin familia —</option>
-            {familias.map(fam => <option key={fam.id} value={fam.id}>{fam.nombre}</option>)}
-          </select>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
+          <div>
+            <label style={S.label}>Familia</label>
+            <select value={form.familia_id || ''} onChange={e => setForm(p => ({ ...p, familia_id: e.target.value || null, subfamilia_id: '' }))} style={S.select}>
+              <option value="">— Sin familia —</option>
+              {familias.map(fam => <option key={fam.id} value={fam.id}>{fam.nombre}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={S.label}>Subfamilia</label>
+            <select value={form.subfamilia_id || ''} onChange={e => f('subfamilia_id', e.target.value || null)} style={{ ...S.select, opacity: form.familia_id ? 1 : 0.5 }} disabled={!form.familia_id}>
+              <option value="">— Sin subfamilia —</option>
+              {subsDeFamilia.map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
+            </select>
+          </div>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '20px' }}>
           {[['costo','Costo $'],['stock_actual','Stock actual'],['stock_minimo','Stock mínimo']].map(([k, label]) => (
@@ -147,6 +161,7 @@ export default function Partes() {
   const { token, user } = useAuth();
   const [partes, setPartes] = useState([]);
   const [familias, setFamilias] = useState([]);
+  const [subfamilias, setSubfamilias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtros, setFiltros] = useState({ codigo: '', nombre: '', familia: '', unidad: '', costo: '', stock: '', minimo: '' });
   const [sortCol, setSortCol] = useState('nombre');
@@ -171,9 +186,11 @@ export default function Partes() {
     Promise.all([
       api.partes.list(token),
       api.familias.list(token),
-    ]).then(([p, f]) => {
+      api.subfamilias.list(token),
+    ]).then(([p, f, s]) => {
       setPartes(p.partes || []);
       setFamilias(f.familias || []);
+      setSubfamilias(s.subfamilias || []);
     }).finally(() => setLoading(false));
   };
 
@@ -183,6 +200,21 @@ export default function Partes() {
     if (form.id) await api.partes.update(token, form);
     else         await api.partes.create(token, form);
     cargar();
+  };
+
+  // Clonar: abre el form prefilled como NUEVO (sin id) con un código sugerido editable
+  const clonarParte = (p) => {
+    setModalParte({
+      codigo: `${p.codigo}-COPIA`,
+      nombre: p.nombre,
+      descripcion: p.descripcion || '',
+      unidad: p.unidad || 'unidad',
+      costo: p.costo ?? '',
+      stock_actual: 0,
+      stock_minimo: p.stock_minimo ?? '',
+      familia_id: p.familia_id || '',
+      subfamilia_id: p.subfamilia_id || '',
+    });
   };
 
   const handleStock = async (data) => {
@@ -404,6 +436,10 @@ export default function Partes() {
                         style={{ background: C.goldDim, border: 'none', borderRadius: '6px', padding: '4px 8px', color: C.gold, cursor: 'pointer', fontSize: '0.8rem' }}>
                         ✏️
                       </button>
+                      <button onClick={() => clonarParte(p)} title="Clonar (crear variante)"
+                        style={{ background: C.blueDim, border: 'none', borderRadius: '6px', padding: '4px 8px', color: C.blue, cursor: 'pointer', fontSize: '0.8rem' }}>
+                        ⧉
+                      </button>
                     </>
                   )}
                 </div>
@@ -419,6 +455,7 @@ export default function Partes() {
         <ModalParte
           parte={modalParte === 'nueva' ? null : modalParte}
           familias={familias}
+          subfamilias={subfamilias}
           onClose={() => setModalParte(null)}
           onSave={handleSaveParte}
         />

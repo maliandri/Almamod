@@ -7,7 +7,18 @@ import { C, S, inputFocus, inputBlur } from '../styles';
 
 const COLORES = ['#d4a574','#667eea','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#ec4899','#84cc16'];
 
-function FamiliaRow({ familia, onUpdate, onDelete }) {
+function SubAdd({ onAdd }) {
+  const [v, setV] = useState('');
+  const add = () => { if (!v.trim()) return; onAdd(v.trim()); setV(''); };
+  return (
+    <input value={v} onChange={e => setV(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()}
+      placeholder="+ subfamilia (Enter)"
+      style={{ ...S.input, padding: '2px 8px', fontSize: '0.72rem', width: '150px' }}
+      onFocus={inputFocus} onBlur={inputBlur} />
+  );
+}
+
+function FamiliaRow({ familia, subfamilias = [], onUpdate, onDelete, onAddSub, onDeleteSub, canWrite }) {
   const [editando, setEditando] = useState(false);
   const [form, setForm] = useState({ nombre: familia.nombre, color: familia.color });
   const [loading, setLoading] = useState(false);
@@ -56,20 +67,40 @@ function FamiliaRow({ familia, onUpdate, onDelete }) {
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', borderBottom: `1px solid ${C.border}`, background: 'transparent' }}>
-      <span style={{ width: '14px', height: '14px', borderRadius: '50%', background: familia.color, flexShrink: 0 }} />
-      <span style={{ flex: 1, color: C.text, fontSize: '0.9rem', fontWeight: 500 }}>{familia.nombre}</span>
-      <span style={{ background: `${familia.color}20`, color: familia.color, fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: '10px' }}>
-        {familia.nombre}
-      </span>
-      <button onClick={() => setEditando(true)}
-        style={{ background: C.goldDim, border: 'none', borderRadius: '6px', padding: '4px 10px', color: C.gold, cursor: 'pointer', fontSize: '0.78rem' }}>
-        ✏️ Editar
-      </button>
-      <button onClick={() => onDelete(familia.id)}
-        style={{ background: C.redDim, border: 'none', borderRadius: '6px', padding: '4px 10px', color: C.red, cursor: 'pointer', fontSize: '0.78rem' }}>
-        Eliminar
-      </button>
+    <div style={{ borderBottom: `1px solid ${C.border}` }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', background: 'transparent' }}>
+        <span style={{ width: '14px', height: '14px', borderRadius: '50%', background: familia.color, flexShrink: 0 }} />
+        <span style={{ flex: 1, color: C.text, fontSize: '0.9rem', fontWeight: 500 }}>{familia.nombre}</span>
+        <span style={{ background: `${familia.color}20`, color: familia.color, fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: '10px' }}>
+          {familia.nombre}
+        </span>
+        <button onClick={() => setEditando(true)}
+          style={{ background: C.goldDim, border: 'none', borderRadius: '6px', padding: '4px 10px', color: C.gold, cursor: 'pointer', fontSize: '0.78rem' }}>
+          ✏️ Editar
+        </button>
+        {onDelete && (
+          <button onClick={() => onDelete(familia.id)}
+            style={{ background: C.redDim, border: 'none', borderRadius: '6px', padding: '4px 10px', color: C.red, cursor: 'pointer', fontSize: '0.78rem' }}>
+            Eliminar
+          </button>
+        )}
+      </div>
+
+      {/* Subfamilias */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', padding: '0 16px 10px 42px' }}>
+        <span style={{ color: C.textMuted, fontSize: '0.7rem', letterSpacing: '0.04em' }}>SUBFAMILIAS:</span>
+        {subfamilias.map(s => (
+          <span key={s.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: `${familia.color}15`, color: C.textSub, fontSize: '0.72rem', padding: '2px 4px 2px 9px', borderRadius: '10px', border: `1px solid ${familia.color}30` }}>
+            {s.nombre}
+            {canWrite && onDeleteSub && (
+              <button onClick={() => onDeleteSub(s.id)} title="Eliminar subfamilia"
+                style={{ background: 'none', border: 'none', color: C.red, cursor: 'pointer', fontSize: '0.85rem', lineHeight: 1, padding: '0 3px' }}>×</button>
+            )}
+          </span>
+        ))}
+        {subfamilias.length === 0 && <span style={{ color: C.textMuted, fontSize: '0.72rem', fontStyle: 'italic' }}>sin subfamilias</span>}
+        {canWrite && onAddSub && <SubAdd onAdd={(nombre) => onAddSub(familia.id, nombre)} />}
+      </div>
     </div>
   );
 }
@@ -77,6 +108,7 @@ function FamiliaRow({ familia, onUpdate, onDelete }) {
 export default function Familias() {
   const { token, user } = useAuth();
   const [familias, setFamilias] = useState([]);
+  const [subfamilias, setSubfamilias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [nuevaNombre, setNuevaNombre] = useState('');
   const [nuevoColor, setNuevoColor] = useState(COLORES[0]);
@@ -89,7 +121,21 @@ export default function Familias() {
 
   const cargar = () => {
     setLoading(true);
-    api.familias.list(token).then(d => setFamilias(d.familias || [])).finally(() => setLoading(false));
+    Promise.all([api.familias.list(token), api.subfamilias.list(token)])
+      .then(([f, s]) => { setFamilias(f.familias || []); setSubfamilias(s.subfamilias || []); })
+      .finally(() => setLoading(false));
+  };
+
+  const handleAddSub = async (familia_id, nombre) => {
+    try {
+      await api.subfamilias.create(token, { familia_id, nombre });
+      cargar();
+    } catch (e) { setMsg(`Error: ${e.message}`); }
+  };
+
+  const handleDeleteSub = async (id) => {
+    await api.subfamilias.delete(token, id);
+    cargar();
   };
 
   useEffect(() => { cargar(); }, [token]);
@@ -220,7 +266,13 @@ export default function Familias() {
               <p>No hay familias creadas todavía</p>
             </div>
           ) : familias.map(f => (
-            <FamiliaRow key={f.id} familia={f} onUpdate={handleUpdate} onDelete={canWrite ? handleDelete : undefined} />
+            <FamiliaRow key={f.id} familia={f}
+              subfamilias={subfamilias.filter(s => String(s.familia_id) === String(f.id))}
+              onUpdate={handleUpdate}
+              onDelete={canWrite ? handleDelete : undefined}
+              onAddSub={handleAddSub}
+              onDeleteSub={handleDeleteSub}
+              canWrite={canWrite} />
           ))}
         </div>
       </div>
