@@ -142,6 +142,10 @@ export const api = {
   modelos: {
     list: (token) => request('modelos-list', { token }),
   },
+  configCostos: {
+    get:    (token)       => request('config-costos', { token }),
+    update: (token, data) => request('config-costos', { method: 'PUT', body: data, token }),
+  },
   pic: {
     list:   (token)       => request('pic', { token }),
     get:    (token, id)   => request(`pic?id=${id}`, { token }),

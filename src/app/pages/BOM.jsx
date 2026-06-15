@@ -4,8 +4,19 @@ import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
 import { C, S, inputFocus, inputBlur } from '../styles';
+import { calcularCostoModelo } from '../lib/costos';
 
 const COLORES = ['#667eea','#d4a574','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316'];
+
+// Fila del panel de resumen
+function ResumenRow({ label, value, strong }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', padding: '6px 0', borderBottom: `1px solid ${C.border}` }}>
+      <span style={{ color: C.textMuted, fontSize: '0.82rem' }}>{label}</span>
+      <span style={{ color: strong ? C.text : C.textSub, fontSize: '0.85rem', fontWeight: strong ? 700 : 500 }}>{value}</span>
+    </div>
+  );
+}
 
 export default function BOM() {
   const { token, user } = useAuth();
@@ -22,11 +33,15 @@ export default function BOM() {
   const [addingLoading, setAddingLoading] = useState(false);
   const fileRef = useRef();
 
+  const [config, setConfig] = useState({ valor_hora: 0, pct_indirectos: 0, pct_margen: 0, costo_m2_ref: 0 });
+
   const canWrite = ['superadmin', 'dueno', 'deposito'].includes(user?.rol);
+  const canEditConfig = ['superadmin', 'dueno'].includes(user?.rol);
 
   useEffect(() => {
     api.modelos.list(token).then(d => setModelos(d.modelos || []));
     api.partes.list(token).then(d => setTodasPartes(d.partes || []));
+    api.configCostos.get(token).then(d => { if (d.config) setConfig(d.config); }).catch(() => {});
   }, [token]);
 
   useEffect(() => {
@@ -132,7 +147,31 @@ export default function BOM() {
 
   const bomPorEtapa = (etapa_id) => bom.filter(b => b.etapas_produccion?.id === etapa_id);
   const bomSinEtapa = bom.filter(b => !b.etapas_produccion);
-  const costoTotal = bom.reduce((sum, b) => sum + (Number(b.partes?.costo || 0) * Number(b.cantidad_necesaria || 0)), 0);
+
+  const fmt = (n) => '$' + Math.round(Number(n) || 0).toLocaleString('es-AR');
+  const modeloSel = modelos.find(m => String(m.id) === String(modeloId));
+
+  // Edición en vivo de etapas (horas / estado / monto estimado)
+  const setEtapaLocal = (id, patch) => setEtapas(prev => prev.map(e => e.id === id ? { ...e, ...patch } : e));
+  const persistEtapa  = (id, patch) => api.etapasProduccion.update(token, { id, ...patch }).catch(err => setImportMsg(`Error al guardar etapa: ${err.message}`));
+
+  // Cantidad de parte en vivo (recalcula sin recargar; persiste onBlur con actualizarCantidad)
+  const setCantidadLocal = (id, v) => setBom(prev => prev.map(b => b.id === id ? { ...b, cantidad_necesaria: v } : b));
+
+  // Parámetros de costo (config_costos)
+  const setCfgLocal   = (patch) => setConfig(prev => ({ ...prev, ...patch }));
+  const persistConfig = (next)  => api.configCostos.update(token, next).catch(err => setImportMsg(`Error al guardar parámetros: ${err.message}`));
+
+  // Cálculo en vivo
+  const partesPorEtapa = {};
+  for (const b of bom) {
+    const k = b.etapas_produccion?.id ?? '__sin_etapa__';
+    (partesPorEtapa[k] ||= []).push(b);
+  }
+  const etapasCalculo = [...etapas].sort((a, b) => a.orden - b.orden);
+  if (bomSinEtapa.length) etapasCalculo.push({ id: '__sin_etapa__', nombre: 'Sin etapa asignada', estado: 'detallado', horas_estimadas: 0 });
+  const costo = calcularCostoModelo({ modelo: modeloSel, etapas: etapasCalculo, partesPorEtapa, config });
+  const subtotalEtapa = (id) => costo.porEtapa.find(e => e.id === id)?.subtotal || 0;
 
   return (
     <AppLayout>
@@ -151,14 +190,49 @@ export default function BOM() {
               <button onClick={() => fileRef.current?.click()} style={{ ...S.btnGhost, fontSize: '0.85rem' }}>📊 Importar Excel</button>
             </>
           )}
-          {modeloId && bom.length > 0 && (
+          {modeloId && (etapas.length > 0 || bom.length > 0) && (
             <span style={{ marginLeft: 'auto', color: C.textMuted, fontSize: '0.85rem' }}>
-              Costo total estimado: <strong style={{ color: C.gold }}>${costoTotal.toLocaleString('es-AR')}</strong>
+              Precio de venta: <strong style={{ color: C.gold }}>{fmt(costo.precio_venta)}</strong>
             </span>
           )}
         </div>
 
         {importMsg && <div style={{ ...S.alertSuccess, marginBottom: '16px' }}>{importMsg}</div>}
+
+        {/* Parámetros de costeo (edita solo dueño/superadmin) */}
+        {modeloId && (
+          <div style={{ ...S.cardSm, display: 'flex', gap: '18px', alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: '20px' }}>
+            <div>
+              <label style={{ ...S.label, marginBottom: '4px' }}>Valor hora (ARS)</label>
+              <input type="number" min="0" step="100" value={config.valor_hora ?? 0} disabled={!canEditConfig}
+                onChange={e => setCfgLocal({ valor_hora: e.target.value })}
+                onBlur={() => canEditConfig && persistConfig(config)}
+                style={{ ...S.input, width: '120px', opacity: canEditConfig ? 1 : 0.6 }} onFocus={inputFocus} />
+            </div>
+            <div>
+              <label style={{ ...S.label, marginBottom: '4px' }}>Indirectos (%)</label>
+              <input type="number" min="0" step="1" value={Math.round((config.pct_indirectos ?? 0) * 1000) / 10} disabled={!canEditConfig}
+                onChange={e => setCfgLocal({ pct_indirectos: (Number(e.target.value) || 0) / 100 })}
+                onBlur={() => canEditConfig && persistConfig(config)}
+                style={{ ...S.input, width: '90px', opacity: canEditConfig ? 1 : 0.6 }} onFocus={inputFocus} />
+            </div>
+            <div>
+              <label style={{ ...S.label, marginBottom: '4px' }}>Margen (%)</label>
+              <input type="number" min="0" step="1" value={Math.round((config.pct_margen ?? 0) * 1000) / 10} disabled={!canEditConfig}
+                onChange={e => setCfgLocal({ pct_margen: (Number(e.target.value) || 0) / 100 })}
+                onBlur={() => canEditConfig && persistConfig(config)}
+                style={{ ...S.input, width: '90px', opacity: canEditConfig ? 1 : 0.6 }} onFocus={inputFocus} />
+            </div>
+            <div>
+              <label style={{ ...S.label, marginBottom: '4px' }}>Costo/m² ref. (ARS)</label>
+              <input type="number" min="0" step="1000" value={config.costo_m2_ref ?? 0} disabled={!canEditConfig}
+                onChange={e => setCfgLocal({ costo_m2_ref: e.target.value })}
+                onBlur={() => canEditConfig && persistConfig(config)}
+                style={{ ...S.input, width: '130px', opacity: canEditConfig ? 1 : 0.6 }} onFocus={inputFocus} />
+            </div>
+            {!canEditConfig && <span style={{ color: C.textMuted, fontSize: '0.74rem', alignSelf: 'center' }}>Solo dueño/admin edita estos parámetros</span>}
+          </div>
+        )}
 
         {!modeloId && (
           <div style={{ textAlign: 'center', padding: '64px', color: C.textMuted }}>
@@ -227,6 +301,58 @@ export default function BOM() {
                     </div>
                   </div>
 
+                  {/* Banda de costeo de la etapa */}
+                  <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap', padding: '8px 16px', borderBottom: `1px solid ${C.border}`, background: 'rgba(255,255,255,0.02)' }}>
+                    {etapa.id ? (
+                      <>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: C.textMuted, fontSize: '0.78rem' }}>
+                          Estado:
+                          {canWrite ? (
+                            <select value={etapa.estado || 'detallado'}
+                              onChange={e => { const v = e.target.value; setEtapaLocal(etapa.id, { estado: v }); persistEtapa(etapa.id, { estado: v }); }}
+                              style={{ ...S.select, padding: '4px 8px', fontSize: '0.78rem' }}>
+                              <option value="detallado">Detallado</option>
+                              <option value="estimado">Estimado</option>
+                            </select>
+                          ) : <strong style={{ color: C.textSub }}>{etapa.estado || 'detallado'}</strong>}
+                        </label>
+
+                        {(etapa.estado || 'detallado') === 'detallado' ? (
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: C.textMuted, fontSize: '0.78rem' }}>
+                            Horas MO:
+                            {canWrite ? (
+                              <input type="number" min="0" step="0.5" value={etapa.horas_estimadas ?? 0}
+                                onChange={e => setEtapaLocal(etapa.id, { horas_estimadas: e.target.value })}
+                                onBlur={e => persistEtapa(etapa.id, { horas_estimadas: Number(e.target.value) || 0 })}
+                                style={{ ...S.input, width: '70px', padding: '4px 8px', fontSize: '0.78rem' }} onFocus={inputFocus} />
+                            ) : <strong style={{ color: C.textSub }}>{etapa.horas_estimadas ?? 0} h</strong>}
+                          </label>
+                        ) : (
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: C.textMuted, fontSize: '0.78rem' }}>
+                            Monto estimado:
+                            {canWrite ? (
+                              <>
+                                <input type="number" min="0" step="1000" value={etapa.monto_estimado ?? 0}
+                                  onChange={e => setEtapaLocal(etapa.id, { monto_estimado: e.target.value })}
+                                  onBlur={e => persistEtapa(etapa.id, { monto_estimado: Number(e.target.value) || 0 })}
+                                  style={{ ...S.input, width: '120px', padding: '4px 8px', fontSize: '0.78rem' }} onFocus={inputFocus} />
+                                <button type="button"
+                                  onClick={() => { const v = Math.round((modeloSel?.superficie || 0) * (Number(config.costo_m2_ref) || 0)); setEtapaLocal(etapa.id, { monto_estimado: v }); persistEtapa(etapa.id, { monto_estimado: v }); }}
+                                  style={{ ...S.btnGhost, padding: '4px 10px', fontSize: '0.72rem' }}>Sugerir</button>
+                              </>
+                            ) : <strong style={{ color: C.textSub }}>{fmt(etapa.monto_estimado)}</strong>}
+                          </label>
+                        )}
+                      </>
+                    ) : (
+                      <span style={{ color: C.textMuted, fontSize: '0.78rem' }}>Partes sin etapa (cuentan como materiales)</span>
+                    )}
+
+                    <span style={{ marginLeft: 'auto', color: C.textSub, fontSize: '0.8rem' }}>
+                      Subtotal: <strong style={{ color: C.gold }}>{fmt(etapa.id ? subtotalEtapa(etapa.id) : subtotalEtapa('__sin_etapa__'))}</strong>
+                    </span>
+                  </div>
+
                   {/* Partes de la etapa */}
                   <div style={{ overflowX: 'auto' }}>
                   {items.map((item, i) => (
@@ -237,7 +363,8 @@ export default function BOM() {
                         {item.partes?.familias && <span style={{ background: `${item.partes.familias.color}22`, color: item.partes.familias.color, fontSize: '0.68rem', fontWeight: 700, padding: '1px 6px', borderRadius: '10px', marginLeft: '6px', verticalAlign: 'middle' }}>{item.partes.familias.nombre}</span>}
                       </div>
                       <div style={{ textAlign: 'center' }}>
-                        <input type="number" min="0.01" step="0.01" defaultValue={item.cantidad_necesaria}
+                        <input type="number" min="0.01" step="0.01" value={item.cantidad_necesaria}
+                          onChange={e => setCantidadLocal(item.id, e.target.value)}
                           onBlur={e => actualizarCantidad(item.id, e.target.value)}
                           style={{ ...S.input, width: '60px', padding: '4px 8px', textAlign: 'center', fontSize: '0.85rem' }}
                           onFocus={inputFocus}
@@ -305,6 +432,26 @@ export default function BOM() {
             {etapas.length === 0 && bom.length === 0 && (
               <div style={{ textAlign: 'center', padding: '48px', color: C.textMuted }}>
                 <p>Creá etapas de producción y luego agregá partes a cada una</p>
+              </div>
+            )}
+
+            {/* Resumen de costo — recalcula en vivo */}
+            {(etapas.length > 0 || bom.length > 0) && (
+              <div style={{ ...S.card, position: 'sticky', bottom: '12px', marginTop: '8px', borderColor: C.goldBorder, background: 'linear-gradient(135deg, rgba(212,165,116,0.10), rgba(255,255,255,0.03))' }}>
+                <h2 style={{ ...S.h2, marginBottom: '14px' }}>💰 Resumen de costo{modeloSel ? ` — ${modeloSel.nombre}` : ''}</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0 18px' }}>
+                  <ResumenRow label="Materiales" value={fmt(costo.materiales)} />
+                  <ResumenRow label="Mano de obra" value={fmt(costo.mano_obra)} />
+                  <ResumenRow label="Estimado (etapas)" value={fmt(costo.estimado)} />
+                  <ResumenRow label="Subtotal directo" value={fmt(costo.subtotal_directo)} strong />
+                  <ResumenRow label={`Indirectos (${Math.round((config.pct_indirectos || 0) * 100)}%)`} value={fmt(costo.indirectos)} />
+                  <ResumenRow label={`Margen (${Math.round((config.pct_margen || 0) * 100)}%)`} value={fmt(costo.margen)} />
+                  <ResumenRow label="Costo / m²" value={modeloSel?.superficie ? fmt(costo.costo_m2) : '—'} />
+                </div>
+                <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: `1px solid ${C.goldBorder}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                  <span style={{ color: C.textSub, fontSize: '0.95rem', fontWeight: 600 }}>Precio de venta</span>
+                  <span style={{ color: C.gold, fontSize: '1.5rem', fontWeight: 800 }}>{fmt(costo.precio_venta)}</span>
+                </div>
               </div>
             )}
           </>
