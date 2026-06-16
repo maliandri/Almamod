@@ -12,6 +12,14 @@ const PERM_OPTS = [
   { value: 'write',   label: 'Escritura', color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
 ];
 
+const ROLES_MATRIZ = ['dueno', 'deposito', 'fabricacion', 'arquitectura', 'marketing', 'cliente'];
+
+function permChip(perm) {
+  if (perm === 'write') return { t: 'Edición', c: '#10b981', b: 'rgba(16,185,129,0.14)' };
+  if (perm === 'read')  return { t: 'Lectura', c: '#667eea', b: 'rgba(102,126,234,0.14)' };
+  return { t: '—', c: '#64748b', b: 'transparent' };
+}
+
 function PermisosModal({ usuario, onClose, onSave }) {
   const [permisos, setPermisos] = useState(() => ({ ...(usuario.permisos || {}) }));
   const [saving, setSaving] = useState(false);
@@ -251,6 +259,7 @@ export default function Usuarios() {
   const [permisosUsuario, setPermisosUsuario] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [confirmSignout, setConfirmSignout] = useState(null);
+  const [showMatriz, setShowMatriz] = useState(false);
 
   const cargarUsuarios = () => {
     Promise.all([
@@ -362,6 +371,53 @@ export default function Usuarios() {
               </div>
             )}
           </form>
+        </div>
+
+        {/* Matriz de accesos por rol */}
+        <div style={{ ...S.card, marginBottom: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+            onClick={() => setShowMatriz(v => !v)}>
+            <h2 style={{ ...S.h2, margin: 0 }}>📊 Accesos por rol</h2>
+            <span style={{ color: C.textMuted, fontSize: '0.85rem' }}>{showMatriz ? '▲ ocultar' : '▼ ver tabla'}</span>
+          </div>
+          {showMatriz && (
+            <>
+              <p style={{ color: C.textMuted, fontSize: '0.78rem', margin: '10px 0 14px' }}>
+                Lo que ve cada rol <strong>por defecto</strong>. Ajustá por usuario con «Permisos». (Dueño y Superadmin ven todo.)
+              </p>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: '640px', fontSize: '0.78rem' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: 'left', color: C.textMuted, fontWeight: 700, padding: '6px 10px', borderBottom: `1px solid ${C.border}` }}>Módulo</th>
+                      {ROLES_MATRIZ.map(r => (
+                        <th key={r} style={{ textAlign: 'center', color: C.textMuted, fontWeight: 700, padding: '6px 8px', borderBottom: `1px solid ${C.border}`, whiteSpace: 'nowrap' }}>
+                          {ROL_LABEL[r] || r}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {MODULOS.map(m => (
+                      <tr key={m.key}>
+                        <td style={{ color: C.text, padding: '7px 10px', borderBottom: `1px solid ${C.border}`, whiteSpace: 'nowrap' }}>
+                          <span style={{ marginRight: '6px' }}>{m.icon}</span>{m.label}
+                        </td>
+                        {ROLES_MATRIZ.map(r => {
+                          const chip = permChip(rolDefaultPerm(r, m.key));
+                          return (
+                            <td key={r} style={{ textAlign: 'center', padding: '7px 8px', borderBottom: `1px solid ${C.border}` }}>
+                              <span style={{ background: chip.b, color: chip.c, fontSize: '0.68rem', fontWeight: 700, padding: chip.t === '—' ? 0 : '2px 8px', borderRadius: '10px' }}>{chip.t}</span>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Invitaciones pendientes */}
