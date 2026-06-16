@@ -162,7 +162,8 @@ export default function RemitoEgreso() {
       <div style={{ padding: '28px 32px', maxWidth: '900px' }}>
         <h1 style={{ ...S.h1, margin: '0 0 6px 0' }}>📤 Remito de entrega de insumos</h1>
         <p style={{ color: C.textMuted, fontSize: '0.88rem', marginBottom: '24px' }}>
-          Escaneá el QR con un lector (o escribí el código y Enter), poné la cantidad y emití el PDF para imprimir y firmar.
+          Escaneá el QR con la cámara o un lector (o escribí el código y Enter), poné la cantidad y emití el PDF para imprimir y firmar.
+          <strong style={{ color: C.gold }}> Al emitir se descuenta el stock</strong> de cada componente (el borrador no toca el inventario).
         </p>
 
         {msg && <div style={{ ...S.alertSuccess, marginBottom: '16px' }}>{msg}</div>}

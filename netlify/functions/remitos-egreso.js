@@ -66,6 +66,21 @@ export async function handler(event) {
       const { error: e2 } = await supabase.from('remito_egreso_items').insert(rows);
       if (e2) return response(500, { error: e2.message });
     }
+
+    // Descontar stock solo al EMITIR (en borrador no toca el inventario)
+    if (est === 'emitido' && rows.length) {
+      for (const it of rows) {
+        await supabase.from('stock_movimientos').insert({
+          parte_id: it.parte_id, tipo: 'egreso', cantidad: it.cantidad,
+          notas: `Remito egreso N° ${numero}${destino ? ' — ' + destino : ''}`,
+          creado_por: user.id,
+        });
+        const { data: pr } = await supabase.from('partes').select('stock_actual').eq('id', it.parte_id).single();
+        const nuevo = Math.max(0, Number(pr?.stock_actual || 0) - Number(it.cantidad));
+        await supabase.from('partes').update({ stock_actual: nuevo }).eq('id', it.parte_id);
+      }
+    }
+
     return response(201, { remito });
   }
 
