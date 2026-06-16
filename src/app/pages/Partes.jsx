@@ -250,6 +250,11 @@ export default function Partes() {
   const [modalParte, setModalParte] = useState(null);
   const [modalStock, setModalStock] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [colWidths, setColWidths] = useState(() => {
+    try { const s = JSON.parse(localStorage.getItem('partes_colw')); if (Array.isArray(s) && s.length === 7) return s; } catch { /* ignore */ }
+    return [110, 420, 90, 110, 80, 90, 190];
+  });
+  useEffect(() => { localStorage.setItem('partes_colw', JSON.stringify(colWidths)); }, [colWidths]);
   const [importando, setImportando] = useState(false);
   const [importMsg, setImportMsg] = useState('');
   const fileRef = useRef();
@@ -373,6 +378,27 @@ export default function Partes() {
   const sinStock = partes.filter(p => Number(p.stock_actual) === 0).length;
   const stockBajo = partes.filter(p => Number(p.stock_actual) > 0 && Number(p.stock_actual) <= Number(p.stock_minimo)).length;
 
+  // Columnas redimensionables (estilo Excel)
+  const gridCols = colWidths.map(w => `${w}px`).join(' ');
+  const minW = colWidths.reduce((a, b) => a + b, 0);
+  const startResize = (i, e) => {
+    e.preventDefault(); e.stopPropagation();
+    const startX = e.clientX;
+    const startW = colWidths[i];
+    document.body.style.userSelect = 'none';
+    const onMove = (ev) => {
+      const w = Math.max(50, startW + (ev.clientX - startX));
+      setColWidths(prev => { const n = [...prev]; n[i] = w; return n; });
+    };
+    const onUp = () => {
+      document.body.style.userSelect = '';
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
   return (
     <AppLayout>
       <div style={{ padding: '28px 32px' }}>
@@ -420,32 +446,43 @@ export default function Partes() {
         ) : (
           <div style={{ ...S.card, padding: 0, overflow: 'hidden' }}>
             <div style={{ overflowX: 'auto' }}>
-            {/* Header tabla con sort */}
+            {/* Header tabla con sort + redimensión */}
             {(() => {
-              const GRID = '100px 1fr 80px 90px 80px 80px 190px';
               const fi = { width: '100%', background: 'rgba(255,255,255,0.05)', border: `1px solid rgba(212,165,116,0.12)`, borderRadius: '4px', padding: '3px 6px', color: C.textSub, fontSize: '0.72rem', outline: 'none', boxSizing: 'border-box' };
               const SH = ({ col, label, center }) => {
                 const active = sortCol === col;
                 return (
-                  <div onClick={() => handleSort(col)} style={{ display: 'flex', alignItems: 'center', gap: '3px', justifyContent: center ? 'center' : 'flex-start', cursor: 'pointer', userSelect: 'none', color: active ? C.gold : C.textMuted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em' }}>
+                  <div onClick={() => handleSort(col)} style={{ display: 'flex', alignItems: 'center', gap: '3px', justifyContent: center ? 'center' : 'flex-start', cursor: 'pointer', userSelect: 'none', color: active ? C.gold : C.textMuted, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em', overflow: 'hidden' }}>
                     {label}
                     <span style={{ fontSize: '0.6rem', opacity: active ? 1 : 0.35 }}>{active ? (sortDir === 'asc' ? '↑' : '↓') : '↕'}</span>
                   </div>
                 );
               };
+              const COLS = [
+                { col: 'codigo', label: 'Código' },
+                { col: 'nombre', label: 'Nombre' },
+                { col: 'unidad', label: 'Unidad', center: true },
+                { col: 'costo',  label: 'Costo',  center: true },
+                { col: 'stock',  label: 'Stock',  center: true },
+                { col: 'minimo', label: 'Mínimo', center: true },
+                { col: null,     label: '' },
+              ];
               return (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '8px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '760px' }}>
-                    <SH col="codigo" label="Código" />
-                    <SH col="nombre" label="Nombre" />
-                    <SH col="unidad" label="Unidad" center />
-                    <SH col="costo" label="Costo" center />
-                    <SH col="stock" label="Stock" center />
-                    <SH col="minimo" label="Mínimo" center />
-                    <div />
+                  <style>{`.col-resizer:hover{background:rgba(212,165,116,0.5)}`}</style>
+                  <div style={{ display: 'grid', gridTemplateColumns: gridCols, gap: '0', padding: '8px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: `${minW}px` }}>
+                    {COLS.map((c, idx) => (
+                      <div key={idx} style={{ position: 'relative', overflow: 'hidden', paddingRight: '9px' }}>
+                        {c.col ? <SH col={c.col} label={c.label} center={c.center} /> : <div />}
+                        {idx < COLS.length - 1 && (
+                          <div className="col-resizer" onMouseDown={(e) => startResize(idx, e)} title="Arrastrá para cambiar el ancho"
+                            style={{ position: 'absolute', top: 0, right: 0, width: '8px', height: '100%', cursor: 'col-resize' }} />
+                        )}
+                      </div>
+                    ))}
                   </div>
                   {/* Fila de filtros */}
-                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '6px 16px', background: 'rgba(255,255,255,0.015)', borderBottom: `1px solid ${C.border}`, minWidth: '760px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: gridCols, gap: '0', padding: '6px 16px', background: 'rgba(255,255,255,0.015)', borderBottom: `1px solid ${C.border}`, minWidth: `${minW}px` }}>
                     <input style={fi} placeholder="Código..." value={filtros.codigo} onChange={e => setF('codigo', e.target.value)} />
                     <input style={{ ...fi, marginLeft: '0' }} placeholder="Nombre..." value={filtros.nombre} onChange={e => setF('nombre', e.target.value)} />
                     <input style={{ ...fi, textAlign: 'center' }} placeholder="unidad" value={filtros.unidad} onChange={e => setF('unidad', e.target.value)} />
@@ -468,7 +505,7 @@ export default function Partes() {
                 {hayFiltros ? 'Sin resultados para los filtros aplicados' : 'No hay partes cargadas'}
               </div>
             ) : filtradas.map((p, i) => (
-              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 90px 80px 80px 190px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '760px' }}>
+              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: gridCols, gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: `${minW}px` }}>
                 <div style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 700 }}>{p.codigo}</div>
                 <div>
                   <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 500 }}>{p.nombre}</div>
