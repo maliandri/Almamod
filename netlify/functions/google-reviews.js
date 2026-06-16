@@ -22,8 +22,15 @@ export async function handler(event) {
   const fresh = cache?.updated_at && (Date.now() - new Date(cache.updated_at).getTime() < TTL_MS);
   if (cache?.data && fresh) return response(200, cache.data);
 
-  // 2) Sin configurar → devolver lo cacheado o vacío
-  if (!apiKey || !placeId) return response(200, cache?.data || EMPTY);
+  // 2) Sin configurar → devolver lo cacheado o vacío (con diagnóstico no sensible)
+  if (!apiKey || !placeId) {
+    const _diag = {
+      hasKey: !!apiKey,
+      hasPlace: !!placeId,
+      vars: Object.keys(process.env).filter(k => /GOOGLE|PLACE/i.test(k)),
+    };
+    return response(200, { ...(cache?.data || EMPTY), _diag });
+  }
 
   // 3) Traer de Google Places
   try {
