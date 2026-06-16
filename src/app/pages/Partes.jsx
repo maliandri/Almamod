@@ -294,15 +294,18 @@ export default function Partes() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
           <h1 style={{ ...S.h1, margin: 0 }}>⚙️ Componentes</h1>
-          {canWrite && (
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" onChange={handleExcel} style={{ display: 'none' }} />
-              <button onClick={() => fileRef.current?.click()} disabled={importando} style={{ ...S.btnGhost, fontSize: '0.85rem' }}>
-                {importando ? 'Importando...' : '📊 Excel'}
-              </button>
-              <button onClick={() => setModalParte('nueva')} style={S.btnGold}>+ Nueva parte</button>
-            </div>
-          )}
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <button onClick={() => window.open('/app/qr-print', '_blank')} style={{ ...S.btnGhost, fontSize: '0.85rem' }}>🏷️ Imprimir QR</button>
+            {canWrite && (
+              <>
+                <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" onChange={handleExcel} style={{ display: 'none' }} />
+                <button onClick={() => fileRef.current?.click()} disabled={importando} style={{ ...S.btnGhost, fontSize: '0.85rem' }}>
+                  {importando ? 'Importando...' : '📊 Excel'}
+                </button>
+                <button onClick={() => setModalParte('nueva')} style={S.btnGold}>+ Nueva parte</button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Alertas de stock */}
@@ -334,7 +337,7 @@ export default function Partes() {
             <div style={{ overflowX: 'auto' }}>
             {/* Header tabla con sort */}
             {(() => {
-              const GRID = '100px 1fr 80px 90px 80px 80px 110px';
+              const GRID = '100px 1fr 80px 90px 80px 80px 140px';
               const fi = { width: '100%', background: 'rgba(255,255,255,0.05)', border: `1px solid rgba(212,165,116,0.12)`, borderRadius: '4px', padding: '3px 6px', color: C.textSub, fontSize: '0.72rem', outline: 'none', boxSizing: 'border-box' };
               const SH = ({ col, label, center }) => {
                 const active = sortCol === col;
@@ -347,7 +350,7 @@ export default function Partes() {
               };
               return (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '8px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '680px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '8px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '710px' }}>
                     <SH col="codigo" label="Código" />
                     <SH col="nombre" label="Nombre" />
                     <SH col="unidad" label="Unidad" center />
@@ -357,7 +360,7 @@ export default function Partes() {
                     <div />
                   </div>
                   {/* Fila de filtros */}
-                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '6px 16px', background: 'rgba(255,255,255,0.015)', borderBottom: `1px solid ${C.border}`, minWidth: '680px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '6px 16px', background: 'rgba(255,255,255,0.015)', borderBottom: `1px solid ${C.border}`, minWidth: '710px' }}>
                     <input style={fi} placeholder="Código..." value={filtros.codigo} onChange={e => setF('codigo', e.target.value)} />
                     <input style={{ ...fi, marginLeft: '0' }} placeholder="Nombre..." value={filtros.nombre} onChange={e => setF('nombre', e.target.value)} />
                     <input style={{ ...fi, textAlign: 'center' }} placeholder="unidad" value={filtros.unidad} onChange={e => setF('unidad', e.target.value)} />
@@ -380,7 +383,7 @@ export default function Partes() {
                 {hayFiltros ? 'Sin resultados para los filtros aplicados' : 'No hay partes cargadas'}
               </div>
             ) : filtradas.map((p, i) => (
-              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 90px 80px 80px 110px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '680px' }}>
+              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 90px 80px 80px 140px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '710px' }}>
                 <div style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 700 }}>{p.codigo}</div>
                 <div>
                   <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 500 }}>{p.nombre}</div>
@@ -391,6 +394,10 @@ export default function Partes() {
                 <div style={{ textAlign: 'center' }}><StockBadge actual={p.stock_actual} minimo={p.stock_minimo} /></div>
                 <div style={{ color: C.textMuted, fontSize: '0.8rem', textAlign: 'center' }}>{p.stock_minimo}</div>
                 <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
+                  <button onClick={() => window.open(`/app/qr-print?codigo=${encodeURIComponent(p.codigo)}`, '_blank')} title="Imprimir QR de este componente"
+                    style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '6px', padding: '4px 8px', color: C.textSub, cursor: 'pointer', fontSize: '0.8rem' }}>
+                    🏷️
+                  </button>
                   {canWrite && (
                     <>
                       <button onClick={() => setModalStock(p)} title="Movimiento de stock"

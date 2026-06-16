@@ -26,6 +26,7 @@ import OT from './pages/OT';
 import REI from './pages/REI';
 import Presupuestador from './pages/Presupuestador';
 import ResetPassword from './pages/ResetPassword';
+import QrPrint from './pages/QrPrint';
 
 export default function AppRouter() {
   return (
@@ -70,6 +71,14 @@ export default function AppRouter() {
         element={
           <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="partes" mode="read">
             <Partes />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="qr-print"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="partes" mode="read">
+            <QrPrint />
           </ProtectedRoute>
         }
       />
