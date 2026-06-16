@@ -33,6 +33,7 @@ export async function handler(event) {
     const { data, error } = await supabase
       .from('partes')
       .select('id, codigo, nombre, descripcion, unidad, costo, stock_actual, stock_minimo, familia_id, subfamilia_id, familias(id, nombre, color), subfamilias(id, nombre)')
+      .eq('activo', true)
       .order('nombre');
     if (error) return response(500, { error: error.message });
     return response(200, { partes: data });
@@ -61,6 +62,16 @@ export async function handler(event) {
     const { data, error } = await supabase.from('partes').update(update).eq('id', id).select().single();
     if (error) return response(500, { error: error.message });
     return response(200, { parte: data });
+  }
+
+  // DELETE ?id=xxx — baja lógica (conserva historial en BOM/remitos/stock)
+  if (event.httpMethod === 'DELETE') {
+    if (!canWrite) return response(403, { error: 'Sin permisos' });
+    const { id } = event.queryStringParameters || {};
+    if (!id) return response(400, { error: 'id requerido' });
+    const { error } = await supabase.from('partes').update({ activo: false }).eq('id', id);
+    if (error) return response(500, { error: error.message });
+    return response(200, { ok: true });
   }
 
   return response(405, { error: 'Método no permitido' });

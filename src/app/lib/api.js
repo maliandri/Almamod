@@ -116,6 +116,7 @@ export const api = {
     list:   (token, modelo_id) => request(`partes-list${modelo_id ? `?modelo_id=${modelo_id}` : ''}`, { token }),
     create: (token, data)      => request('partes-list', { method: 'POST', body: data, token }),
     update: (token, data)      => request('partes-list', { method: 'PUT',  body: data, token }),
+    delete: (token, id)        => request(`partes-list?id=${id}`, { method: 'DELETE', token }),
   },
   etapasProduccion: {
     list:   (token, modelo_id) => request(`etapas-produccion?modelo_id=${modelo_id}`, { token }),

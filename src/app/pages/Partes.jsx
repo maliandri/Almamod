@@ -202,6 +202,42 @@ function ModalStock({ parte, onClose, onSave }) {
   );
 }
 
+function ConfirmDeleteParte({ parte, onClose, onConfirm }) {
+  const [text, setText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const ok = text.trim().toLowerCase() === 'eliminar';
+  const handle = async () => {
+    if (!ok) return;
+    setLoading(true); setError('');
+    try { await onConfirm(parte.id); onClose(); }
+    catch (e) { setError(e.message); setLoading(false); }
+  };
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+      onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{ ...S.card, width: '100%', maxWidth: '400px', textAlign: 'center' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>⚠️</div>
+        <h2 style={{ color: C.red, fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>Eliminar componente</h2>
+        <p style={{ color: C.textSub, fontSize: '0.9rem', marginBottom: '4px' }}>{parte.codigo} — {parte.nombre}</p>
+        <p style={{ color: C.textMuted, fontSize: '0.82rem', marginBottom: '16px' }}>
+          Se quita del catálogo (se conserva el historial). Escribí <strong style={{ color: C.red }}>eliminar</strong> para confirmar.
+        </p>
+        <input value={text} onChange={e => setText(e.target.value)} placeholder="eliminar" autoFocus
+          onKeyDown={e => e.key === 'Enter' && handle()}
+          style={{ ...S.input, textAlign: 'center', marginBottom: '14px' }} onFocus={inputFocus} onBlur={inputBlur} />
+        {error && <div style={{ ...S.alertError, marginBottom: '12px' }}>{error}</div>}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={onClose} style={{ ...S.btnGhost, flex: 1 }}>Cancelar</button>
+          <button onClick={handle} disabled={!ok || loading} style={{ ...S.btnDanger, flex: 1, opacity: (!ok || loading) ? 0.5 : 1 }}>
+            {loading ? 'Eliminando...' : 'Eliminar'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Partes() {
   const { token, user } = useAuth();
   const [partes, setPartes] = useState([]);
@@ -213,6 +249,7 @@ export default function Partes() {
   const [sortDir, setSortDir] = useState('asc');
   const [modalParte, setModalParte] = useState(null);
   const [modalStock, setModalStock] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const [importando, setImportando] = useState(false);
   const [importMsg, setImportMsg] = useState('');
   const fileRef = useRef();
@@ -264,6 +301,11 @@ export default function Partes() {
 
   const handleStock = async (data) => {
     await api.stock.registrar(token, data);
+    cargar();
+  };
+
+  const handleDeleteParte = async (id) => {
+    await api.partes.delete(token, id);
     cargar();
   };
 
@@ -380,7 +422,7 @@ export default function Partes() {
             <div style={{ overflowX: 'auto' }}>
             {/* Header tabla con sort */}
             {(() => {
-              const GRID = '100px 1fr 80px 90px 80px 80px 140px';
+              const GRID = '100px 1fr 80px 90px 80px 80px 190px';
               const fi = { width: '100%', background: 'rgba(255,255,255,0.05)', border: `1px solid rgba(212,165,116,0.12)`, borderRadius: '4px', padding: '3px 6px', color: C.textSub, fontSize: '0.72rem', outline: 'none', boxSizing: 'border-box' };
               const SH = ({ col, label, center }) => {
                 const active = sortCol === col;
@@ -393,7 +435,7 @@ export default function Partes() {
               };
               return (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '8px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '710px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '8px 16px', background: 'rgba(212,165,116,0.06)', borderBottom: `1px solid ${C.border}`, minWidth: '760px' }}>
                     <SH col="codigo" label="Código" />
                     <SH col="nombre" label="Nombre" />
                     <SH col="unidad" label="Unidad" center />
@@ -403,7 +445,7 @@ export default function Partes() {
                     <div />
                   </div>
                   {/* Fila de filtros */}
-                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '6px 16px', background: 'rgba(255,255,255,0.015)', borderBottom: `1px solid ${C.border}`, minWidth: '710px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: '0', padding: '6px 16px', background: 'rgba(255,255,255,0.015)', borderBottom: `1px solid ${C.border}`, minWidth: '760px' }}>
                     <input style={fi} placeholder="Código..." value={filtros.codigo} onChange={e => setF('codigo', e.target.value)} />
                     <input style={{ ...fi, marginLeft: '0' }} placeholder="Nombre..." value={filtros.nombre} onChange={e => setF('nombre', e.target.value)} />
                     <input style={{ ...fi, textAlign: 'center' }} placeholder="unidad" value={filtros.unidad} onChange={e => setF('unidad', e.target.value)} />
@@ -426,7 +468,7 @@ export default function Partes() {
                 {hayFiltros ? 'Sin resultados para los filtros aplicados' : 'No hay partes cargadas'}
               </div>
             ) : filtradas.map((p, i) => (
-              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 90px 80px 80px 140px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '710px' }}>
+              <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 90px 80px 80px 190px', gap: '0', padding: '10px 16px', borderBottom: i < filtradas.length - 1 ? `1px solid ${C.border}` : 'none', alignItems: 'center', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', transition: 'background 0.15s', minWidth: '760px' }}>
                 <div style={{ color: C.gold, fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 700 }}>{p.codigo}</div>
                 <div>
                   <div style={{ color: C.text, fontSize: '0.88rem', fontWeight: 500 }}>{p.nombre}</div>
@@ -455,6 +497,10 @@ export default function Partes() {
                         style={{ background: C.blueDim, border: `1px solid ${C.blue}40`, borderRadius: '6px', padding: '4px 8px', color: C.blue, cursor: 'pointer', fontSize: '0.8rem', lineHeight: 1 }}>
                         📋
                       </button>
+                      <button onClick={() => setConfirmDelete(p)} title="Eliminar"
+                        style={{ background: C.redDim, border: 'none', borderRadius: '6px', padding: '4px 8px', color: C.red, cursor: 'pointer', fontSize: '0.8rem', lineHeight: 1 }}>
+                        🗑
+                      </button>
                     </>
                   )}
                 </div>
@@ -480,6 +526,13 @@ export default function Partes() {
           parte={modalStock}
           onClose={() => setModalStock(null)}
           onSave={handleStock}
+        />
+      )}
+      {confirmDelete && (
+        <ConfirmDeleteParte
+          parte={confirmDelete}
+          onClose={() => setConfirmDelete(null)}
+          onConfirm={handleDeleteParte}
         />
       )}
     </AppLayout>
