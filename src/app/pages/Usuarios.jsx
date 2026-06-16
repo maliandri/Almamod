@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
-import { MODULOS, rolDefaultLabel } from '../lib/modulos';
+import { MODULOS, rolDefaultLabel, rolDefaultPerm } from '../lib/modulos';
 import { C, S, ROL_STYLE, ROL_LABEL, inputFocus, inputBlur } from '../styles';
 
 const PERM_OPTS = [
@@ -27,6 +27,14 @@ function PermisosModal({ usuario, onClose, onSave }) {
       }
       return next;
     });
+  };
+
+  // Aplicar el mismo nivel a TODOS los módulos de una
+  const setAll = (value) => {
+    if (value === 'default') { setPermisos({}); return; }
+    const next = {};
+    MODULOS.forEach(m => { next[m.key] = value; });
+    setPermisos(next);
   };
 
   const handleSave = async () => {
@@ -68,16 +76,21 @@ function PermisosModal({ usuario, onClose, onSave }) {
           </button>
         </div>
 
-        {/* Legend */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+        {/* Explicación */}
+        <div style={{ background: C.goldDim, border: `1px solid ${C.goldBorder}`, borderRadius: '8px', padding: '10px 12px', marginBottom: '14px', fontSize: '0.8rem', color: C.textSub, lineHeight: 1.5 }}>
+          Por defecto cada usuario ve los menús de su <strong>rol</strong>. Acá podés <strong style={{ color: C.gold }}>darle o quitarle menús puntuales sin cambiarle el rol</strong>.
+          A la derecha de cada módulo, el indicador <strong>Ve / No ve</strong> muestra cómo queda con la configuración actual.
+        </div>
+
+        {/* Aplicar a todos */}
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '14px' }}>
+          <span style={{ color: C.textMuted, fontSize: '0.75rem', fontWeight: 600 }}>Aplicar a todos:</span>
           {PERM_OPTS.map(opt => (
-            <span key={opt.value} style={{ background: opt.bg, color: opt.color, fontSize: '0.72rem', fontWeight: 700, padding: '2px 8px', borderRadius: '12px', border: `1px solid ${opt.color}22` }}>
-              {opt.label}
-            </span>
+            <button key={opt.value} onClick={() => setAll(opt.value)}
+              style={{ background: opt.bg, border: `1px solid ${opt.color}44`, borderRadius: '6px', padding: '3px 10px', color: opt.color, fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}>
+              {opt.value === 'default' ? 'Rol' : opt.label}
+            </button>
           ))}
-          <span style={{ color: C.textMuted, fontSize: '0.72rem', alignSelf: 'center', marginLeft: '4px' }}>
-            — "Rol" usa el acceso predeterminado según el rol del usuario
-          </span>
         </div>
 
         {/* Module list */}
@@ -85,6 +98,10 @@ function PermisosModal({ usuario, onClose, onSave }) {
           {MODULOS.map(mod => {
             const current = permisos[mod.key] ?? 'default';
             const defaultLabel = rolDefaultLabel(usuario.rol, mod.key);
+            const efectivo = current === 'default' ? rolDefaultPerm(usuario.rol, mod.key) : current;
+            const efBadge = efectivo === 'write' ? { t: 'Ve · edición', c: '#10b981', b: 'rgba(16,185,129,0.12)' }
+                          : efectivo === 'read'  ? { t: 'Ve · lectura', c: '#667eea', b: 'rgba(102,126,234,0.12)' }
+                          :                          { t: 'No ve', c: '#ef4444', b: 'rgba(239,68,68,0.12)' };
             return (
               <div key={mod.key} style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -92,9 +109,10 @@ function PermisosModal({ usuario, onClose, onSave }) {
                 borderBottom: `1px solid ${C.border}`,
               }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                     <span style={{ fontSize: '1rem' }}>{mod.icon}</span>
                     <span style={{ color: C.text, fontWeight: 600, fontSize: '0.88rem' }}>{mod.label}</span>
+                    <span style={{ background: efBadge.b, color: efBadge.c, fontWeight: 700, fontSize: '0.66rem', padding: '1px 7px', borderRadius: '10px' }}>{efBadge.t}</span>
                   </div>
                   <div style={{ color: C.textMuted, fontSize: '0.75rem', marginTop: '2px', paddingLeft: '22px' }}>
                     {mod.desc}
@@ -398,6 +416,9 @@ export default function Usuarios() {
               {usuarios.length}
             </span>
           </div>
+          <p style={{ color: C.textMuted, fontSize: '0.78rem', marginBottom: '14px' }}>
+            💡 Para dar o quitar menús a un usuario <strong>sin cambiarle el rol</strong>, usá el botón <strong style={{ color: '#8b5cf6' }}>«Permisos»</strong>.
+          </p>
 
           {loading ? (
             <div style={{ textAlign: 'center', padding: '32px', color: C.textMuted, fontSize: '0.9rem' }}>Cargando...</div>
