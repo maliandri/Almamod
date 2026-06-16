@@ -27,6 +27,7 @@ import REI from './pages/REI';
 import Presupuestador from './pages/Presupuestador';
 import ResetPassword from './pages/ResetPassword';
 import QrPrint from './pages/QrPrint';
+import RemitoEgreso from './pages/RemitoEgreso';
 
 export default function AppRouter() {
   return (
@@ -214,6 +215,14 @@ export default function AppRouter() {
         element={
           <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="rei" mode="read">
             <REI />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="remito-egreso"
+        element={
+          <ProtectedRoute roles={['superadmin', 'dueno', 'deposito']} module="remito_scan" mode="read">
+            <RemitoEgreso />
           </ProtectedRoute>
         }
       />

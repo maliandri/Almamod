@@ -55,6 +55,7 @@ const NAV_SECTIONS = [
       { to: '/app/pic',        module: 'pic',         icon: '🛒', label: 'PIC',              roles: ['superadmin','dueno','deposito'] },
       { to: '/app/ot',         module: 'ot',          icon: '🔧', label: 'OT',               roles: ['superadmin','dueno','deposito','fabricacion'] },
       { to: '/app/rei',        module: 'rei',         icon: '📦', label: 'REI',              roles: ['superadmin','dueno','deposito'] },
+      { to: '/app/remito-egreso', module: 'remito_scan', icon: '📤', label: 'Remito Egreso',  roles: ['superadmin','dueno','deposito'] },
     ],
   },
   {

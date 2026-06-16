@@ -192,6 +192,11 @@ export const api = {
       URL.revokeObjectURL(url);
     },
   },
+  remitosEgreso: {
+    list:   (token)       => request('remitos-egreso', { token }),
+    get:    (token, id)   => request(`remitos-egreso?id=${id}`, { token }),
+    create: (token, data) => request('remitos-egreso', { method: 'POST', body: data, token }),
+  },
   rei: {
     list:           (token)              => request('rei', { token }),
     get:            (token, id)          => request(`rei?id=${id}`, { token }),
