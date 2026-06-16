@@ -7,6 +7,27 @@ import { C, S, inputFocus, inputBlur } from '../styles';
 
 const EMPTY = { codigo: '', nombre: '', descripcion: '', unidad: 'unidad', costo: '', stock_actual: '', stock_minimo: '', familia_id: '', subfamilia_id: '' };
 
+// Unidades de medida usadas en construcción modular / SIP
+const UNIDADES = [
+  { v: 'unidad', label: 'Unidad (u)' },
+  { v: 'm²',     label: 'Metro cuadrado (m²)' },
+  { v: 'm³',     label: 'Metro cúbico (m³)' },
+  { v: 'ml',     label: 'Metro lineal (ml)' },
+  { v: 'm',      label: 'Metro (m)' },
+  { v: 'litro',  label: 'Litro (L)' },
+  { v: 'kg',     label: 'Kilogramo (kg)' },
+  { v: 'g',      label: 'Gramo (g)' },
+  { v: 'bolsa',  label: 'Bolsa' },
+  { v: 'balde',  label: 'Balde / tarro' },
+  { v: 'rollo',  label: 'Rollo' },
+  { v: 'placa',  label: 'Placa / plancha' },
+  { v: 'caja',   label: 'Caja' },
+  { v: 'par',    label: 'Par' },
+  { v: 'juego',  label: 'Juego / kit' },
+  { v: 'barra',  label: 'Barra / tira' },
+  { v: 'global', label: 'Global' },
+];
+
 function FamiliaBadge({ familia }) {
   if (!familia) return null;
   return (
@@ -36,6 +57,10 @@ function ModalParte({ parte, familias, subfamilias = [], onClose, onSave }) {
   const [form, setForm] = useState(parte || EMPTY);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [otraUnidad, setOtraUnidad] = useState(() => {
+    const v = (parte || EMPTY).unidad;
+    return !!v && !UNIDADES.some(u => u.v === v);
+  });
   const f = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
   const subsDeFamilia = subfamilias.filter(s => String(s.familia_id) === String(form.familia_id));
@@ -59,12 +84,30 @@ function ModalParte({ parte, familias, subfamilias = [], onClose, onSave }) {
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
         <div style={{ maxWidth: '760px', margin: '0 auto' }}>
-        {[['codigo','Código *','text'],['nombre','Nombre *','text'],['descripcion','Descripción','text'],['unidad','Unidad','text']].map(([k, label]) => (
+        {[['codigo','Código *'],['nombre','Nombre *'],['descripcion','Descripción']].map(([k, label]) => (
           <div key={k} style={{ marginBottom: '14px' }}>
             <label style={S.label}>{label}</label>
             <input value={form[k]} onChange={e => f(k, e.target.value)} style={S.input} onFocus={inputFocus} onBlur={inputBlur} />
           </div>
         ))}
+        <div style={{ marginBottom: '14px' }}>
+          <label style={S.label}>Unidad de medida</label>
+          <select
+            value={otraUnidad ? '__otra__' : (form.unidad || 'unidad')}
+            onChange={e => {
+              if (e.target.value === '__otra__') { setOtraUnidad(true); f('unidad', ''); }
+              else { setOtraUnidad(false); f('unidad', e.target.value); }
+            }}
+            style={S.select}
+          >
+            {UNIDADES.map(u => <option key={u.v} value={u.v}>{u.label}</option>)}
+            <option value="__otra__">➕ Otra…</option>
+          </select>
+          {otraUnidad && (
+            <input value={form.unidad} onChange={e => f('unidad', e.target.value)} placeholder="Escribí la unidad..."
+              style={{ ...S.input, marginTop: '8px' }} onFocus={inputFocus} onBlur={inputBlur} autoFocus />
+          )}
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
           <div>
             <label style={S.label}>Familia</label>
