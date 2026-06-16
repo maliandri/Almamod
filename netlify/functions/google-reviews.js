@@ -37,7 +37,7 @@ export async function handler(event) {
     const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(placeId)}&fields=rating,user_ratings_total,reviews,url,name&reviews_sort=newest&language=es&key=${apiKey}`;
     const r = await fetch(url);
     const j = await r.json();
-    if (j.status !== 'OK') return response(200, cache?.data || { ...EMPTY, error: j.status });
+    if (j.status !== 'OK') return response(200, cache?.data || { ...EMPTY, error: j.status, error_message: j.error_message || null });
 
     const res = j.result || {};
     const payload = {
