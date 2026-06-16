@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { jsPDF } from 'jspdf';
+import { Html5Qrcode } from 'html5-qrcode';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../lib/api';
 import AppLayout from '../components/AppLayout';
@@ -56,7 +57,10 @@ export default function RemitoEgreso() {
   const [recientes, setRecientes] = useState([]);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
+  const [scanOpen, setScanOpen] = useState(false);
   const codeRef = useRef();
+  const scannerRef = useRef(null);
+  const lastScan = useRef({ code: '', t: 0 });
 
   useEffect(() => {
     api.partes.list(token).then(d => setPartes(d.partes || []));
@@ -87,6 +91,29 @@ export default function RemitoEgreso() {
     addParte(parte);
     setMsg(`✓ ${parte.codigo} — ${parte.nombre}`);
   };
+
+  // Cámara: lector de QR (html5-qrcode). El QR codifica el código del componente.
+  useEffect(() => {
+    if (!scanOpen) return;
+    const inst = new Html5Qrcode('qr-reader');
+    scannerRef.current = inst;
+    inst.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 240, height: 240 } },
+      (decoded) => {
+        const now = Date.now();
+        if (decoded === lastScan.current.code && now - lastScan.current.t < 1500) return;
+        lastScan.current = { code: decoded, t: now };
+        addByCodigo(decoded);
+      },
+      () => {}
+    ).catch(err => setMsg(`No se pudo abrir la cámara: ${err}`));
+    return () => {
+      inst.stop().then(() => inst.clear()).catch(() => {});
+      scannerRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanOpen]);
 
   const setCantidad = (parte_id, cantidad) => {
     setItems(prev => prev.map(i => i.parte_id === parte_id ? { ...i, cantidad } : i));
@@ -153,6 +180,7 @@ export default function RemitoEgreso() {
               style={{ ...S.input, flex: 1, minWidth: '240px' }}
               onFocus={inputFocus} onBlur={inputBlur}
             />
+            <button onClick={() => { setMsg(''); setScanOpen(true); }} style={{ ...S.btnGold, fontSize: '0.85rem' }}>📷 Cámara</button>
             <div style={{ position: 'relative' }}>
               <button onClick={() => setShowSearch(s => !s)} style={{ ...S.btnGhost, fontSize: '0.85rem' }}>🔍 Buscar</button>
               {showSearch && (
@@ -251,6 +279,20 @@ export default function RemitoEgreso() {
           </div>
         )}
       </div>
+
+      {/* Overlay de cámara */}
+      {scanOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ width: '100%', maxWidth: '340px' }}>
+            <div id="qr-reader" style={{ width: '100%', borderRadius: '10px', overflow: 'hidden' }} />
+          </div>
+          <div style={{ color: '#fff', marginTop: '14px', textAlign: 'center', fontSize: '0.9rem', minHeight: '20px', padding: '0 16px' }}>
+            {msg || 'Apuntá la cámara al QR del componente'}
+          </div>
+          <div style={{ color: C.gold, marginTop: '6px', fontWeight: 700 }}>{items.length} ítems · {totalUnidades} unidades</div>
+          <button onClick={() => setScanOpen(false)} style={{ ...S.btnGold, marginTop: '18px', minWidth: '160px' }}>✓ Listo</button>
+        </div>
+      )}
     </AppLayout>
   );
 }
