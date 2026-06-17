@@ -3,6 +3,7 @@ import AppLayout from '../components/AppLayout';
 import { C, S, inputFocus, inputBlur } from '../styles';
 import { uploadImagen, generarContenido, publicarEnMake } from '../lib/marketing';
 import SelectorImagenModelo from '../components/SelectorImagenModelo';
+import CampoEditable from '../components/CampoEditable';
 import { useModelosCms } from '../hooks/useModelosCms';
 const TONOS = ['Inspirador', 'Informativo', 'Urgencia', 'Emocional', 'Humorístico', 'Educativo'];
 
@@ -116,19 +117,18 @@ export default function MarketingReels() {
           {/* Resultado */}
           {resultado && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <p style={{ color: C.textMuted, fontSize: '0.78rem', margin: '0 0 2px' }}>
+                ✏️ Editá cualquier campo antes de publicar. Lo que dejes acá es lo que se envía a Make.
+              </p>
               {[
-                { label: '🎯 Hook (primeros 3 seg)', value: resultado.hook },
-                { label: '📋 Guión', value: resultado.guion },
-                { label: '📝 Caption', value: resultado.caption },
-                { label: '#️⃣ Hashtags', value: resultado.hashtags },
-                { label: '📣 CTA', value: resultado.cta },
-              ].map(({ label, value }) => value && (
-                <div key={label} style={S.card}>
-                  <div style={{ color: C.gold, fontSize: '0.75rem', fontWeight: 700, marginBottom: '6px', letterSpacing: '0.04em' }}>{label}</div>
-                  <div style={{ color: C.textSub, fontSize: '0.85rem', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{value}</div>
-                  <button onClick={() => navigator.clipboard.writeText(value)}
-                    style={{ ...S.btnGhost, fontSize: '0.72rem', padding: '4px 10px', marginTop: '8px' }}>Copiar</button>
-                </div>
+                { label: '🎯 Hook (primeros 3 seg)', key: 'hook' },
+                { label: '📋 Guión', key: 'guion' },
+                { label: '📝 Caption', key: 'caption' },
+                { label: '#️⃣ Hashtags', key: 'hashtags' },
+                { label: '📣 CTA', key: 'cta' },
+              ].map(({ label, key }) => key in resultado && (
+                <CampoEditable key={key} label={label} value={resultado[key] || ''}
+                  onChange={v => setResultado(p => ({ ...p, [key]: v }))} />
               ))}
 
               {publishOk

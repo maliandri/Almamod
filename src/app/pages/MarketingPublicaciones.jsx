@@ -3,6 +3,7 @@ import AppLayout from '../components/AppLayout';
 import { C, S, inputFocus, inputBlur } from '../styles';
 import { uploadImagen, generarContenido, publicarEnMake } from '../lib/marketing';
 import SelectorImagenModelo from '../components/SelectorImagenModelo';
+import CampoEditable from '../components/CampoEditable';
 import { useModelosCms } from '../hooks/useModelosCms';
 const TONOS = ['Inspirador', 'Informativo', 'Urgencia', 'Emocional', 'Educativo'];
 const FORMATOS = ['Imagen única', 'Carrusel', 'Comparativa', 'Testimonio', 'Precio/Oferta'];
@@ -123,19 +124,18 @@ export default function MarketingPublicaciones() {
 
           {resultado && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <p style={{ color: C.textMuted, fontSize: '0.78rem', margin: '0 0 2px' }}>
+                ✏️ Editá cualquier campo antes de publicar. Lo que dejes acá es lo que se envía a Make.
+              </p>
               {[
-                { label: '🎯 Título / Primera línea', value: resultado.titulo },
-                { label: '📝 Caption completo', value: resultado.caption },
-                { label: '#️⃣ Hashtags', value: resultado.hashtags },
-                { label: '📣 CTA', value: resultado.cta },
-                { label: '🖼️ Sugerencia visual', value: resultado.sugerencia_visual },
-              ].map(({ label, value }) => value && (
-                <div key={label} style={S.card}>
-                  <div style={{ color: C.gold, fontSize: '0.75rem', fontWeight: 700, marginBottom: '6px', letterSpacing: '0.04em' }}>{label}</div>
-                  <div style={{ color: C.textSub, fontSize: '0.85rem', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{value}</div>
-                  <button onClick={() => navigator.clipboard.writeText(value)}
-                    style={{ ...S.btnGhost, fontSize: '0.72rem', padding: '4px 10px', marginTop: '8px' }}>Copiar</button>
-                </div>
+                { label: '🎯 Título / Primera línea', key: 'titulo' },
+                { label: '📝 Caption completo', key: 'caption' },
+                { label: '#️⃣ Hashtags', key: 'hashtags' },
+                { label: '📣 CTA', key: 'cta' },
+                { label: '🖼️ Sugerencia visual', key: 'sugerencia_visual' },
+              ].map(({ label, key }) => key in resultado && (
+                <CampoEditable key={key} label={label} value={resultado[key] || ''}
+                  onChange={v => setResultado(p => ({ ...p, [key]: v }))} />
               ))}
 
               {publishOk

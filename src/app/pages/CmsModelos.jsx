@@ -23,13 +23,15 @@ function generarPublicId(modeloNombre, fotosActuales) {
 // Categorías de documentación por modelo. grupo define visibilidad:
 // 'comercial' → clientes · 'tecnica' → solo dueño/depósito
 const DOC_CATS = [
-  { key: 'comercial',       label: 'Comercial',          grupo: 'comercial' },
-  { key: 'agua',            label: 'Agua',               grupo: 'tecnica' },
-  { key: 'gas',             label: 'Gas',                grupo: 'tecnica' },
-  { key: 'cloacas',         label: 'Plano de cloacas',   grupo: 'tecnica' },
-  { key: 'paneles_piso',    label: 'Paneles · Piso',     grupo: 'tecnica' },
-  { key: 'paneles_techo',   label: 'Paneles · Techo',    grupo: 'tecnica' },
-  { key: 'paneles_paredes', label: 'Paneles · Paredes',  grupo: 'tecnica' },
+  { key: 'comercial',       label: 'Comercial',             grupo: 'comercial' },
+  { key: 'fundaciones',     label: 'Plano de fundaciones',  grupo: 'tecnica' },
+  { key: 'patines',         label: 'Plano de patines',      grupo: 'tecnica' },
+  { key: 'agua',            label: 'Agua',                  grupo: 'tecnica' },
+  { key: 'gas',             label: 'Gas',                   grupo: 'tecnica' },
+  { key: 'cloacas',         label: 'Plano de cloacas',      grupo: 'tecnica' },
+  { key: 'paneles_piso',    label: 'Paneles · Piso',        grupo: 'tecnica' },
+  { key: 'paneles_techo',   label: 'Paneles · Techo',       grupo: 'tecnica' },
+  { key: 'paneles_paredes', label: 'Paneles · Paredes',     grupo: 'tecnica' },
 ];
 
 function generarDocPublicId(modeloNombre, cat, n) {
